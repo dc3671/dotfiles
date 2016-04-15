@@ -1,0 +1,246 @@
+" save without Permission
+cmap w!! %!sudo tee > /dev/null %
+" no backups "
+set nobackup
+set nowritebackup
+
+set nospell
+
+" Do not wrap long lines
+set wrap
+
+" Vim colorscheme
+colorscheme molokai
+
+" for tmux to automatically set paste and nopaste mode at the time pasting (as
+" happens in VIM UI)
+function! WrapForTmux(s)
+  if !exists('$TMUX')
+    return a:s
+  endif
+
+  let tmux_start = "\<Esc>Ptmux;"
+  let tmux_end = "\<Esc>\\"
+
+  return tmux_start . substitute(a:s, "\<Esc>", "\<Esc>\<Esc>", 'g') . tmux_end
+endfunction
+
+let &t_SI .= WrapForTmux("\<Esc>[?2004h")
+let &t_EI .= WrapForTmux("\<Esc>[?2004l")
+
+function! XTermPasteBegin()
+  set pastetoggle=<Esc>[201~
+  set paste
+  return ""
+endfunction
+
+inoremap <special> <expr> <Esc>[200~ XTermPasteBegin()
+
+" BEGIN Highlight current line "
+"set cursorline
+"hi CursorLine cterm=NONE ctermbg=lightyellow
+"hi CursorColumn cterm=NONE ctermbg=lightyellow
+"nnoremap c :set cursorline! cursorcolumn!
+" END "
+
+" BEGIN Get rid of unnecessary plugins "
+
+" interpret a file by function and cache file automatically
+"UnBundle 'MarcWeber/vim-addon-mw-utils'
+
+" Some utility functions for VIM http://www.vim.org/scripts/script.php?script_id=1863
+"UnBundle 'tomtom/tlib_vim'
+
+" A tree explorer plugin for vim
+"UnBundle 'scrooloose/nerdtree'
+
+" precision colorscheme for the vim text editor
+"UnBundle 'altercation/vim-colors-solarized'
+
+" Collection of color schemes for VIM
+"UnBundle 'spf13/vim-colors'
+
+" quoting/parenthesizing made simple
+"UnBundle 'tpope/vim-surround'
+
+" enable repeating supported plugin maps with "."
+"UnBundle 'tpope/vim-repeat'
+
+" Inserts matching bracket, paren, brace or quote http://www.vim.org/scripts/script.php?script_id=1849
+"UnBundle 'spf13/vim-autoclose'
+
+" Fuzzy file, buffer, mru, tag, etc finder
+"UnBundle 'kien/ctrlp.vim'
+
+" Navigate and jump to function defs http://www.vim.org/scripts/script.php?script_id=4592
+"UnBundle 'tacahiroy/ctrlp-funky'
+
+" True Sublime Text style multiple selections for Vim
+"UnBundle 'terryma/vim-multiple-cursors'
+
+" Vim session manager http://www.vim.org/scripts/script.php?script_id=2010
+"UnBundle 'vim-scripts/sessionman.vim'
+
+" extended % matching for HTML, LaTeX, and many other languages http://www.vim.org/scripts/script.php?script_id=39
+"UnBundle 'matchit.zip'
+
+" lean & mean status/tabline for vim that's light as air
+"UnBundle 'bling/vim-airline'
+
+" super simple vim plugin to show the list of buffers in the command bar
+"UnBundle 'bling/vim-bufferline'
+
+" Vim motions on speed! http://www.vim.org/scripts/script.php?script_id=3526
+"UnBundle 'Lokaltog/vim-easymotion'
+
+" NERDTree and tabs together in Vim, painlessly
+"UnBundle 'jistr/vim-nerdtree-tabs'
+
+" one colorscheme pack to rule them all
+"UnBundle 'flazz/vim-colorschemes'
+
+" Display your undo history in a graph. http://www.vim.org/scripts/script.php?script_id=4177
+"UnBundle 'mbbill/undotree'
+
+" A Vim plugin for visually displaying indent levels in code
+"UnBundle 'nathanaelkane/vim-indent-guides'
+
+" A plugin for automatically restoring file's cursor position and folding http://www.vim.org/scripts/script.php?script_id=4021
+"UnBundle 'vim-scripts/restore_view.vim'
+
+" Show a VCS diff using Vim's sign column
+"UnBundle 'mhinz/vim-signify'
+
+" easily search for, substitute, and abbreviate multiple variants of a word
+"UnBundle 'tpope/vim-abolish.git'
+
+" :substitute preview
+"UnBundle 'osyo-manga/vim-over'
+
+" Create your own text objects http://www.vim.org/scripts/script.php?script_id=2100
+"UnBundle 'kana/vim-textobj-user'
+
+" provide text objects to select a block of lines which are similarly indented to the current line
+"UnBundle 'kana/vim-textobj-indent'
+
+" Smart selection of the closest text object
+"UnBundle 'gcmt/wildfire.vim'
+
+" Lightweight auto-correction for Vim
+"UnBundle 'reedes/vim-litecorrect'
+
+" Improving on Vim's native sentence text object and motion
+"UnBundle 'reedes/vim-textobj-sentence'
+
+" Use â€ ̃curlyâ€TM quote characters in Vim
+"UnBundle 'reedes/vim-textobj-quote'
+
+" Uncover usage problems in your writing
+"UnBundle 'reedes/vim-wordy'
+
+" Syntax checking hacks for vim
+UnBundle 'scrooloose/syntastic'
+
+" a Git wrapper so awesome, it should be illegal http://www.vim.org/scripts/script.php?script_id=2975
+"UnBundle 'tpope/vim-fugitive'
+
+" An Interface to WEB APIs
+"UnBundle 'mattn/webapi-vim'
+
+" vimscript for creating gists
+"UnBundle 'mattn/gist-vim'
+
+" Vim plugin for intensely orgasmic commenting
+"UnBundle 'scrooloose/nerdcommenter'
+
+" comment stuff out
+"UnBundle 'tpope/vim-commentary'
+
+" Vim script for text filtering and alignment
+"UnBundle 'godlygeek/tabular'
+
+" Ultimate auto-completion system for Vim
+"UnBundle 'Shougo/neocomplcache'
+
+" neo-snippet plugin contains neocomplcache snippets source
+"UnBundle 'Shougo/neosnippet'
+
+" The standard snippets repository for neosnippet
+"UnBundle 'Shougo/neosnippet-snippets'
+
+" vim-snipmate default snippets
+"UnBundle 'honza/vim-snippets'
+
+" PHP Integration environment for Vim
+"UnBundle 'spf13/PIV'
+
+" vim plugin for inserting "use" statements automatically
+"UnBundle 'arnaud-lb/vim-php-namespace'
+
+" Twig syntax highlighting, snipMate, etc. - twig php templates
+"UnBundle 'beyondwords/vim-twig'
+
+" Vim python-mode. PyLint, Rope, Pydoc, breakpoints from box.
+"UnBundle 'klen/python-mode'
+
+" A set of menus/shortcuts to work with Python files
+"UnBundle 'yssource/python.vim'
+
+" Extend the % motion and define g%, [%, and ]% motions for Python files
+"UnBundle 'python_match.vim'
+
+" This is the pythoncomplete omni-completion script shipped with vim 7
+"UnBundle 'pythoncomplete'
+
+" distinct highlighting of keywords vs values, JSON-specific (non-JS) warnings, quote concealing
+"UnBundle 'elzr/vim-json'
+
+" vim syntax for LESS (dynamic CSS)
+"UnBundle 'groenewege/vim-less'
+
+" Vastly improved Javascript indentation and syntax support in Vim
+"UnBundle 'pangloss/vim-javascript'
+
+" highlighting and indenting JST/EJS syntax
+"UnBundle 'briancollins/vim-jst'
+
+" CoffeeScript support for vim
+"UnBundle 'kchmck/vim-coffee-script'
+
+" Automatically closes HTML tags once you finish typing them
+"UnBundle 'amirh/HTML-AutoCloseTag'
+
+" Add CSS3 syntax support to vim's built-in
+"UnBundle 'hail2u/vim-css3-syntax'
+
+" css/less/sass/html color preview for vim
+"UnBundle 'gorodinskiy/vim-coloresque'
+
+" Vim runtime files for Haml, Sass, and SCSS
+"UnBundle 'tpope/vim-haml'
+
+" Ruby on Rails power tools
+"UnBundle 'tpope/vim-rails'
+
+" Vim support for Rust file detection and syntax highlighting
+"UnBundle 'wting/rust.vim'
+
+" Vim Markdown runtime files
+"UnBundle 'tpope/vim-markdown'
+
+" Vim plugin for previewing markup files
+"UnBundle 'spf13/vim-preview'
+
+" Vim Cucumber runtime files Ruby acceptance testing framework Cucumber
+"UnBundle 'tpope/vim-cucumber'
+
+" Vim syntax for TOML
+"UnBundle 'cespare/vim-toml'
+
+" Align pipes when you are editing Cucumber tables
+"UnBundle 'quentindecock/vim-cucumber-align-pipes'
+
+" Vim files for editing Salt files
+"UnBundle 'saltstack/salt-vim'
+
+" END "
