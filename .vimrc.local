@@ -100,7 +100,7 @@ inoremap <special> <expr> <Esc>[200~ XTermPasteBegin()
 "UnBundle 'flazz/vim-colorschemes'
 
 " Display your undo history in a graph. http://www.vim.org/scripts/script.php?script_id=4177
-"UnBundle 'mbbill/undotree'
+UnBundle 'mbbill/undotree'
 
 " A Vim plugin for visually displaying indent levels in code
 "UnBundle 'nathanaelkane/vim-indent-guides'
@@ -139,7 +139,7 @@ inoremap <special> <expr> <Esc>[200~ XTermPasteBegin()
 "UnBundle 'reedes/vim-wordy'
 
 " Syntax checking hacks for vim
-UnBundle 'scrooloose/syntastic'
+"UnBundle 'scrooloose/syntastic'
 
 " a Git wrapper so awesome, it should be illegal http://www.vim.org/scripts/script.php?script_id=2975
 "UnBundle 'tpope/vim-fugitive'
@@ -172,7 +172,7 @@ UnBundle 'scrooloose/syntastic'
 "UnBundle 'honza/vim-snippets'
 
 " PHP Integration environment for Vim
-"UnBundle 'spf13/PIV'
+UnBundle 'spf13/PIV'
 
 " vim plugin for inserting "use" statements automatically
 "UnBundle 'arnaud-lb/vim-php-namespace'
@@ -202,10 +202,10 @@ UnBundle 'scrooloose/syntastic'
 "UnBundle 'pangloss/vim-javascript'
 
 " highlighting and indenting JST/EJS syntax
-"UnBundle 'briancollins/vim-jst'
+UnBundle 'briancollins/vim-jst'
 
 " CoffeeScript support for vim
-"UnBundle 'kchmck/vim-coffee-script'
+UnBundle 'kchmck/vim-coffee-script'
 
 " Automatically closes HTML tags once you finish typing them
 "UnBundle 'amirh/HTML-AutoCloseTag'
@@ -217,7 +217,7 @@ UnBundle 'scrooloose/syntastic'
 "UnBundle 'gorodinskiy/vim-coloresque'
 
 " Vim runtime files for Haml, Sass, and SCSS
-"UnBundle 'tpope/vim-haml'
+UnBundle 'tpope/vim-haml'
 
 " Ruby on Rails power tools
 "UnBundle 'tpope/vim-rails'
@@ -235,12 +235,12 @@ UnBundle 'scrooloose/syntastic'
 "UnBundle 'tpope/vim-cucumber'
 
 " Vim syntax for TOML
-"UnBundle 'cespare/vim-toml'
+UnBundle 'cespare/vim-toml'
 
 " Align pipes when you are editing Cucumber tables
 "UnBundle 'quentindecock/vim-cucumber-align-pipes'
 
 " Vim files for editing Salt files
-"UnBundle 'saltstack/salt-vim'
+UnBundle 'saltstack/salt-vim'
 
 " END "

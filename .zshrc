@@ -105,7 +105,7 @@ alias vi='vim'
 alias cp='cp -r'
 alias rm='rm -r'
 alias mkdir='mkdir -p'
-alias tmux='tmux -2'
+#alias tmux='tmux -2'
 
 alias fq='sudo /opt/XX-Net-2.8.9/start.sh'
 #alias understand='sudo /opt/scitools/bin/linux64/understand'[]
