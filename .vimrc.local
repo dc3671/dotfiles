@@ -11,6 +11,7 @@ set wrap
 
 " Vim colorscheme
 colorscheme molokai
+let g:airline_theme = 'zenburn'
 
 " for tmux to automatically set paste and nopaste mode at the time pasting (as
 " happens in VIM UI)

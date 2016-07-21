@@ -54,13 +54,14 @@ ZSH_THEME="afowler"
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(git)
+plugins=(git history-substring-search)
 
 # User configuration
 
 export PYTHON_HOME="/usr/lib/python2.7:/usr/lib64/python2.7:/usr/include/python2.7"
 export GCC_HOME="/usr/lib/gcc/x86_64-redhat-linux/4.9.2"
 export LKP_SRC="/home/dash/Project/lkp-tests"
+export TEXHOME="/usr/share/texmf-dist"
 
 export LC_ALL="en_US.utf8"
 
@@ -69,6 +70,7 @@ export PATH="$PATH:/usr/share/fonts"
 export PATH="$PATH:$PYTHON_HOME"
 export PATH="$PATH:$GCC_HOME/include/"
 export PATH="$PATH:$LKP_SRC/bin"
+export PATH="$TEXHOME:$PATH"
 
 export GIT_SSL_NO_VERIFY=1
 export TERM="xterm-256color"
@@ -98,7 +100,7 @@ source $ZSH/oh-my-zsh.sh
 #
 # Example aliases
 
-#alias sudo="sudo -E"
+alias sudo="sudo -E"
 alias la='ls -a'
 alias lh='ls -a | egrep "^\."'
 alias vi='vim'
