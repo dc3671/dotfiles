@@ -40,6 +40,13 @@ endfunction
 
 inoremap <special> <expr> <Esc>[200~ XTermPasteBegin()
 
+" BEGIN plugins specific config "
+
+" JS syntax config
+let g:used_javascript_libs = 'jquery,angularjs,underscore,backbone'
+
+" END "
+
 " BEGIN Highlight current line "
 "set cursorline
 "hi CursorLine cterm=NONE ctermbg=lightyellow

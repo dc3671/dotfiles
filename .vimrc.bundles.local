@@ -1,0 +1,6 @@
+" Yet Another JS Syntax & lib
+Bundle 'othree/yajs.vim'
+Bundle 'othree/javascript-libraries-syntax.vim'
+
+" Tern for JS
+Bundle 'ternjs/tern_for_vim'
