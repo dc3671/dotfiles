@@ -13,6 +13,9 @@ set wrap
 colorscheme molokai
 let g:airline_theme = 'zenburn'
 
+" for transparent probelm with konsole
+hi Normal  ctermfg=252 ctermbg=none
+
 " for tmux to automatically set paste and nopaste mode at the time pasting (as
 " happens in VIM UI)
 function! WrapForTmux(s)
