@@ -171,7 +171,7 @@ UnBundle 'mbbill/undotree'
 "UnBundle 'godlygeek/tabular'
 
 " Ultimate auto-completion system for Vim
-"UnBundle 'Shougo/neocomplcache'
+UnBundle 'Shougo/neocomplcache'
 
 " neo-snippet plugin contains neocomplcache snippets source
 "UnBundle 'Shougo/neosnippet'
@@ -180,7 +180,7 @@ UnBundle 'mbbill/undotree'
 "UnBundle 'Shougo/neosnippet-snippets'
 
 " vim-snipmate default snippets
-"UnBundle 'honza/vim-snippets'
+UnBundle 'honza/vim-snippets'
 
 " PHP Integration environment for Vim
 UnBundle 'spf13/PIV'
