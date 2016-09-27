@@ -62,6 +62,7 @@ export PYTHON_HOME="/usr/lib/python2.7:/usr/lib64/python2.7:/usr/include/python2
 export GCC_HOME="/usr/lib/gcc/x86_64-redhat-linux/4.9.2"
 export LKP_SRC="/home/dash/Project/lkp-tests"
 export TEXHOME="/usr/share/texmf-dist"
+export NPM_CONFIG_PREFIX="/home/dash/.npm-global"
 
 export LC_ALL="en_US.utf8"
 
@@ -71,6 +72,7 @@ export PATH="$PATH:$PYTHON_HOME"
 export PATH="$PATH:$GCC_HOME/include/"
 export PATH="$PATH:$LKP_SRC/bin"
 export PATH="$TEXHOME:$PATH"
+export PATH="$NPM_CONFIG_PREFIX/bin:$PATH"
 
 export GIT_SSL_NO_VERIFY=1
 export TERM="xterm-256color"
@@ -108,8 +110,10 @@ alias cp='cp -r'
 alias rm='rm -r'
 alias mkdir='mkdir -p'
 #alias tmux='tmux -2'
+alias npm='cnpm'
 
-alias fq='sudo /opt/XX-Net-2.8.9/start.sh'
+
+alias fq='~/.config/autostart-scripts/xx-net.sh'
 #alias understand='sudo /opt/scitools/bin/linux64/understand'[]
 #alias clearlkp='rm /tmp/init*sult;'
 alias -s html=vi

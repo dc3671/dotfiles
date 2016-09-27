@@ -2,5 +2,33 @@
 Bundle 'othree/yajs.vim'
 Bundle 'othree/javascript-libraries-syntax.vim'
 
-" Tern for JS
-Bundle 'ternjs/tern_for_vim'
+" Syntax for vue
+Bundle 'posva/vim-vue'
+
+" Grep search like sublime
+Bundle 'dyng/ctrlsf.vim'
+
+" Delete whitespace at end of line
+Bundle 'bronson/vim-trailing-whitespace'
+
+" Save buffer status after exit
+Bundle 'tpope/vim-obsession'
+Bundle 'dhruvasagar/vim-prosession'
+
+" Highlight pair tag
+Bundle 'Valloric/MatchTagAlways'
+
+" Close html tags
+Bundle 'alvan/vim-closetag'
+
+" Ternjs for completion
+Bundle 'marijnh/tern_for_vim'
+
+" delete current buffer
+Bundle 'moll/vim-bbye'
+
+" delete other buffer
+Bundle 'vim-scripts/BufOnly.vim'
+
+" Auto format
+Bundle 'Chiel92/vim-autoformat'

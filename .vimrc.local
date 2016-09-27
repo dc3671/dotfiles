@@ -1,5 +1,6 @@
 " save without Permission
 cmap w!! %!sudo tee > /dev/null %
+
 " no backups "
 set nobackup
 set nowritebackup
@@ -9,12 +10,41 @@ set nospell
 " Do not wrap long lines
 set wrap
 
+" Smart way to move between windows
+noremap <C-j> <C-W>j
+noremap <C-k> <C-W>k
+noremap <C-h> <C-W>h
+noremap <C-l> <C-W>l
+
 " Vim colorscheme
 colorscheme molokai
 let g:airline_theme = 'zenburn'
 
+" no Highlight
+noremap <silent><leader>/ :nohls<CR>
+
+" Use 'm/M' to move among buffers
+noremap m :bn<CR>
+noremap M :bp<CR>
+
+" toggle between two buffers
+nnoremap t <C-^>
+
+" Quick move in insert mode
+inoremap <C-o> <Esc>o
+inoremap <C-a> <Home>
+inoremap <C-e> <End>
+
+" Go to home and end using capitalized directions
+noremap H 0
+noremap L $
+noremap Y y$
+
 " for transparent probelm with konsole
 hi Normal  ctermfg=252 ctermbg=none
+
+" select all
+noremap <Leader>sa ggVG
 
 " for tmux to automatically set paste and nopaste mode at the time pasting (as
 " happens in VIM UI)
@@ -40,21 +70,98 @@ endfunction
 
 inoremap <special> <expr> <Esc>[200~ XTermPasteBegin()
 
+" Set JS/HTML tab width
+" autocmd FileType javascript,html,css setlocal expandtab tabstop=2 shiftwidth=2 softtabstop=2
+
+
 " BEGIN plugins specific config "
 
 " JS syntax config
 let g:used_javascript_libs = 'jquery,angularjs,underscore,backbone'
 
 " Syntastic config
+" show list of errors and warnings on the current file
+nmap <leader>e :Errors<CR>
+" turn to next or previous errors, after open errors list
+nmap <leader>n :lnext<CR>
+nmap <leader>p :lprevious<CR>
 
-" set statusline+=%#warningmsg#
+set statusline+=%#warningmsg#
 set statusline+=%{SyntasticStatuslineFlag()}
 set statusline+=%*
 
-let g:syntastic_always_populate_loc_list = 1
+" let g:syntastic_always_populate_loc_list = 1
 let g:syntastic_auto_loc_list = 1
 let g:syntastic_check_on_open = 1
 let g:syntastic_check_on_wq = 0
+let g:syntastic_quiet_messages = { "level": [] }
+let g:syntastic_aggregate_errors = 1
+let g:syntastic_error_symbol = '✗'
+let g:syntastic_warning_symbol = '⚠'
+let g:syntastic_style_error_symbol = '✗'
+let g:syntastic_style_warning_symbol = '⚠'
+let g:syntastic_loc_list_height=5
+
+let g:syntastic_javascript_checkers = ['eslint']
+
+" YouCompleteMe
+let g:ycm_autoclose_preview_window_after_completion = 1
+"let g:ycm_complete_in_strings = 1
+let g:ycm_complete_in_comments = 1
+let g:ycm_key_list_select_completion = ['<Tab>', '<C-j>', '<Down>']
+let g:ycm_key_list_previous_completion = ['<C-k>', '<Up>']
+let g:ycm_semantic_triggers =  {
+    \ 'c' : ['->', '.'],
+    \ 'objc' : ['->', '.'],
+    \ 'ocaml' : ['.', '#'],
+    \ 'cpp,objcpp' : ['->', '.', '::'],
+    \ 'perl' : ['->'],
+    \ 'php' : ['->', '::', '(', 'use ', 'namespace ', '\'],
+    \ 'cs,java,typescript,d,python,perl6,scala,vb,elixir,go' : ['.', 're!(?=[a-zA-Z]{3,4})'],
+    \ 'html': ['<', '"', '</', ' '],
+    \ 'vim' : ['re![_a-za-z]+[_\w]*\.'],
+    \ 'ruby' : ['.', '::'],
+    \ 'lua' : ['.', ':'],
+    \ 'erlang' : [':'],
+    \ 'haskell' : ['.', 're!.'],
+    \ 'scss,css': [ 're!^\s{2,4}', 're!:\s+' ],
+    \ 'javascript': ['.', 're!(?=[a-zA-Z]{3,4})'],
+    \ 'tagbar' : 1,
+    \ 'qf' : 1,
+    \ 'notes' : 1,
+    \ 'markdown' : 1,
+    \ 'unite' : 1,
+    \ 'text' : 1,
+    \ 'vimwiki' : 1,
+    \ 'gitcommit' : 1,
+\}
+
+let tern_show_signature_in_pum = 1
+let tern_show_argument_hints = 'on_hold'
+autocmd FileType javascript nnoremap <leader>d :TernDef<CR>
+autocmd FileType javascript setlocal omnifunc=tern#Complete
+
+" ctrlsf: grep search
+vmap <Leader>s <Plug>CtrlSFVwordExec
+
+" vim-fuzzysearch
+nnoremap <leader><leader>/ :FuzzySearch<cr>
+
+" vim-easymotion
+map <space> <Plug>(easymotion-s2)
+
+" vim-autoformat
+"require: npm install -g js-beautify
+autocmd FileType javascript,json,html,css,scss noremap <buffer>  <leader><leader>f :Autoformat<cr>
+
+" vim-bbye
+nnoremap qq :Bdelete<cr>
+
+" BufOnly.vim
+nnoremap <silent> qo :BufOnly<CR>
+
+" vim-trailing-whitespace
+map <leader><space> :FixWhitespace<cr>
 
 " END "
 
@@ -185,10 +292,10 @@ UnBundle 'mbbill/undotree'
 UnBundle 'Shougo/neocomplcache'
 
 " neo-snippet plugin contains neocomplcache snippets source
-"UnBundle 'Shougo/neosnippet'
+UnBundle 'Shougo/neosnippet'
 
 " The standard snippets repository for neosnippet
-"UnBundle 'Shougo/neosnippet-snippets'
+UnBundle 'Shougo/neosnippet-snippets'
 
 " vim-snipmate default snippets
 UnBundle 'honza/vim-snippets'
@@ -196,14 +303,14 @@ UnBundle 'honza/vim-snippets'
 " PHP Integration environment for Vim
 UnBundle 'spf13/PIV'
 
-" vim plugin for inserting "use" statements automatically
-"UnBundle 'arnaud-lb/vim-php-namespace'
+" vim plugin for inserting use statements automatically
+UnBundle 'arnaud-lb/vim-php-namespace'
 
 " Twig syntax highlighting, snipMate, etc. - twig php templates
-"UnBundle 'beyondwords/vim-twig'
+UnBundle 'beyondwords/vim-twig'
 
 " Vim python-mode. PyLint, Rope, Pydoc, breakpoints from box.
-"UnBundle 'klen/python-mode'
+UnBundle 'klen/python-mode'
 
 " A set of menus/shortcuts to work with Python files
 "UnBundle 'yssource/python.vim'
@@ -221,13 +328,13 @@ UnBundle 'spf13/PIV'
 "UnBundle 'groenewege/vim-less'
 
 " Vastly improved Javascript indentation and syntax support in Vim
-"UnBundle 'pangloss/vim-javascript'
+UnBundle 'pangloss/vim-javascript'
 
 " highlighting and indenting JST/EJS syntax
-UnBundle 'briancollins/vim-jst'
+"UnBundle 'briancollins/vim-jst'
 
 " CoffeeScript support for vim
-UnBundle 'kchmck/vim-coffee-script'
+"UnBundle 'kchmck/vim-coffee-script'
 
 " Automatically closes HTML tags once you finish typing them
 "UnBundle 'amirh/HTML-AutoCloseTag'

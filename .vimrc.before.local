@@ -1,3 +1,6 @@
+" Use Youcompleteme rather than Neocomplete
+let g:spf13_bundle_groups=['general', 'writing', 'programming', 'python', 'javascript', 'html', 'misc', 'youcompleteme']
+
 " Enable powerline symbols
 let g:airline_powerline_fonts = 1
 

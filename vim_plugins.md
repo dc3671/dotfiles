@@ -95,5 +95,5 @@ EasyMotion provides an interactive way to use motions in Vim.
 
 It quickly maps each possible jump destination to a key allowing very fast and straightforward movement.
 
-*QuickStart* EasyMotion is triggered using the normal movements, but prefixing them with <leader><leader>
+*QuickStart* EasyMotion is triggered using the normal movements, but prefixing them with <leader><leader>. eg: `,,w/,,b`
 
