@@ -1,27 +1,31 @@
-" save without Permission
-cmap w!! %!sudo tee > /dev/null %
 
-" no backups "
-set nobackup
-set nowritebackup
 
-set nospell
+
+"------------------------------------------------
+" display/navigate settings
+"------------------------------------------------
+
+" Vim colorscheme
+colorscheme molokai
+let g:airline_theme = 'zenburn'
 
 " Do not wrap long lines
 set wrap
+
+" no Highlight
+noremap <silent><leader>/ :nohls<CR>
+
+" no spell highlight
+set nospell
+
+" for transparent probelm with konsole
+hi Normal  ctermfg=252 ctermbg=none
 
 " Smart way to move between windows
 noremap <C-j> <C-W>j
 noremap <C-k> <C-W>k
 noremap <C-h> <C-W>h
 noremap <C-l> <C-W>l
-
-" Vim colorscheme
-colorscheme molokai
-let g:airline_theme = 'zenburn'
-
-" no Highlight
-noremap <silent><leader>/ :nohls<CR>
 
 " Use 'm/M' to move among buffers
 noremap m :bn<CR>
@@ -40,11 +44,20 @@ noremap H 0
 noremap L $
 noremap Y y$
 
-" for transparent probelm with konsole
-hi Normal  ctermfg=252 ctermbg=none
+
+"------------------------------------------------
+" edit settings
+"------------------------------------------------
 
 " select all
 noremap <Leader>sa ggVG
+
+" save without Permission
+cmap w!! %!sudo tee > /dev/null %
+
+" no backups "
+set nobackup
+set nowritebackup
 
 " for tmux to automatically set paste and nopaste mode at the time pasting (as
 " happens in VIM UI)
@@ -70,18 +83,22 @@ endfunction
 
 inoremap <special> <expr> <Esc>[200~ XTermPasteBegin()
 
-" Set JS/HTML tab width
+" set JS/HTML tab width
 " autocmd FileType javascript,html,css setlocal expandtab tabstop=2 shiftwidth=2 softtabstop=2
 
-
-" BEGIN plugins specific config "
+"------------------------------------------------
+" plugin specific settings
+"------------------------------------------------
 
 " JS syntax config
+
 let g:used_javascript_libs = 'jquery,angularjs,underscore,backbone'
 
 " Syntastic config
+
 " show list of errors and warnings on the current file
 nmap <leader>e :Errors<CR>
+
 " turn to next or previous errors, after open errors list
 nmap <leader>n :lnext<CR>
 nmap <leader>p :lprevious<CR>
@@ -90,21 +107,21 @@ set statusline+=%#warningmsg#
 set statusline+=%{SyntasticStatuslineFlag()}
 set statusline+=%*
 
-" let g:syntastic_always_populate_loc_list = 1
-let g:syntastic_auto_loc_list = 1
+"let g:syntastic_always_populate_loc_list = 1
+"let g:syntastic_auto_loc_list = 1
 let g:syntastic_check_on_open = 1
 let g:syntastic_check_on_wq = 0
-let g:syntastic_quiet_messages = { "level": [] }
 let g:syntastic_aggregate_errors = 1
-let g:syntastic_error_symbol = '✗'
-let g:syntastic_warning_symbol = '⚠'
-let g:syntastic_style_error_symbol = '✗'
-let g:syntastic_style_warning_symbol = '⚠'
+let g:syntastic_error_symbol = 'EE'
+let g:syntastic_warning_symbol = 'WW'
+"let g:syntastic_style_error_symbol = '✗'
+"let g:syntastic_style_warning_symbol = '⚠'
 let g:syntastic_loc_list_height=5
 
 let g:syntastic_javascript_checkers = ['eslint']
 
 " YouCompleteMe
+
 let g:ycm_autoclose_preview_window_after_completion = 1
 "let g:ycm_complete_in_strings = 1
 let g:ycm_complete_in_comments = 1
@@ -163,16 +180,22 @@ nnoremap <silent> qo :BufOnly<CR>
 " vim-trailing-whitespace
 map <leader><space> :FixWhitespace<cr>
 
-" END "
+" Indent guide line
+let g:indent_guides_auto_colors = 0
+let g:indent_guides_guide_size = 1
+"autocmd VimEnter,Colorscheme * :hi IndentGuidesOdd  guibg=#1f1f1f ctermbg=0
+"autocmd VimEnter,Colorscheme * :hi IndentGuidesEven guibg=#2f2f2f ctermbg=1
+hi IndentGuidesOdd guibg=#1f1f1f ctermbg=grey
+hi IndentGuidesEven guibg=#2f2f2f ctermbg=darkgrey
 
-" BEGIN Highlight current line "
 "set cursorline
 "hi CursorLine cterm=NONE ctermbg=lightyellow
 "hi CursorColumn cterm=NONE ctermbg=lightyellow
 "nnoremap c :set cursorline! cursorcolumn!
-" END "
 
-" BEGIN Get rid of unnecessary plugins "
+"------------------------------------------------
+" Get rid of unnecessary plugins "
+"------------------------------------------------
 
 " interpret a file by function and cache file automatically
 "UnBundle 'MarcWeber/vim-addon-mw-utils'

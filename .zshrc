@@ -113,7 +113,7 @@ alias mkdir='mkdir -p'
 alias npm='cnpm'
 
 
-alias fq='~/.config/autostart-scripts/xx-net.sh'
+alias fq='~/xx-net.sh'
 #alias understand='sudo /opt/scitools/bin/linux64/understand'[]
 #alias clearlkp='rm /tmp/init*sult;'
 alias -s html=vi

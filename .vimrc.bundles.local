@@ -32,3 +32,6 @@ Bundle 'vim-scripts/BufOnly.vim'
 
 " Auto format
 Bundle 'Chiel92/vim-autoformat'
+
+" inkpot theme
+Bundle 'ciaranm/inkpot'
