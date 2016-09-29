@@ -166,6 +166,9 @@ nnoremap <leader><leader>/ :FuzzySearch<cr>
 
 " vim-easymotion
 map <space> <Plug>(easymotion-s2)
+map  / <Plug>(easymotion-sn)
+omap / <Plug>(easymotion-tn)
+let g:EasyMotion_smartcase = 1
 
 " vim-autoformat
 "require: npm install -g js-beautify
@@ -231,7 +234,7 @@ hi IndentGuidesEven guibg=#2f2f2f ctermbg=darkgrey
 "UnBundle 'terryma/vim-multiple-cursors'
 
 " Vim session manager http://www.vim.org/scripts/script.php?script_id=2010
-"UnBundle 'vim-scripts/sessionman.vim'
+UnBundle 'vim-scripts/sessionman.vim'
 
 " extended % matching for HTML, LaTeX, and many other languages http://www.vim.org/scripts/script.php?script_id=39
 "UnBundle 'matchit.zip'
