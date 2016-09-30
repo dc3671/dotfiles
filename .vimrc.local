@@ -18,6 +18,9 @@ noremap <silent><leader>/ :nohls<CR>
 " no spell highlight
 set nospell
 
+" set foldmethod
+set foldmethod=indent
+
 " for transparent probelm with konsole
 hi Normal  ctermfg=252 ctermbg=none
 
@@ -191,6 +194,12 @@ let g:indent_guides_guide_size = 1
 hi IndentGuidesOdd guibg=#1f1f1f ctermbg=grey
 hi IndentGuidesEven guibg=#2f2f2f ctermbg=darkgrey
 
+" Multiple Cursors
+"let g:multi_cursor_next_key='<C-n>'
+"let g:multi_cursor_prev_key='<C-p>'
+let g:multi_cursor_skip_key='<C-l>'
+
+
 "set cursorline
 "hi CursorLine cterm=NONE ctermbg=lightyellow
 "hi CursorColumn cterm=NONE ctermbg=lightyellow
@@ -363,7 +372,7 @@ UnBundle 'pangloss/vim-javascript'
 "UnBundle 'kchmck/vim-coffee-script'
 
 " Automatically closes HTML tags once you finish typing them
-"UnBundle 'amirh/HTML-AutoCloseTag'
+UnBundle 'amirh/HTML-AutoCloseTag'
 
 " Add CSS3 syntax support to vim's built-in
 "UnBundle 'hail2u/vim-css3-syntax'

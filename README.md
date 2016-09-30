@@ -25,21 +25,24 @@ $ cd ~/.vim/bundle/YouCompleteMe/
 $ python install.py
 ```
 
-* For tmux:
+* For `ternjs/tern_for_vim` plugin of vim:
+
+```bash
+$ cd ~/.vim/bundle/tern_for_vim/
+$ npm install
+```
+
+* For tmux, then open tmux and type `<Leader>+shift+i` to install other plugins
 
 ```
 $ git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
 ```
 
-then open tmux and type `<Leader>+shift+i` to install other plugins
-
-* For zsh, to change local user's default shell:
+* For zsh, to change local user's default shell, then reopen terminal.
 
 ```
 $ chsh -s /bin/zsh
 ```
-
-then reopen terminal.
 
 ## Contact ##
 
