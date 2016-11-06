@@ -20,6 +20,8 @@ set nospell
 
 " set foldmethod
 set foldmethod=indent
+" default not folding
+set foldlevelstart=99
 
 " for transparent probelm with konsole
 hi Normal  ctermfg=252 ctermbg=none
