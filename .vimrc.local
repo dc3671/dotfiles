@@ -175,10 +175,6 @@ map  / <Plug>(easymotion-sn)
 omap / <Plug>(easymotion-tn)
 let g:EasyMotion_smartcase = 1
 
-" vim-autoformat
-"require: npm install -g js-beautify
-autocmd FileType javascript,json,html,css,scss noremap <buffer>  <leader><leader>f :Autoformat<cr>
-
 " vim-bbye
 nnoremap qq :Bdelete<cr>
 
@@ -206,6 +202,9 @@ let g:multi_cursor_skip_key='<C-l>'
 "hi CursorLine cterm=NONE ctermbg=lightyellow
 "hi CursorColumn cterm=NONE ctermbg=lightyellow
 "nnoremap c :set cursorline! cursorcolumn!
+
+" JS/CSS/HTML Beauty
+map <c-f> :call JsBeautify()<cr>
 
 "------------------------------------------------
 " Get rid of unnecessary plugins "

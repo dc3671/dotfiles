@@ -30,8 +30,8 @@ Bundle 'moll/vim-bbye'
 " delete other buffer
 Bundle 'vim-scripts/BufOnly.vim'
 
-" Auto format
-Bundle 'Chiel92/vim-autoformat'
-
 " inkpot theme
 Bundle 'ciaranm/inkpot'
+
+" JS/CSS/HTML beauty
+Bundle 'maksimr/vim-jsbeautify'
