@@ -60,6 +60,9 @@ noremap <Leader>sa ggVG
 " save without Permission
 cmap w!! %!sudo tee > /dev/null %
 
+" Change default filetype
+au BufNewFile,BufRead *.ejs set filetype=html
+
 " no backups "
 set nobackup
 set nowritebackup
@@ -203,8 +206,11 @@ let g:multi_cursor_skip_key='<C-l>'
 "hi CursorColumn cterm=NONE ctermbg=lightyellow
 "nnoremap c :set cursorline! cursorcolumn!
 
-" JS/CSS/HTML Beauty
-map <c-f> :call JsBeautify()<cr>
+" Autoformat
+noremap <c-f> :Autoformat<CR>
+let g:autoformat_autoindent = 0
+let g:autoformat_retab = 0
+let g:autoformat_remove_trailing_spaces = 0
 
 "------------------------------------------------
 " Get rid of unnecessary plugins "

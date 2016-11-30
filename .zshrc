@@ -63,6 +63,7 @@ export GCC_HOME="/usr/lib/gcc/x86_64-redhat-linux/4.9.2"
 export LKP_SRC="/home/dash/Project/lkp-tests"
 export TEXHOME="/usr/share/texmf-dist"
 export NPM_CONFIG_PREFIX="/home/dash/.npm-global"
+export JAVA_HOME="/usr/lib/jvm/java-8-openjdk-amd64"
 
 export LC_ALL="en_US.utf8"
 
@@ -73,6 +74,7 @@ export PATH="$PATH:$GCC_HOME/include/"
 export PATH="$PATH:$LKP_SRC/bin"
 export PATH="$TEXHOME:$PATH"
 export PATH="$NPM_CONFIG_PREFIX/bin:$PATH"
+export PATH="$JAVA_HOME:$JAVA_HOME/jre/bin/;$PATH"
 
 export GIT_SSL_NO_VERIFY=1
 export TERM="xterm-256color"
@@ -111,14 +113,15 @@ alias rm='rm -r'
 alias mkdir='mkdir -p'
 #alias tmux='tmux -2'
 alias npm='cnpm'
+alias sa="sudo apt-get install"
 
 
 alias fq='~/xx-net.sh'
 #alias understand='sudo /opt/scitools/bin/linux64/understand'[]
 #alias clearlkp='rm /tmp/init*sult;'
 alias -s html=vi
-alias -s rb=vi  
-alias -s py=vi     
+alias -s rb=vi
+alias -s py=vi
 alias -s js=vi
 alias -s c=vi
 alias -s java=vi

@@ -34,4 +34,7 @@ Bundle 'vim-scripts/BufOnly.vim'
 Bundle 'ciaranm/inkpot'
 
 " JS/CSS/HTML beauty
-Bundle 'maksimr/vim-jsbeautify'
+" Bundle 'maksimr/vim-jsbeautify'
+
+" Handle all files
+Bundle 'Chiel92/vim-autoformat'
