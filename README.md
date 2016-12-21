@@ -2,9 +2,9 @@
 
 My dotfiles for:
 
-* vim(with spf13-vim)
+* vim(with [spf13-vim](https://github.com/spf13/spf13-vim))
 * tmux
-* zsh(with oh-my-zsh)
+* zsh(with [oh-my-zsh](https://github.com/robbyrussell/oh-my-zsh))
 
 ## Install ##
 
@@ -32,7 +32,7 @@ $ cd ~/.vim/bundle/tern_for_vim/
 $ npm install
 ```
 
-* For tmux, then open tmux and type `<Leader>+shift+i` to install other plugins
+* For tmux, then open tmux and type `<Leader>+shift+i`(my default `<C-x>+I`) to install other plugins
 
 ```
 $ git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
