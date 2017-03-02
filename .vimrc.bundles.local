@@ -38,3 +38,8 @@ Bundle 'ciaranm/inkpot'
 
 " Handle all files
 Bundle 'Chiel92/vim-autoformat'
+
+" Tmuxline theme
+Bundle 'edkolev/tmuxline.vim'
+" Fix airline switch buffer bug
+UnBundle 'vim-scripts/restore_view.vim'

@@ -7,7 +7,9 @@
 
 " Vim colorscheme
 colorscheme molokai
-let g:airline_theme = 'zenburn'
+set background=dark
+let g:airline_theme = 'luna'
+let g:airline#extensions#tabline#enabled = 1
 
 " Do not wrap long lines
 set wrap
@@ -43,6 +45,11 @@ nnoremap t <C-^>
 inoremap <C-o> <Esc>o
 inoremap <C-a> <Home>
 inoremap <C-e> <End>
+inoremap <C-h> <Left>
+inoremap <C-j> <Down>
+inoremap <C-k> <Up>
+inoremap <C-l> <Right>
+inoremap <C-d> <DELETE>
 
 " Go to home and end using capitalized directions
 noremap H 0
@@ -188,12 +195,13 @@ nnoremap <silent> qo :BufOnly<CR>
 map <leader><space> :FixWhitespace<cr>
 
 " Indent guide line
-let g:indent_guides_auto_colors = 0
+let g:indent_guides_auto_colors = 1
 let g:indent_guides_guide_size = 1
+set ts=4 sw=4 et
 "autocmd VimEnter,Colorscheme * :hi IndentGuidesOdd  guibg=#1f1f1f ctermbg=0
 "autocmd VimEnter,Colorscheme * :hi IndentGuidesEven guibg=#2f2f2f ctermbg=1
-hi IndentGuidesOdd guibg=#1f1f1f ctermbg=grey
-hi IndentGuidesEven guibg=#2f2f2f ctermbg=darkgrey
+"hi IndentGuidesOdd guibg=#1f1f1f ctermbg=grey
+"hi IndentGuidesEven guibg=#2f2f2f ctermbg=darkgrey
 
 " Multiple Cursors
 "let g:multi_cursor_next_key='<C-n>'

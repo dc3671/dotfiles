@@ -6,15 +6,19 @@ export ZSH=/home/dash/.oh-my-zsh
 # Optionally, if you set this to "random", it'll load a random theme each
 # time that oh-my-zsh is loaded.
 
-# ZSH_THEME="bureau"
-# ZSH_THEME="amuse"
-# ZSH_THEME="avit"
-# ZSH_THEME="bira"
-# ZSH_THEME="sporty_256"
-# ZSH_THEME="kardan"
-# ZSH_THEME="powerline"
-# ZSH_THEME="agnoster"
-ZSH_THEME="afowler"
+#ZSH_THEME="bureau"
+#ZSH_THEME="amuse"
+#ZSH_THEME="avit"
+#ZSH_THEME="bira"
+#ZSH_THEME="sporty_256"
+#ZSH_THEME="kardan"
+#ZSH_THEME="powerline"
+#ZSH_THEME="agnoster"
+#ZSH_THEME="afowler"
+#ZSH_THEME="aussiegeek"
+#ZSH_THEME="frisk"
+#ZSH_THEME="mortalscumbag"
+ZSH_THEME="ys"
 
 # Uncomment the following line to use case-sensitive completion.
 # CASE_SENSITIVE="true"
@@ -54,7 +58,7 @@ ZSH_THEME="afowler"
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(git history-substring-search)
+plugins=(git history-substring-search tmux)
 
 # User configuration
 
@@ -63,7 +67,7 @@ export GCC_HOME="/usr/lib/gcc/x86_64-redhat-linux/4.9.2"
 export LKP_SRC="/home/dash/Project/lkp-tests"
 export TEXHOME="/usr/share/texmf-dist"
 export NPM_CONFIG_PREFIX="/home/dash/.npm-global"
-export JAVA_HOME="/usr/lib/jvm/java-8-openjdk-amd64"
+export JAVA_HOME="/usr/lib/jvm/java-8-openjdk"
 
 export LC_ALL="en_US.utf8"
 
@@ -74,10 +78,13 @@ export PATH="$PATH:$GCC_HOME/include/"
 export PATH="$PATH:$LKP_SRC/bin"
 export PATH="$TEXHOME:$PATH"
 export PATH="$NPM_CONFIG_PREFIX/bin:$PATH"
-export PATH="$JAVA_HOME:$JAVA_HOME/jre/bin/;$PATH"
+export PATH="$JAVA_HOME/bin:$PATH"
 
 export GIT_SSL_NO_VERIFY=1
 export TERM="xterm-256color"
+export GTK_IM_MODULE=fcitx
+export QT_IM_MODULE=fcitx
+export XMODIFIERS="@im=fcitx"
 
 source $ZSH/oh-my-zsh.sh
 
@@ -113,7 +120,7 @@ alias rm='rm -r'
 alias mkdir='mkdir -p'
 #alias tmux='tmux -2'
 alias npm='cnpm'
-alias sa="sudo apt-get install"
+alias sa="sudo apt-get"
 
 
 alias fq='~/xx-net.sh'
