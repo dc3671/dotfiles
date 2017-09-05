@@ -43,3 +43,6 @@ Bundle 'Chiel92/vim-autoformat'
 Bundle 'edkolev/tmuxline.vim'
 " Fix airline switch buffer bug
 UnBundle 'vim-scripts/restore_view.vim'
+
+" ctags related
+Bundle 'szw/vim-tags'
