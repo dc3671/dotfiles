@@ -171,16 +171,23 @@ autocmd FileType javascript nnoremap <leader>d :TernDef<CR>
 autocmd FileType javascript setlocal omnifunc=tern#Complete
 
 " ctrlsf: grep search
-vmap <Leader>s <Plug>CtrlSFVwordExec
+nmap     <C-F>f <Plug>CtrlSFPrompt
+vmap     <C-F>f <Plug>CtrlSFVwordPath
+vmap     <C-F>F <Plug>CtrlSFVwordExec
+nmap     <C-F>n <Plug>CtrlSFCwordPath
+nmap     <C-F>p <Plug>CtrlSFPwordPath
+nnoremap <C-F>o :CtrlSFOpen<CR>
+nnoremap <C-F>t :CtrlSFToggle<CR>
+inoremap <C-F>t <Esc>:CtrlSFToggle<CR>
 
 " vim-fuzzysearch
-nnoremap <leader><leader>/ :FuzzySearch<cr>
+"nnoremap <leader><leader>/ :FuzzySearch<cr>
 
 " vim-easymotion
-map <space> <Plug>(easymotion-s2)
-map  / <Plug>(easymotion-sn)
-omap / <Plug>(easymotion-tn)
-let g:EasyMotion_smartcase = 1
+"map <space> <Plug>(easymotion-s2)
+"map  / <Plug>(easymotion-sn)
+"omap / <Plug>(easymotion-tn)
+"let g:EasyMotion_smartcase = 1
 
 " vim-bbye
 nnoremap qq :Bdelete<cr>
@@ -212,7 +219,8 @@ let g:multi_cursor_skip_key='<C-l>'
 "nnoremap c :set cursorline! cursorcolumn!
 
 " Autoformat
-noremap <c-f> :Autoformat<CR>
+noremap <leader><leader>f :Autoformat<CR>
+"noremap <c-f> :Autoformat<CR>
 let g:autoformat_autoindent = 0
 let g:autoformat_retab = 0
 let g:autoformat_remove_trailing_spaces = 0
@@ -271,7 +279,7 @@ UnBundle 'vim-scripts/sessionman.vim'
 "UnBundle 'bling/vim-bufferline'
 
 " Vim motions on speed! http://www.vim.org/scripts/script.php?script_id=3526
-"UnBundle 'Lokaltog/vim-easymotion'
+UnBundle 'Lokaltog/vim-easymotion'
 
 " NERDTree and tabs together in Vim, painlessly
 "UnBundle 'jistr/vim-nerdtree-tabs'
