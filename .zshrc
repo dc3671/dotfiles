@@ -28,30 +28,27 @@ plugins=(git history-substring-search tmux virtualenvwrapper)
 
 # User configuration
 
+export FONTS_HOME="/usr/share/fonts"
 export PYTHON_HOME="/usr/lib/python2.7:/usr/lib64/python2.7:/usr/include/python2.7"
 export GCC_HOME="/usr/lib/gcc/x86_64-redhat-linux/4.9.2"
-export LKP_SRC="/home/dash/Project/lkp-tests"
-export TEXHOME="/usr/share/texmf-dist"
 export NPM_CONFIG_PREFIX="/home/dash/.npm-global"
 export JAVA_HOME="/usr/lib/jvm/java-8-openjdk"
 
-export LC_ALL="en_US.utf8"
-export LANG=en_US.UTF-8
+export LC_ALL="en_US.UTF-8"
+export LANG="en_US.UTF-8"
 
 export PATH="/bin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin:~/.local/bin"
-export PATH="$PATH:/usr/share/fonts"
+export PATH="$PATH:$FONTS_HOME"
 export PATH="$PATH:$PYTHON_HOME"
 export PATH="$PATH:$GCC_HOME/include/"
-export PATH="$PATH:$LKP_SRC/bin"
-export PATH="$TEXHOME:$PATH"
-export PATH="$NPM_CONFIG_PREFIX/bin:$PATH"
-export PATH="$JAVA_HOME/bin:$PATH"
+export PATH="$PATH:$NPM_CONFIG_PREFIX/bin"
+export PATH="$PATH:$JAVA_HOME/bin"
 
-export GIT_SSL_NO_VERIFY=1
 export TERM="xterm-256color"
 export GTK_IM_MODULE=fcitx
 export QT_IM_MODULE=fcitx
 export XMODIFIERS="@im=fcitx"
+export GIT_SSL_NO_VERIFY=1
 export EDITOR='vim'
 
 source $ZSH/oh-my-zsh.sh
