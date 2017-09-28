@@ -21,3 +21,7 @@ ln -s $PWD/.eslintrc.json ~/.eslintrc.json
 # ternjs
 mv ~/.tern-config ~/.tern-config.bak >/dev/null 2>&1
 ln -s $PWD/.tern-config ~/.tern-config
+
+# pylint
+mv ~/.pylintrc ~/.pylintrc.bak >/dev/null 2>&1
+ln -s $PWD/.pylintrc ~/.pylintrc
