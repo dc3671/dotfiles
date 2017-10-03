@@ -1,9 +1,13 @@
-" Yet Another JS Syntax & lib
-Bundle 'othree/yajs.vim'
-Bundle 'othree/javascript-libraries-syntax.vim'
-
 " Syntax for vue
+Bundle 'othree/html5.vim'
 Bundle 'posva/vim-vue'
+Bundle 'sekel/vim-vue-syntastic'
+Bundle 'ap/vim-css-color'
+
+" For beauty
+Bundle 'noah/vim256-color'
+Bundle 'junegunn/vim-emoji'
+Bundle 'joshdick/onedark.vim'
 
 " Grep search like sublime
 Bundle 'dyng/ctrlsf.vim'
@@ -22,7 +26,7 @@ Bundle 'Valloric/MatchTagAlways'
 Bundle 'alvan/vim-closetag'
 
 " Ternjs for completion
-Bundle 'marijnh/tern_for_vim'
+Bundle 'ternjs/tern_for_vim'
 
 " delete current buffer
 Bundle 'moll/vim-bbye'
@@ -42,7 +46,7 @@ Bundle 'Chiel92/vim-autoformat'
 " Tmuxline theme
 Bundle 'edkolev/tmuxline.vim'
 " Fix airline switch buffer bug
-UnBundle 'vim-scripts/restore_view.vim'
+"UnBundle 'vim-scripts/restore_view.vim'
 
 " ctags related
 Bundle 'szw/vim-tags'

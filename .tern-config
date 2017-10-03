@@ -1,7 +1,8 @@
 {
     "libs": [
         "browser",
-        "jquery"
+        "jquery",
+        "ecma6"
     ],
     "loadEagerly": [
         "src/**/*.js"
@@ -16,8 +17,8 @@
         },
         "node": {},
         "complete_strings": {},
-        "angular": {},
         "modules": {},
-        "es_modules": {}
+        "es_modules": {},
+        "webpack": {}
     }
 }

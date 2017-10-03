@@ -3,7 +3,8 @@
 "------------------------------------------------
 
 " Vim colorscheme
-colorscheme molokai
+colorscheme onedark
+"set guifont=Roboto\ Mono\ for\ Powerline:h18
 set background=dark
 let g:airline_theme = 'luna'
 let g:airline#extensions#tabline#enabled = 1
@@ -96,7 +97,10 @@ endfunction
 inoremap <special> <expr> <Esc>[200~ XTermPasteBegin()
 
 " set JS/HTML tab width
-" autocmd FileType javascript,html,css setlocal expandtab tabstop=2 shiftwidth=2 softtabstop=2
+ autocmd FileType vue setlocal expandtab tabstop=2 shiftwidth=2 softtabstop=2
+ autocmd FileType javascript setlocal expandtab tabstop=2 shiftwidth=2 softtabstop=2
+ autocmd FileType html setlocal expandtab tabstop=2 shiftwidth=2 softtabstop=2
+ autocmd FileType css setlocal expandtab tabstop=2 shiftwidth=2 softtabstop=2
 
 "------------------------------------------------
 " plugin specific settings
@@ -104,7 +108,7 @@ inoremap <special> <expr> <Esc>[200~ XTermPasteBegin()
 
 " JS syntax config
 
-let g:used_javascript_libs = 'jquery,angularjs,underscore,backbone'
+"let g:used_javascript_libs = 'jquery,angularjs,underscore,backbone'
 
 " Syntastic config
 
@@ -131,6 +135,25 @@ let g:syntastic_warning_symbol = 'WW'
 let g:syntastic_loc_list_height=5
 
 let g:syntastic_javascript_checkers = ['eslint']
+let g:syntastic_vue_checkers = ['eslint']
+let local_eslint = finddir('node_modules', '.;') . '/.bin/eslint'
+if matchstr(local_eslint, "^\/\\w") == ''
+    let local_eslint = getcwd() . "/" . local_eslint
+endif
+if executable(local_eslint)
+    let g:syntastic_javascript_eslint_exec = local_eslint
+    let g:syntastic_vue_eslint_exec = local_eslint
+endif
+
+let g:syntastic_scss_checkers      = [ 'sass_lint' ]
+let g:syntastic_sass_sass_args     = '-I ' . getcwd()
+
+let syntastic_mode_map = { 'passive_filetypes': ['html'] }
+
+" posma/vim-vue
+autocmd BufRead,BufNewFile *.vue setlocal filetype=vue.html.javascript.css
+autocmd FileType vue syntax sync fromstart
+"let g:vue_disable_pre_processors=1
 
 " YouCompleteMe
 
@@ -164,7 +187,18 @@ let g:ycm_semantic_triggers =  {
     \ 'vimwiki' : 1,
     \ 'gitcommit' : 1,
 \}
+let g:ycm_filetype_blacklist = {
+    \ 'json' : 1,
+    \ 'out' : 1,
+    \ 'notes' : 1,
+    \ 'markdown' : 1,
+    \ 'unite' : 1,
+    \ 'text' : 1,
+    \ 'vimwiki' : 1,
+    \ 'gitcommit' : 1,
+  \}
 
+" tern js
 let tern_show_signature_in_pum = 1
 let tern_show_argument_hints = 'on_hold'
 autocmd FileType javascript nnoremap <leader>d :TernDef<CR>
@@ -179,6 +213,12 @@ nmap     <C-F>p <Plug>CtrlSFPwordPath
 nnoremap <C-F>o :CtrlSFOpen<CR>
 nnoremap <C-F>t :CtrlSFToggle<CR>
 inoremap <C-F>t <Esc>:CtrlSFToggle<CR>
+
+" git emojis for got gutter w/ vim-emoji
+let g:gitgutter_sign_added = emoji#for('small_blue_diamond')
+let g:gitgutter_sign_modified = emoji#for('small_orange_diamond')
+let g:gitgutter_sign_removed = emoji#for('small_red_triangle')
+let g:gitgutter_sign_modified_removed = emoji#for('collision')
 
 " vim-fuzzysearch
 "nnoremap <leader><leader>/ :FuzzySearch<cr>
@@ -199,24 +239,17 @@ nnoremap <silent> qo :BufOnly<CR>
 map <leader><space> :FixWhitespace<cr>
 
 " Indent guide line
-let g:indent_guides_auto_colors = 1
-let g:indent_guides_guide_size = 1
-set ts=4 sw=4 et
-"autocmd VimEnter,Colorscheme * :hi IndentGuidesOdd  guibg=#1f1f1f ctermbg=0
-"autocmd VimEnter,Colorscheme * :hi IndentGuidesEven guibg=#2f2f2f ctermbg=1
-"hi IndentGuidesOdd guibg=#1f1f1f ctermbg=grey
-"hi IndentGuidesEven guibg=#2f2f2f ctermbg=darkgrey
+let g:indent_guides_auto_colors = 0
+let g:indent_guides_guide_size = 2
+let g:indent_guides_start_level = 1
+set ts=2 sw=2 et
+autocmd VimEnter,Colorscheme * :hi IndentGuidesOdd  guibg=#353535 ctermbg=240
+autocmd VimEnter,Colorscheme * :hi IndentGuidesEven guibg=#3f3f3f ctermbg=black
 
 " Multiple Cursors
 "let g:multi_cursor_next_key='<C-n>'
 "let g:multi_cursor_prev_key='<C-p>'
 let g:multi_cursor_skip_key='<C-l>'
-
-
-"set cursorline
-"hi CursorLine cterm=NONE ctermbg=lightyellow
-"hi CursorColumn cterm=NONE ctermbg=lightyellow
-"nnoremap c :set cursorline! cursorcolumn!
 
 " Autoformat
 noremap <leader><leader>f :Autoformat<CR>
@@ -224,6 +257,7 @@ noremap <leader><leader>f :Autoformat<CR>
 let g:autoformat_autoindent = 0
 let g:autoformat_retab = 0
 let g:autoformat_remove_trailing_spaces = 0
+"let g:autoformat_verbosemode = 1
 
 " ctrlp/ctags related
 let g:vim_tags_use_language_field = 1
@@ -276,7 +310,7 @@ UnBundle 'vim-scripts/sessionman.vim'
 "UnBundle 'bling/vim-airline'
 
 " super simple vim plugin to show the list of buffers in the command bar
-"UnBundle 'bling/vim-bufferline'
+UnBundle 'bling/vim-bufferline'
 
 " Vim motions on speed! http://www.vim.org/scripts/script.php?script_id=3526
 UnBundle 'Lokaltog/vim-easymotion'
@@ -384,10 +418,10 @@ UnBundle 'klen/python-mode'
 "UnBundle 'elzr/vim-json'
 
 " vim syntax for LESS (dynamic CSS)
-"UnBundle 'groenewege/vim-less'
+UnBundle 'groenewege/vim-less'
 
 " Vastly improved Javascript indentation and syntax support in Vim
-UnBundle 'pangloss/vim-javascript'
+"UnBundle 'pangloss/vim-javascript'
 
 " highlighting and indenting JST/EJS syntax
 "UnBundle 'briancollins/vim-jst'
@@ -402,7 +436,7 @@ UnBundle 'amirh/HTML-AutoCloseTag'
 "UnBundle 'hail2u/vim-css3-syntax'
 
 " css/less/sass/html color preview for vim
-"UnBundle 'gorodinskiy/vim-coloresque'
+UnBundle 'gorodinskiy/vim-coloresque'
 
 " Vim runtime files for Haml, Sass, and SCSS
 UnBundle 'tpope/vim-haml'

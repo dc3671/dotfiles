@@ -15,8 +15,8 @@ mv ~/.zshrc ~/.zshrc.bak >/dev/null 2>&1
 ln -s $PWD/.zshrc ~/.zshrc
 
 # eslint
-mv ~/.eslintrc.json ~/.eslintrc.json.bak >/dev/null 2>&1
-ln -s $PWD/.eslintrc.json ~/.eslintrc.json
+mv ~/.eslintrc.js ~/.eslintrc.js.bak >/dev/null 2>&1
+ln -s $PWD/.eslintrc.js ~/.eslintrc.js
 
 # ternjs
 mv ~/.tern-config ~/.tern-config.bak >/dev/null 2>&1
