@@ -68,7 +68,7 @@ alias cp='cp -r'
 alias rm='rm -r'
 alias mkdir='mkdir -p'
 #alias tmux='tmux -2'
-alias npm='cnpm'
+#alias npm='cnpm'
 alias sa="sudo apt-get"
 alias fq='~/xx-net.sh'
 

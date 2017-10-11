@@ -97,10 +97,10 @@ endfunction
 inoremap <special> <expr> <Esc>[200~ XTermPasteBegin()
 
 " set JS/HTML tab width
- autocmd FileType vue setlocal expandtab tabstop=2 shiftwidth=2 softtabstop=2
- autocmd FileType javascript setlocal expandtab tabstop=2 shiftwidth=2 softtabstop=2
- autocmd FileType html setlocal expandtab tabstop=2 shiftwidth=2 softtabstop=2
- autocmd FileType css setlocal expandtab tabstop=2 shiftwidth=2 softtabstop=2
+ autocmd FileType vue set tabstop=2|set shiftwidth=2|set softtabstop=2|set expandtab
+ autocmd FileType javascript set tabstop=2|set shiftwidth=2|set softtabstop=2|set expandtab
+ autocmd FileType html set tabstop=2|set shiftwidth=2|set softtabstop=2|set expandtab
+ autocmd FileType css set tabstop=2|set shiftwidth=2|set softtabstop=2|set expandtab
 
 "------------------------------------------------
 " plugin specific settings
@@ -148,7 +148,7 @@ endif
 let g:syntastic_scss_checkers      = [ 'sass_lint' ]
 let g:syntastic_sass_sass_args     = '-I ' . getcwd()
 
-let syntastic_mode_map = { 'passive_filetypes': ['html'] }
+let syntastic_mode_map = { 'passive_filetypes': ['html', 'javascript'] }
 
 " posma/vim-vue
 autocmd BufRead,BufNewFile *.vue setlocal filetype=vue.html.javascript.css
@@ -257,10 +257,13 @@ noremap <leader><leader>f :Autoformat<CR>
 let g:autoformat_autoindent = 0
 let g:autoformat_retab = 0
 let g:autoformat_remove_trailing_spaces = 0
+"let g:formatdef_my_eslint = '"eslint --fix "'
+"let g:formatters_javascript = ['my_eslint']
 "let g:autoformat_verbosemode = 1
 
 " ctrlp/ctags related
 let g:vim_tags_use_language_field = 1
+let g:vim_tags_directories = [".git", ".hg", ".svn", ".bzr", "_darcs", "CVS", 'node_modules']
 let g:ctrlp_cmd = 'CtrlPTag'
 
 "------------------------------------------------

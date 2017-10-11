@@ -5,7 +5,7 @@ Bundle 'sekel/vim-vue-syntastic'
 Bundle 'ap/vim-css-color'
 
 " For beauty
-Bundle 'noah/vim256-color'
+"Bundle 'noah/vim256-color'
 Bundle 'junegunn/vim-emoji'
 Bundle 'joshdick/onedark.vim'
 
@@ -50,3 +50,6 @@ Bundle 'edkolev/tmuxline.vim'
 
 " ctags related
 Bundle 'szw/vim-tags'
+
+" editorconfig
+Bundle 'editorconfig/editorconfig-vim'
