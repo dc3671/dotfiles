@@ -8,41 +8,49 @@ My dotfiles for:
 
 ## Install ##
 
-* Make sure `vim`&`spf13-vim`, `tmux`, `zsh`&`oh-my-zsh` have been installed.
-
-* Run `install.sh` to link the config file to `$HOME` directory.
-
-* For vim:
+* Make sure `vim`, `tmux`, `zsh`&`oh-my-zsh`, `node`, `python` have been installed.
 
 ```bash
-$ vim +BundleInstall +BundleClean +q
+# install oh-my-zsh
+sh -c "$(wget https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh -O -)"
+# change to /bin/zsh
+chsh -s /bin/zsh
 ```
 
-* For `YouCompleteMe` plugin of vim:
+* Link config files to `$HOME` directory.
 
 ```bash
-$ cd ~/.vim/bundle/YouCompleteMe/
-$ python install.py
+git clone https://github.com/dc3671/dotfiles.git
+cd dotfiles
+./link_config.sh
 ```
 
-* For `ternjs/tern_for_vim` plugin of vim:
+* Install required plugins for vim:
 
 ```bash
-$ cd ~/.vim/bundle/tern_for_vim/
-$ npm install
+vim +BundleInstall +BundleClean +q
 ```
 
-* For tmux, then open tmux and type `<Leader>+shift+i`(my default `<C-x>+I`) to install other plugins
+* Compile `YouCompleteMe` plugin:
+
+```bash
+cd ~/.vim/bundle/YouCompleteMe/
+python install.py
+```
+
+* Compile `ternjs/tern_for_vim` plugin:
+
+```bash
+cd ~/.vim/bundle/tern_for_vim/
+npm install
+```
+
+* [Optional] Install plugin manager for tmux, then open tmux and press `<C-x>+Shift+i`
 
 ```
-$ git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
+git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
 ```
 
-* For zsh, to change local user's default shell, then reopen terminal.
-
-```
-$ chsh -s /bin/zsh
-```
 
 ## Contact ##
 

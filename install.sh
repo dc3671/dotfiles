@@ -1,10 +1,12 @@
 #!/bin/bash
 
 # vim
-mv ~/.vimrc.local ~/.vimrc.local.bak > /dev/null 2>&1
-ln -s $PWD/.vimrc.local ~/.vimrc.local
-ln -s $PWD/.vimrc.before.local ~/.vimrc.before.local
-ln -s $PWD/.vimrc.bundles.local ~/.vimrc.bundles.local
+mv ~/.vimrc ~/.vimrc.bak > /dev/null 2>&1
+mv ~/.vimrc.before ~/.vimrc.before.bak > /dev/null 2>&1
+mv ~/.vimrc.bundles ~/.vimrc.bundles.bak > /dev/null 2>&1
+ln -s $PWD/.vimrc ~/.vimrc
+ln -s $PWD/.vimrc.before ~/.vimrc.before
+ln -s $PWD/.vimrc.bundles ~/.vimrc.bundles
 
 # tmux
 mv ~/.tmux.conf ~/.tmux.conf.bak >/dev/null 2>&1
