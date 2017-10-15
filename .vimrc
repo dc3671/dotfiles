@@ -68,6 +68,7 @@
         let g:syntastic_loc_list_height=5
         let g:syntastic_javascript_checkers = ['eslint']
         let g:syntastic_vue_checkers = ['eslint']
+        let g:vue_disable_pre_processors=1
         let local_eslint = finddir('node_modules', '.;') . '/.bin/eslint'
         if matchstr(local_eslint, "^\/\\w") == ''
             let local_eslint = getcwd() . "/" . local_eslint
@@ -183,9 +184,6 @@
         set statusline+=\ [%{&ff}/%Y]            " Filetype
         set statusline+=\ [%{getcwd()}]          " Current dir
         set statusline+=%=%-14.(%l,%c%V%)\ %p%%  " Right aligned file nav info
-        set statusline+=%#warningmsg#
-        set statusline+=%{SyntasticStatuslineFlag()}
-        set statusline+=%*
     endif
 
     set backspace=indent,eol,start  " Backspace for dummies
@@ -233,14 +231,10 @@
     autocmd FileType c,cpp,java,go,php,javascript,puppet,python,rust,twig,xml,yml,perl,sql autocmd BufWritePre <buffer> if !exists('g:spf13_keep_trailing_whitespace') | call StripTrailingWhitespace() | endif
     "autocmd FileType go autocmd BufWritePre <buffer> Fmt
     autocmd BufNewFile,BufRead *.html.twig set filetype=html.twig
-    autocmd BufRead,BufNewFile *.vue setlocal filetype=vue.html.javascript.css
+    "autocmd BufRead,BufNewFile *.vue setlocal filetype=vue.html.javascript.css
     autocmd BufNewFile,BufRead *.ejs set filetype=html
-    "autocmd FileType vue set tabstop=2|set shiftwidth=2|set softtabstop=2|set expandtab
-    "autocmd FileType javascript set tabstop=2|set shiftwidth=2|set softtabstop=2|set expandtab
-    "autocmd FileType html set tabstop=2|set shiftwidth=2|set softtabstop=2|set expandtab
-    "autocmd FileType css set tabstop=2|set shiftwidth=2|set softtabstop=2|set expandtab
     autocmd FileType vue,javascript,html,css setlocal expandtab shiftwidth=2 softtabstop=2
-    autocmd FileType vue syntax sync fromstart
+    "autocmd FileType vue syntax sync fromstart
     autocmd FileType haskell,puppet,ruby,yml setlocal expandtab shiftwidth=2 softtabstop=2
     autocmd BufNewFile,BufRead *.coffee set filetype=coffee
     " Workaround vim-commentary for Haskell
@@ -268,8 +262,8 @@
     " The default mappings for editing and applying the spf13 configuration
     " are <leader>ev and <leader>sv respectively. Change them to your preference
     " by adding the following to your .vimrc.before.local file:
-    "   let g:spf13_edit_config_mapping='<leader>ec'
-    "   let g:spf13_apply_config_mapping='<leader>sc'
+    let g:spf13_edit_config_mapping='<leader>ec'
+    let g:spf13_apply_config_mapping='<leader>sc'
     if !exists('g:spf13_edit_config_mapping')
         let s:spf13_edit_config_mapping = '<leader>ev'
     else
@@ -584,8 +578,6 @@
         endif
         " vim-bbye
         nnoremap qq :Bdelete<cr>
-        " BufOnly.vim
-        nnoremap <silent> qo :BufOnly<CR>
     " }
 
     " JSON {
@@ -600,7 +592,15 @@
         endif
 
         if isdirectory(expand("~/.vim/bundle/python-mode"))
-            let g:pymode_lint_checkers = ['pyflakes']
+            let g:pymode_lint_checkers = ['pylint']
+            " Override go-to.definition key shortcut to Ctrl-]
+            let g:pymode_rope_goto_definition_bind = "<C-]>"
+
+            " Override run current python file key shortcut to Ctrl-Shift-e
+            let g:pymode_run_bind = "<C-S-e>"
+
+            " Override view python doc key shortcut to Ctrl-Shift-d
+            let g:pymode_doc_bind = "<C-S-d>"
             let g:pymode_trim_whitespaces = 0
             let g:pymode_options = 0
             let g:pymode_rope = 0
@@ -674,7 +674,7 @@
             nnoremap <silent> <leader>gw :Gwrite<CR>
             nnoremap <silent> <leader>ge :Gedit<CR>
             " Mnemonic _i_nteractive
-            nnoremap <silent> <leader>gi :Git add -p %<CR>
+            nnoremap <silent> <leader>ga :Git add -p %<CR>
             nnoremap <silent> <leader>gg :SignifyToggle<CR>
         endif
     "}
@@ -828,12 +828,15 @@
         " Use the powerline theme and optionally enable powerline symbols.
         " To use the symbols , , , , , , and .in the statusline
         " segments add the following to your .vimrc.before.local file:
-        "   let g:airline_powerline_fonts=1
+        let g:airline_powerline_fonts=1
         " If the previous symbols do not render for you then install a
         " powerline enabled font.
 
         " See `:echo g:airline_theme_map` for some more choices
         " Default in terminal vim is 'dark'
+        let g:airline_theme = 'powerlineish'
+        let g:airline#extensions#tabline#enabled = 1
+        let g:airline#extensions#tmuxline#enabled = 0
         if isdirectory(expand("~/.vim/bundle/vim-airline-themes/"))
             if !exists('g:airline_theme')
                 let g:airline_theme = 'solarized'
@@ -844,8 +847,6 @@
                 let g:airline_right_sep='‹' " Slightly fancier than '<'
             endif
         endif
-        let g:airline_theme = 'luna'
-        let g:airline#extensions#tabline#enabled = 1
     " }
 
     " emoji related {
