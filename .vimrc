@@ -571,8 +571,8 @@
 
     " Session & Buffer {
         set sessionoptions=blank,buffers,curdir,folds,tabpages,winsize
+        let g:session_autosave = 'no'
         if isdirectory(expand("~/.vim/bundle/vim-session.vim/"))
-            let g:session_autosave = 'no'
             nmap <leader>sl :SessionView<CR>
             nmap <leader>ss :SessionSave<CR>
             nmap <leader>sc :SessionClose<CR>
