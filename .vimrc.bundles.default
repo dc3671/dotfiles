@@ -174,7 +174,8 @@
         if count(g:spf13_bundle_groups, 'javascript')
             Plug 'elzr/vim-json'
             Plug 'isRuslan/vim-es6'
-            Plug 'posva/vim-vue'
+            Plug 'cyberdummy/vim-vue'
+            "Plug 'sekel/vim-vue-syntastic'
             Plug 'groenewege/vim-less'
             Plug 'briancollins/vim-jst'
             Plug 'kchmck/vim-coffee-script'

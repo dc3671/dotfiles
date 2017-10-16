@@ -212,7 +212,7 @@
 
 " Formatting {
 
-    set nowrap                      " Do not wrap long lines
+    set wrap                        " Do wrap long lines
     set autoindent                  " Indent at the same level of the previous line
     set shiftwidth=4                " Use indents of 4 spaces
     set expandtab                   " Tabs are spaces, not tabs
@@ -610,9 +610,8 @@
     " ctrlp {
         if isdirectory(expand("~/.vim/bundle/ctrlp.vim/"))
             let g:ctrlp_working_path_mode = 'ra'
-            nnoremap <silent> <D-t> :CtrlP<CR>
-            nnoremap <silent> <D-r> :CtrlPMRU<CR>
-            let g:ctrlp_cmd = 'CtrlPTag'
+            nnoremap <silent> <C-p> :CtrlP<CR>
+            nnoremap <silent> <C-i> :CtrlPTag<CR>
             let g:ctrlp_custom_ignore = {
                 \ 'dir':  '\.git$\|\.hg$\|\.svn$|\node_modules$',
                 \ 'file': '\.exe$\|\.so$\|\.dll$\|\.pyc$' }
@@ -645,7 +644,7 @@
                 let g:ctrlp_extensions = ['funky']
 
                 "funky
-                nnoremap <Leader>fu :CtrlPFunky<Cr>
+                nnoremap <silent> <C-k> :CtrlPFunky<CR>
             endif
         endif
     "}
@@ -816,11 +815,20 @@
         let g:multi_cursor_skip_key='<C-l>'
     " }
 
-    " Wildfire {
+    " wildfire {
+        " This selects the next closest text object.
+        map <SPACE> <Plug>(wildfire-fuel)
+        " This selects the previous closest text object.
+        vmap <C-SPACE> <Plug>(wildfire-water)
+        "nmap <leader>s <plug>(wildfire-quick-select)
         let g:wildfire_objects = {
             \ "*" : ["i'", 'i"', "i)", "i]", "i}", "ip"],
             \ "html,xml" : ["at"],
         \}
+    " }
+
+    " MatchTagAlways {
+        let g:mta_filetypes = { 'html' : 1, 'xhtml' : 1, 'xml' : 1, 'jinja' : 1, 'vue' : 1 }
     " }
 
     " vim-airline {
@@ -964,7 +972,7 @@
         setlocal bufhidden=delete
         setlocal nobuflisted
         setlocal noswapfile
-        setlocal nowrap
+        setlocal wrap
         setlocal filetype=shell
         setlocal syntax=shell
 
