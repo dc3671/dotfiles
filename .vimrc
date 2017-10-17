@@ -595,7 +595,7 @@
         if isdirectory(expand("~/.vim/bundle/python-mode"))
             let g:pymode_lint_checkers = ['pylint']
             " Override go-to.definition key shortcut to Ctrl-]
-            let g:pymode_rope_goto_definition_bind = "<C-]>"
+            let g:pymode_rope_goto_definition_bind = "<leader>d"
 
             " Override run current python file key shortcut to Ctrl-Shift-e
             let g:pymode_run_bind = "<leader><leader>r"
@@ -604,7 +604,8 @@
             let g:pymode_doc_bind = "K"
             let g:pymode_trim_whitespaces = 0
             let g:pymode_options = 0
-            let g:pymode_rope = 0
+            let g:pymode_rope = 1
+            let g:pymode_rope_completion = 0 " use ycm
             let g:pymode_breakpoint = 0
         endif
     " }
@@ -696,22 +697,8 @@
             let g:ycm_complete_in_comments = 1
             let g:ycm_key_list_select_completion = ['<Tab>', '<Down>']
             let g:ycm_key_list_previous_completion = ['<Up>']
-            let g:ycm_semantic_triggers =  {
-                \ 'c' : ['->', '.'],
-                \ 'objc' : ['->', '.'],
-                \ 'ocaml' : ['.', '#'],
-                \ 'cpp,objcpp' : ['->', '.', '::'],
-                \ 'perl' : ['->'],
-                \ 'php' : ['->', '::', '(', 'use ', 'namespace ', '\'],
-                \ 'cs,java,typescript,d,python,perl6,scala,vb,elixir,go' : ['.', 're!(?=[a-zA-Z]{3,4})'],
-                \ 'html': ['<', '"', '</', ' '],
-                \ 'vim' : ['re![_a-za-z]+[_\w]*\.'],
-                \ 'ruby' : ['.', '::'],
-                \ 'lua' : ['.', ':'],
-                \ 'erlang' : [':'],
-                \ 'haskell' : ['.', 're!.'],
-                \ 'scss,css': [ 're!^\s{2,4}', 're!:\s+' ],
-                \ 'javascript': ['.', 're!(?=[a-zA-Z]{3,4})'],
+            let g:ycm_key_detailed_diagnostics = '<leader><leader>d'
+            let g:ycm_filetype_blacklist = {
                 \ 'tagbar' : 1,
                 \ 'qf' : 1,
                 \ 'notes' : 1,
@@ -719,16 +706,10 @@
                 \ 'unite' : 1,
                 \ 'text' : 1,
                 \ 'vimwiki' : 1,
-                \ 'gitcommit' : 1,
-            \}
-            let g:ycm_filetype_blacklist = {
+                \ 'pandoc' : 1,
+                \ 'infolog' : 1,
                 \ 'json' : 1,
                 \ 'out' : 1,
-                \ 'notes' : 1,
-                \ 'markdown' : 1,
-                \ 'unite' : 1,
-                \ 'text' : 1,
-                \ 'vimwiki' : 1,
                 \ 'gitcommit' : 1,
               \}
 
