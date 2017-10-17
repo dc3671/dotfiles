@@ -279,12 +279,12 @@
     " The lines conflict with the default digraph mapping of <C-K>
     " If you prefer that functionality, add the following to your
     " .vimrc.before.local file:
-    "   let g:spf13_no_easyWindows = 1
+    "let g:spf13_no_easyWindows = 1
     if !exists('g:spf13_no_easyWindows')
-        map <C-J> <C-W>j<C-W>_
-        map <C-K> <C-W>k<C-W>_
-        map <C-L> <C-W>l<C-W>_
-        map <C-H> <C-W>h<C-W>_
+        noremap <C-J> <C-W>j
+        noremap <C-K> <C-W>k
+        noremap <C-L> <C-W>l
+        noremap <C-H> <C-W>h
     endif
 
     " Wrapped lines goes down/up to next row, rather than next line in file.
@@ -572,10 +572,10 @@
     " Session & Buffer {
         set sessionoptions=blank,buffers,curdir,folds,tabpages,winsize
         let g:session_autosave = 'no'
-        if isdirectory(expand("~/.vim/bundle/vim-session.vim/"))
-            nmap <leader>sl :SessionView<CR>
-            nmap <leader>ss :SessionSave<CR>
-            nmap <leader>sc :SessionClose<CR>
+        if isdirectory(expand("~/.vim/bundle/vim-session/"))
+            nmap <leader>sl :OpenSession<CR>
+            nmap <leader>ss :SaveSession<Space>
+            nmap <leader>sd :CloseSesslon<CR>
         endif
         " vim-bbye
         nnoremap qq :Bdelete<cr>
@@ -598,13 +598,14 @@
             let g:pymode_rope_goto_definition_bind = "<C-]>"
 
             " Override run current python file key shortcut to Ctrl-Shift-e
-            let g:pymode_run_bind = "<C-S-e>"
+            let g:pymode_run_bind = "<leader><leader>r"
 
             " Override view python doc key shortcut to Ctrl-Shift-d
-            let g:pymode_doc_bind = "<C-S-d>"
+            let g:pymode_doc_bind = "K"
             let g:pymode_trim_whitespaces = 0
             let g:pymode_options = 0
             let g:pymode_rope = 0
+            let g:pymode_breakpoint = 0
         endif
     " }
 
@@ -612,7 +613,7 @@
         if isdirectory(expand("~/.vim/bundle/ctrlp.vim/"))
             let g:ctrlp_working_path_mode = 'ra'
             nnoremap <silent> <C-p> :CtrlP<CR>
-            nnoremap <silent> <C-i> :CtrlPTag<CR>
+            nnoremap <silent> <C-p>p :CtrlPTag<CR>
             let g:ctrlp_custom_ignore = {
                 \ 'dir':  '\.git$\|\.hg$\|\.svn$|\node_modules$',
                 \ 'file': '\.exe$\|\.so$\|\.dll$\|\.pyc$' }
@@ -645,7 +646,7 @@
                 let g:ctrlp_extensions = ['funky']
 
                 "funky
-                nnoremap <silent> <C-k> :CtrlPFunky<CR>
+                nnoremap <silent> <C-p>k :CtrlPFunky<CR>
             endif
         endif
     "}
@@ -687,14 +688,14 @@
             let g:ycm_collect_identifiers_from_tags_files = 1
 
             " remap Ultisnips for compatibility for YCM
-            let g:UltiSnipsExpandTrigger = '<C-j>'
-            let g:UltiSnipsJumpForwardTrigger = '<C-j>'
+            let g:UltiSnipsExpandTrigger = '<C-m>'
+            let g:UltiSnipsJumpForwardTrigger = '<C-b>'
             let g:UltiSnipsJumpBackwardTrigger = '<C-k>'
             let g:ycm_autoclose_preview_window_after_completion = 1
             "let g:ycm_complete_in_strings = 1
             let g:ycm_complete_in_comments = 1
-            let g:ycm_key_list_select_completion = ['<Tab>', '<C-j>', '<Down>']
-            let g:ycm_key_list_previous_completion = ['<C-k>', '<Up>']
+            let g:ycm_key_list_select_completion = ['<Tab>', '<Down>']
+            let g:ycm_key_list_previous_completion = ['<Up>']
             let g:ycm_semantic_triggers =  {
                 \ 'c' : ['->', '.'],
                 \ 'objc' : ['->', '.'],
