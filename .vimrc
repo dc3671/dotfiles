@@ -203,12 +203,15 @@
     set scrolloff=3                 " Minimum lines to keep above and below cursor
     set foldenable                  " Auto fold code
     set foldmethod=indent           " set foldmethod
-    set foldlevelstart=99           " default not folding
+    "set foldlevelstart=99           " default not folding
     set list
     set listchars=tab:›\ ,trail:•,extends:#,nbsp:. " Highlight problematic whitespace
     " for transparent probelm with konsole
     hi Normal  ctermfg=252 ctermbg=none
 
+    " save and restore folds when a file is closed and re-opened
+    autocmd BufWinLeave *.* mkview
+    autocmd BufWinEnter *.* silent loadview
 " }
 
 " Formatting {
