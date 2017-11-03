@@ -6,4 +6,5 @@ git merge master
 # delete personal config
 git rebase -i HEAD~5
 # done
+git checkout master
 git log --graph --all
