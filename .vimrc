@@ -170,8 +170,7 @@
     if has('cmdline_info')
         set ruler                   " Show the ruler
         set rulerformat=%30(%=\:b%n%y%m%r%w\ %l,%c%V\ %P%) " A ruler on steroids
-        set showcmd                 " Show partial commands in status line and
-                                    " Selected characters/lines in visual mode
+        set showcmd                 " Show partial commands in status line and Selected characters/lines in visual mode
     endif
 
     if has('statusline')
@@ -211,7 +210,7 @@
 
     " save and restore folds when a file is closed and re-opened
     autocmd BufWinLeave *.* mkview
-    autocmd BufWinEnter *.* silent loadview
+    autocmd BufWinEnter *.* silent! loadview
 " }
 
 " Formatting {
