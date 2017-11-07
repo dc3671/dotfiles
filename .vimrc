@@ -478,7 +478,7 @@
             au FileType go nmap <Leader>gv <Plug>(go-doc-vertical)
             au FileType go nmap <leader>co <Plug>(go-coverage)
         endif
-        " }
+    " }
 
     " TextObj Sentence {
         if count(g:spf13_bundle_groups, 'writing')
@@ -596,18 +596,20 @@
         endif
 
         if isdirectory(expand("~/.vim/bundle/python-mode"))
+            let g:pymode_folding = 0
             let g:pymode_lint_checkers = ['pylint']
-            " Override go-to.definition key shortcut to Ctrl-]
-            let g:pymode_rope_goto_definition_bind = "<leader>d"
 
-            " Override run current python file key shortcut to Ctrl-Shift-e
+            " Override run current python file key shortcut
             let g:pymode_run_bind = "<leader><leader>r"
 
-            " Override view python doc key shortcut to Ctrl-Shift-d
+            " Override view python doc key shortcut
             let g:pymode_doc_bind = "K"
             let g:pymode_trim_whitespaces = 0
             let g:pymode_options = 0
-            let g:pymode_rope = 1
+            " cancel annoying rope
+            let g:pymode_rope = 0
+            " Override go-to.definition key shortcut
+            let g:pymode_rope_goto_definition_bind = "<leader>d"
             let g:pymode_rope_completion = 0 " use ycm
             let g:pymode_breakpoint = 0
         endif
