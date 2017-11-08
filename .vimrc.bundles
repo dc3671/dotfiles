@@ -76,6 +76,7 @@
             Plug 'tacahiroy/ctrlp-funky'
             Plug 'dyng/ctrlsf.vim'
             Plug 'terryma/vim-multiple-cursors'
+            Plug 'vim-scripts/restore_view.vim'
             Plug 'xolox/vim-misc'
             Plug 'xolox/vim-session'
             "Plug 'tpope/vim-obsession'
@@ -172,9 +173,11 @@
 
     " Javascript {
         if count(g:spf13_bundle_groups, 'javascript')
+            Plug 'pangloss/vim-javascript'
             Plug 'elzr/vim-json'
             Plug 'isRuslan/vim-es6'
             Plug 'posva/vim-vue'
+            Plug 'mxw/vim-jsx'
             Plug 'groenewege/vim-less'
             Plug 'briancollins/vim-jst'
             Plug 'kchmck/vim-coffee-script'

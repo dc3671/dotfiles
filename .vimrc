@@ -59,24 +59,17 @@
         "let g:syntastic_always_populate_loc_list = 1
         "let g:syntastic_auto_loc_list = 1
         let g:syntastic_check_on_open = 1
-        let g:syntastic_check_on_wq = 0
+        let g:syntastic_check_on_wq = 1
         let g:syntastic_aggregate_errors = 1
-        let g:syntastic_error_symbol = 'EE'
-        let g:syntastic_warning_symbol = 'WW'
-        "let g:syntastic_style_error_symbol = '✗'
-        "let g:syntastic_style_warning_symbol = '⚠'
+        "let g:syntastic_error_symbol = 'EE'
+        "let g:syntastic_warning_symbol = 'WW'
+        let g:syntastic_style_error_symbol = '✗'
+        let g:syntastic_style_warning_symbol = '⚠'
         let g:syntastic_loc_list_height=5
         let g:syntastic_javascript_checkers = ['eslint']
         let g:syntastic_vue_checkers = ['eslint']
         let g:vue_disable_pre_processors=1
-        let local_eslint = finddir('node_modules', '.;') . '/.bin/eslint'
-        if matchstr(local_eslint, "^\/\\w") == ''
-            let local_eslint = getcwd() . "/" . local_eslint
-        endif
-        if executable(local_eslint)
-            let g:syntastic_javascript_eslint_exec = local_eslint
-            let g:syntastic_vue_eslint_exec = local_eslint
-        endif
+        let g:jsx_ext_required = 0
 
         let g:syntastic_scss_checkers      = [ 'sass_lint' ]
         let g:syntastic_sass_sass_args     = '-I ' . getcwd()
@@ -107,7 +100,7 @@
 
     "set autowrite                       " Automatically write a file when leaving a modified buffer
     set shortmess+=filmnrxoOtT          " Abbrev. of messages (avoids 'hit enter')
-    set viewoptions=folds,options,cursor,unix,slash " Better Unix / Windows compatibility
+    set viewoptions=cursor,folds,slash,unix " Better Unix / Windows compatibility
     set virtualedit=onemore             " Allow for cursor beyond last character
     set history=1000                    " Store a ton of history (default is 20)
     set nospell                         " Spell checking off
@@ -207,10 +200,6 @@
     set listchars=tab:›\ ,trail:•,extends:#,nbsp:. " Highlight problematic whitespace
     " for transparent probelm with konsole
     hi Normal  ctermfg=252 ctermbg=none
-
-    " save and restore folds when a file is closed and re-opened
-    autocmd BufWinLeave *.* mkview
-    autocmd BufWinEnter *.* silent! loadview
 " }
 
 " Formatting {
@@ -233,16 +222,11 @@
     " let g:spf13_keep_trailing_whitespace = 1
     autocmd FileType c,cpp,java,go,php,javascript,puppet,python,rust,twig,xml,yml,perl,sql autocmd BufWritePre <buffer> if !exists('g:spf13_keep_trailing_whitespace') | call StripTrailingWhitespace() | endif
     "autocmd FileType go autocmd BufWritePre <buffer> Fmt
-    autocmd BufNewFile,BufRead *.html.twig set filetype=html.twig
-    "autocmd BufRead,BufNewFile *.vue setlocal filetype=vue.html.javascript.css
+    "autocmd BufNewFile,BufRead *.vue set filetype=vue.html.javascript.css
+    autocmd BufNewFile,BufRead *.js set filetype=javascript.jsx
     autocmd BufNewFile,BufRead *.ejs set filetype=html
     autocmd FileType vue,javascript,html,css setlocal expandtab shiftwidth=2 softtabstop=2
     "autocmd FileType vue syntax sync fromstart
-    autocmd FileType haskell,puppet,ruby,yml setlocal expandtab shiftwidth=2 softtabstop=2
-    autocmd BufNewFile,BufRead *.coffee set filetype=coffee
-    " Workaround vim-commentary for Haskell
-    autocmd FileType haskell setlocal commentstring=--\ %s
-
 " }
 
 " Key (re)Mappings {
@@ -573,6 +557,7 @@
     " }
 
     " Session & Buffer {
+        "let g:loaded_restore_view = 0
         set sessionoptions=blank,buffers,curdir,folds,tabpages,winsize
         let g:session_autosave = 'no'
         if isdirectory(expand("~/.vim/bundle/vim-session/"))
@@ -772,8 +757,6 @@
         let g:autoformat_autoindent = 0
         let g:autoformat_retab = 0
         let g:autoformat_remove_trailing_spaces = 0
-        "let g:formatdef_my_eslint = '"eslint --fix "'
-        "let g:formatters_javascript = ['my_eslint']
         "let g:autoformat_verbosemode = 1
     " }
 
@@ -791,7 +774,6 @@
             let g:indent_guides_auto_colors = 0
             let g:indent_guides_guide_size = 2
             let g:indent_guides_start_level = 1
-            set ts=2 sw=2 et
             autocmd VimEnter,Colorscheme * :hi IndentGuidesOdd  guibg=#353535 ctermbg=240
             autocmd VimEnter,Colorscheme * :hi IndentGuidesEven guibg=#3f3f3f ctermbg=black
         endif
