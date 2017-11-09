@@ -59,7 +59,7 @@ mv ~/.vimrc.bundles ~/.vimrc.bundles.bak > /dev/null 2>&1
 ln -s $PWD/.vimrc ~/.vimrc
 ln -s $PWD/.vimrc.before ~/.vimrc.before
 ln -s $PWD/.vimrc.bundles ~/.vimrc.bundles
-vim -u "$PWD/.vimrc.bundles.default" "+set nomore" "+PlugInstall!" "+PlugClean" "+qall"
+vim -u "$PWD/.vimrc.bundles" "+set nomore" "+PlugInstall!" "+PlugClean" "+qall"
 
 # eslint
 mv ~/.eslintrc.js ~/.eslintrc.js.bak >/dev/null 2>&1
