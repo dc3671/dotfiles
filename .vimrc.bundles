@@ -94,8 +94,6 @@
             Plug 'mhinz/vim-signify'
             Plug 'tpope/vim-abolish'
             Plug 'osyo-manga/vim-over'
-            Plug 'kana/vim-textobj-user'
-            Plug 'kana/vim-textobj-indent'
             Plug 'gcmt/wildfire.vim'
         endif
     " }
@@ -103,9 +101,14 @@
     " Writing {
         if count(g:spf13_bundle_groups, 'writing')
             Plug 'reedes/vim-litecorrect'
-            Plug 'reedes/vim-textobj-sentence'
-            Plug 'reedes/vim-textobj-quote'
             Plug 'reedes/vim-wordy'
+            Plug 'kana/vim-textobj-user'
+            Plug 'kana/vim-textobj-indent'
+            Plug 'beloglazov/vim-textobj-quotes'
+            Plug 'Julian/vim-textobj-brace'
+            Plug 'Chun-Yang/vim-textobj-chunk'
+            Plug 'whatyouhide/vim-textobj-xmlattr'
+            Plug 'jceb/vim-textobj-uri'
             Plug 'lilydjwg/fcitx.vim'
             Plug 'Chiel92/vim-autoformat'
             Plug 'editorconfig/editorconfig-vim'
