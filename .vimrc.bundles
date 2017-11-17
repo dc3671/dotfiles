@@ -95,6 +95,7 @@
             Plug 'tpope/vim-abolish'
             Plug 'osyo-manga/vim-over'
             Plug 'gcmt/wildfire.vim'
+            Plug 'mhinz/vim-hugefile'
         endif
     " }
 
