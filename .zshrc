@@ -52,6 +52,7 @@ export GIT_SSL_NO_VERIFY=1
 export EDITOR='vim'
 
 source $ZSH/oh-my-zsh.sh
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
 unsetopt PROMPT_SP
 

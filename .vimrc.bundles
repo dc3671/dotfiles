@@ -38,17 +38,17 @@
 
     " Deps {
         "Plug 'gmarik/vundle'
-        Plug 'MarcWeber/vim-addon-mw-utils'
-        Plug 'tomtom/tlib_vim'
-        if executable('ag')
-            Plug 'mileszs/ack.vim'
-            let g:ackprg = 'ag --nogroup --nocolor --column --smart-case'
-        elseif executable('ack-grep')
-            let g:ackprg="ack-grep -H --nocolor --nogroup --column"
-            Plug 'mileszs/ack.vim'
-        elseif executable('ack')
-            Plug 'mileszs/ack.vim'
-        endif
+        "Plug 'MarcWeber/vim-addon-mw-utils'
+        "Plug 'tomtom/tlib_vim'
+        "if executable('ag')
+            "Plug 'mileszs/ack.vim'
+            "let g:ackprg = 'ag --nogroup --nocolor --column --smart-case'
+        "elseif executable('ack-grep')
+            "let g:ackprg="ack-grep -H --nocolor --nogroup --column"
+            "Plug 'mileszs/ack.vim'
+        "elseif executable('ack')
+            "Plug 'mileszs/ack.vim'
+        "endif
     " }
 
     " In your .vimrc.before.local file
@@ -72,8 +72,10 @@
             Plug 'rhysd/conflict-marker.vim'
             Plug 'jiangmiao/auto-pairs'
             Plug 'Valloric/MatchTagAlways'
-            Plug 'ctrlpvim/ctrlp.vim'
-            Plug 'tacahiroy/ctrlp-funky'
+            Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
+            Plug 'junegunn/fzf.vim'
+            "Plug 'ctrlpvim/ctrlp.vim'
+            "Plug 'tacahiroy/ctrlp-funky'
             Plug 'dyng/ctrlsf.vim'
             Plug 'terryma/vim-multiple-cursors'
             Plug 'vim-scripts/restore_view.vim'
@@ -113,14 +115,15 @@
             Plug 'lilydjwg/fcitx.vim'
             Plug 'Chiel92/vim-autoformat'
             Plug 'editorconfig/editorconfig-vim'
-            Plug 'bronson/vim-trailing-whitespace'
         endif
     " }
 
     " General Programming {
         if count(g:spf13_bundle_groups, 'programming')
             " Pick one of the checksyntax, jslint, or syntastic
-            Plug 'scrooloose/syntastic'
+            Plug 'sheerun/vim-polyglot'
+            Plug 'w0rp/ale'
+            "Plug 'scrooloose/syntastic'
             Plug 'tpope/vim-fugitive'
             Plug 'mattn/webapi-vim'
             Plug 'mattn/gist-vim'
@@ -178,6 +181,7 @@
     " Javascript {
         if count(g:spf13_bundle_groups, 'javascript')
             Plug 'pangloss/vim-javascript'
+            Plug 'ternjs/tern_for_vim', {'do': 'npm install'}
             Plug 'elzr/vim-json'
             Plug 'isRuslan/vim-es6'
             Plug 'posva/vim-vue'

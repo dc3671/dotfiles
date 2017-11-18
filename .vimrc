@@ -54,26 +54,14 @@
 
     filetype plugin indent on   " Automatically detect file types.
 
-    " Syntax {
+    " Linter, use Ale {
         syntax on                   " Syntax highlighting
-        "let g:syntastic_always_populate_loc_list = 1
-        "let g:syntastic_auto_loc_list = 1
-        let g:syntastic_check_on_open = 1
-        let g:syntastic_check_on_wq = 1
-        let g:syntastic_aggregate_errors = 1
-        "let g:syntastic_error_symbol = 'EE'
-        "let g:syntastic_warning_symbol = 'WW'
-        let g:syntastic_style_error_symbol = '✗'
-        let g:syntastic_style_warning_symbol = '⚠'
-        let g:syntastic_loc_list_height=5
-        let g:syntastic_javascript_checkers = ['eslint']
-        let g:syntastic_vue_checkers = ['eslint']
+        let g:ale_sign_error = '✗'
+        let g:ale_sign_warning = '⚠'
+        let g:ale_echo_msg_format = '%s [%severity%%/code%]'
+        let g:ale_linters = {'javascript': ['eslint'], 'python': ['pylint']}
         let g:vue_disable_pre_processors=1
         let g:jsx_ext_required = 0
-
-        let g:syntastic_scss_checkers      = [ 'sass_lint' ]
-        let g:syntastic_sass_sass_args     = '-I ' . getcwd()
-        let syntastic_mode_map = { 'passive_filetypes': ['html', 'javascript'] }
     " }
 
     set mouse=a                 " Automatically enable mouse usage
@@ -317,16 +305,6 @@
         vnoremap ^ :<C-U>call WrapRelativeMotion("^", 1)<CR>
     endif
 
-    " The following two lines conflict with moving to top and
-    " bottom of the screen
-    " If you prefer that functionality, add the following to your
-    " .vimrc.before.local file:
-    "   let g:spf13_no_fastTabs = 1
-    if !exists('g:spf13_no_fastTabs')
-        map <S-H> gT
-        map <S-L> gt
-    endif
-
     " Stupid shift key fixes
     if !exists('g:spf13_no_keyfixes')
         if has("user_commands")
@@ -358,9 +336,6 @@
     nmap <leader>f7 :set foldlevel=7<CR>
     nmap <leader>f8 :set foldlevel=8<CR>
     nmap <leader>f9 :set foldlevel=9<CR>
-
-    " vim-trailing-whitespace
-    map <leader><space> :FixWhitespace<cr>
 
     " Most prefer to toggle search highlighting rather than clear the current
     " search results. To clear search highlighting rather than toggle it on
@@ -571,47 +546,26 @@
         endif
     " }
 
-    " ctrlp {
-        if isdirectory(expand("~/.vim/bundle/ctrlp.vim/"))
-            let g:ctrlp_working_path_mode = 'ra'
-            nnoremap <silent> <C-p> :CtrlP<CR>
-            nnoremap <silent> <C-p>p :CtrlPTag<CR>
-            let g:ctrlp_custom_ignore = {
-                \ 'dir':  '\.git$\|\.hg$\|\.svn$|\node_modules$',
-                \ 'file': '\.exe$\|\.so$\|\.dll$\|\.pyc$' }
-
-            if executable('ag')
-                let s:ctrlp_fallback = 'ag %s --nocolor -l -g ""'
-            elseif executable('ack-grep')
-                let s:ctrlp_fallback = 'ack-grep %s --nocolor -f'
-            elseif executable('ack')
-                let s:ctrlp_fallback = 'ack %s --nocolor -f'
-            " On Windows use "dir" as fallback command.
-            elseif WINDOWS()
-                let s:ctrlp_fallback = 'dir %s /-n /b /s /a-d'
-            else
-                let s:ctrlp_fallback = 'find %s -type f'
-            endif
-            if exists("g:ctrlp_user_command")
-                unlet g:ctrlp_user_command
-            endif
-            let g:ctrlp_user_command = {
-                \ 'types': {
-                    \ 1: ['.git', 'cd %s && git ls-files . --cached --exclude-standard --others'],
-                    \ 2: ['.hg', 'hg --cwd %s locate -I .'],
-                \ },
-                \ 'fallback': s:ctrlp_fallback
-            \ }
-
-            if isdirectory(expand("~/.vim/bundle/ctrlp-funky/"))
-                " CtrlP extensions
-                let g:ctrlp_extensions = ['funky']
-
-                "funky
-                nnoremap <silent> <C-p>k :CtrlPFunky<CR>
-            endif
+    " fzf, alternate to ctrlp {
+        if isdirectory(expand("~/.vim/bundle/fzf.vim/"))
+            nnoremap <silent> <C-p> :Files<CR>
+            nnoremap <silent> <C-t> :Tags<CR>
+            nnoremap <leader><leader>/ :Ag<space>
         endif
-    "}
+    " }
+
+    " CtrlSF {
+        if isdirectory(expand("~/.vim/bundle/ctrlsf.vim/"))
+            nmap     <C-F>f <Plug>CtrlSFPrompt
+            vmap     <C-F>f <Plug>CtrlSFVwordPath
+            vmap     <C-F>F <Plug>CtrlSFVwordExec
+            nmap     <C-F>n <Plug>CtrlSFCwordPath
+            nmap     <C-F>p <Plug>CtrlSFPwordPath
+            nnoremap <C-F>o :CtrlSFOpen<CR>
+            nnoremap <C-F>t :CtrlSFToggle<CR>
+            inoremap <C-F>t <Esc>:CtrlSFToggle<CR>
+        endif
+    " }
 
     " TagBar {
         if isdirectory(expand("~/.vim/bundle/tagbar/"))
@@ -687,7 +641,7 @@
             " tern js
             let tern_show_signature_in_pum = 1
             let tern_show_argument_hints = 'on_hold'
-            autocmd FileType javascript nnoremap <leader>d :TernDef<CR>
+            autocmd FileType javascript nnoremap K :TernDef<CR>
             autocmd FileType javascript setlocal omnifunc=tern#Complete
 
             " Haskell post write lint and check with ghcmod
@@ -711,20 +665,9 @@
         endif
     " }
 
-    " CtrlSF {
-        nmap     <C-F>f <Plug>CtrlSFPrompt
-        vmap     <C-F>f <Plug>CtrlSFVwordPath
-        vmap     <C-F>F <Plug>CtrlSFVwordExec
-        nmap     <C-F>n <Plug>CtrlSFCwordPath
-        nmap     <C-F>p <Plug>CtrlSFPwordPath
-        nnoremap <C-F>o :CtrlSFOpen<CR>
-        nnoremap <C-F>t :CtrlSFToggle<CR>
-        inoremap <C-F>t <Esc>:CtrlSFToggle<CR>
-    " }
-
     " Autoformat {
         noremap <leader><leader>f :Autoformat<CR>
-        "noremap <c-f> :Autoformat<CR>
+        noremap <leader><space> :RemoveTrailingSpaces<cr>
         let g:autoformat_autoindent = 0
         let g:autoformat_retab = 0
         let g:autoformat_remove_trailing_spaces = 0
@@ -785,6 +728,7 @@
         " Default in terminal vim is 'dark'
         let g:airline_theme = 'powerlineish'
         let g:airline#extensions#tabline#enabled = 1
+        let g:airline#extensions#ale#enabled = 1
         let g:airline#extensions#tmuxline#enabled = 0
         if isdirectory(expand("~/.vim/bundle/vim-airline-themes/"))
             if !exists('g:airline_theme')
