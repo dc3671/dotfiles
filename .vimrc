@@ -528,7 +528,7 @@
 
         if isdirectory(expand("~/.vim/bundle/python-mode"))
             let g:pymode_folding = 0
-            let g:pymode_lint_checkers = ['pylint']
+            let g:pymode_lint = 0
 
             " Override run current python file key shortcut
             let g:pymode_run_bind = "<leader><leader>r"
