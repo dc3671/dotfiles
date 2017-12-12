@@ -28,16 +28,17 @@ plugins=(git history-substring-search tmux virtualenvwrapper)
 
 # User configuration
 
+export HOME=~
 export FONTS_HOME="/usr/share/fonts"
-export PYTHON_HOME="/usr/lib/python2.7:/usr/lib64/python2.7:/usr/include/python2.7"
+export PYTHON_HOME="$HOME/.local/lib/python2.7:/usr/lib/python2.7:/usr/lib64/python2.7:/usr/include/python2.7"
 export GCC_HOME="/usr/lib/gcc/x86_64-redhat-linux/4.9.2"
-export NPM_CONFIG_PREFIX="/home/dash/.npm-global"
+export NPM_CONFIG_PREFIX="$HOME/.npm-global"
 export JAVA_HOME="/usr/lib/jvm/java-8-openjdk"
 
 export LC_ALL="en_US.UTF-8"
 export LANG="en_US.UTF-8"
 
-export PATH="/bin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin:~/.local/bin"
+export PATH="/bin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin:$HOME/.local/bin"
 export PATH="$PATH:$FONTS_HOME"
 export PATH="$PATH:$PYTHON_HOME"
 export PATH="$PATH:$GCC_HOME/include/"
