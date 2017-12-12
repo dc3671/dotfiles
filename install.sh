@@ -42,7 +42,7 @@ success     "Done."
 # zsh
 msg         ">>> Config zsh..."
 msg         ">>> Install oh-my-zsh..."
-sh -c "$(curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"
+git clone --depth=1 https://github.com/robbyrussell/oh-my-zsh.git ~/.oh-my-zsh
 msg         ">>> Change shell to zsh"
 mv ~/.zshrc ~/.zshrc.bak >/dev/null 2>&1
 ln -s $PWD/.zshrc ~/.zshrc
