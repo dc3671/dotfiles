@@ -1,10 +1,10 @@
 " spf13 options {
 
   " disable youcompleteme for easy use
-  let g:spf13_bundle_groups = ['general', 'writing', 'programming', 'python', 'javascript', 'html', 'misc']
+  "let g:spf13_bundle_groups = ['general', 'writing', 'programming', 'python', 'javascript', 'html', 'misc']
   " enable youcompleteme for long-term efficiency
-  "let g:spf13_bundle_groups = ['general', 'writing', 'programming', 'python', 'javascript', 'html', 'misc', 'youcompleteme']
+  let g:spf13_bundle_groups = ['general', 'writing', 'programming', 'python', 'javascript', 'html', 'misc', 'youcompleteme']
 
-  let g:dc_complete_func = 1
+  let g:dc_enable_all_func = 1
 
 " }
