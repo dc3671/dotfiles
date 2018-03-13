@@ -16,34 +16,11 @@ cd dotfiles
 ./install.sh
 ```
 
-* [Optional] Install [`YouCompleteMe`](https://github.com/Valloric/YouCompleteMe) plugin, require Vim 7.4.1578 with Python 2 or Python 3 support.
-
-    Because `YouCompleteMe` contains many submodules and it will cost a lot of time, I move it to a optional part, though it's really neccessary.
-
-    To install:
-
-1. modify `.vimrc.before`, add 'youcompleteme'
-```vim
-let g:spf13_bundle_groups=['general', 'writing', 'programming', 'python', 'javascript', 'html', 'misc', 'youcompleteme']
-```
-
-1. run this command in your terminal (cloning submodules of YCM may take a long time)
-```bash
-vim  +PlugInstall! +PlugClean!
-```
-
-1. build YCM server (more support language see YCM's [instruction](https://github.com/Valloric/YouCompleteMe#installation))
-```bash
-cd ~/.vim/bundle/YouCompleteMe/
-# for js support
-python install.py --js-completer
-```
-
 ## Key Mappings ##
 
 ### Tmux ###
 
-- change `<leader>` key to ctrl+x
+- `<leader>` key has been changed to ctrl+x
 ```tmux
 set -g prefix C-x
 ```
@@ -79,7 +56,7 @@ bind r source-file ~/.tmux.conf \; display "Reloaded!"
 
 ### Vim ###
 
-- change `<leader>` key
+- `<leader>` key has been changed to `,`
 ```vim
 let mapleader = ','
 ```
@@ -171,11 +148,11 @@ map <leader>e :NERDTreeFind<CR>
 nmap <leader>nt :NERDTreeFind<CR>
 ```
 
-- CtrlP, search files/tags/functions among project
+- fzf, search files/tags/text among project
 ```vim
-nnoremap <silent> <C-p> :CtrlP<CR>
-nnoremap <silent> <C-i> :CtrlPTag<CR>
-nnoremap <silent> <C-k> :CtrlPFunky<CR>
+nnoremap <silent> <C-p> :Files<CR>
+nnoremap <silent> <C-t> :Tags<CR>
+nnoremap <leader><leader>/ :Ag<space>
 ```
 
 - more detailed mapping see `.vimrc` -> `Key Mapping` part
