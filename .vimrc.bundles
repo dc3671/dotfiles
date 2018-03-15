@@ -165,9 +165,8 @@
 
   " PHP {
     if count(g:spf13_bundle_groups, 'php')
-      Plug 'spf13/PIV'
+      Plug 'noahfrederick/vim-laravel'
       Plug 'arnaud-lb/vim-php-namespace'
-      Plug 'beyondwords/vim-twig'
     endif
   " }
 
@@ -262,8 +261,6 @@
       Plug 'rust-lang/rust.vim'
       Plug 'tpope/vim-markdown'
       Plug 'spf13/vim-preview'
-      Plug 'tpope/vim-cucumber'
-      Plug 'cespare/vim-toml'
       Plug 'quentindecock/vim-cucumber-align-pipes'
       Plug 'saltstack/salt-vim'
     endif
