@@ -59,9 +59,14 @@
     let g:ale_sign_error = '✗'
     let g:ale_sign_warning = '⚠'
     let g:ale_echo_msg_format = '%s [%severity%%/code%]'
-    let g:ale_linters = {'javascript': ['eslint'], 'python': ['pylint']}
+    let g:ale_linters = {
+      \'javascript': ['eslint'],
+      \'python': ['pylint'],
+      \'vue': ['prettier']
+    \}
     let g:vue_disable_pre_processors=1
-    let g:jsx_ext_required = 0
+    let g:vim_jsx_pretty_enable_jsx_highlight = 1
+    let g:vim_jsx_pretty_colorful_config = 1
   " }
 
   set mouse=a         " Automatically enable mouse usage
@@ -183,7 +188,7 @@
   set scrolloff=3         " Minimum lines to keep above and below cursor
   set foldenable          " Auto fold code
   set foldmethod=indent       " set foldmethod
-  "set foldlevelstart=99       " default not folding
+  set foldlevelstart=99       " default not folding
   set list
   set listchars=tab:›\ ,trail:•,extends:#,nbsp:. " Highlight problematic whitespace
   " for transparent probelm with konsole
@@ -678,6 +683,7 @@
       let g:autoformat_autoindent = 0
       let g:autoformat_retab = 0
       let g:autoformat_remove_trailing_spaces = 0
+      let g:formatters_typescript = ['eslint_local']
       "let g:autoformat_verbosemode = 1
     endif
   " }

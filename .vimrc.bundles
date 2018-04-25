@@ -112,7 +112,7 @@
       Plug 'Chun-Yang/vim-textobj-chunk'
       Plug 'whatyouhide/vim-textobj-xmlattr'
       Plug 'jceb/vim-textobj-uri'
-      Plug 'lilydjwg/fcitx.vim'
+      "Plug 'lilydjwg/fcitx.vim'
       Plug 'Chiel92/vim-autoformat'
       Plug 'editorconfig/editorconfig-vim'
     endif
@@ -130,7 +130,7 @@
       Plug 'scrooloose/nerdcommenter'
       Plug 'tpope/vim-commentary'
       Plug 'godlygeek/tabular'
-      Plug 'luochen1990/rainbow'
+      "Plug 'luochen1990/rainbow'
       if executable('ctags')
         Plug 'szw/vim-tags'
         Plug 'majutsushi/tagbar'
@@ -184,9 +184,9 @@
       Plug 'elzr/vim-json'
       Plug 'isRuslan/vim-es6'
       Plug 'posva/vim-vue'
-      Plug 'mxw/vim-jsx'
+      "Plug 'mxw/vim-jsx'
+      Plug 'maxmellon/vim-jsx-pretty'
       Plug 'groenewege/vim-less'
-      Plug 'briancollins/vim-jst'
       Plug 'kchmck/vim-coffee-script'
     endif
   " }
@@ -222,7 +222,7 @@
       Plug 'ap/vim-css-color'
       Plug 'othree/csscomplete.vim'
       Plug 'tpope/vim-haml'
-      Plug 'mattn/emmet-vim'
+      "Plug 'mattn/emmet-vim'
     endif
   " }
 
