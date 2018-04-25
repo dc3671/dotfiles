@@ -38,7 +38,7 @@ export JAVA_HOME="/usr/lib/jvm/java-8-openjdk"
 export LC_ALL="en_US.UTF-8"
 export LANG="en_US.UTF-8"
 
-export PATH="/bin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin:$HOME/.local/bin"
+export PATH="/bin:/sbin:/usr/local/bin:/usr/local/sbin:$HOME/.local/bin:/usr/bin:/usr/sbin"
 export PATH="$PATH:$FONTS_HOME"
 export PATH="$PATH:$PYTHON_HOME"
 export PATH="$PATH:$GCC_HOME/include/"
@@ -51,6 +51,8 @@ export QT_IM_MODULE=fcitx
 export XMODIFIERS="@im=fcitx"
 export GIT_SSL_NO_VERIFY=1
 export EDITOR='vim'
+export HOMEBREW_BOTTLE_DOMAIN=https://mirrors.tuna.tsinghua.edu.cn/homebrew-bottles
+umask 002
 
 source $ZSH/oh-my-zsh.sh
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
@@ -88,6 +90,7 @@ alias -s tgz='tar -xzvf'
 alias -s zip='unzip'
 alias -s bz2='tar -xjvf'
 
+alias gf='git flow'
 alias ga='git add'
 alias gp='git push'
 alias gl='git log'
@@ -103,4 +106,3 @@ alias grr='git remote rm'
 alias gpu='git pull'
 alias gcl='git clone'
 alias gta='git tag -a -m'
-alias gf='git reflog'
