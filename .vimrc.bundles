@@ -147,7 +147,7 @@
         source ~/.vim/bundle/vim-snippets/snippets/support_functions.vim
       endif
     elseif count(g:spf13_bundle_groups, 'youcompleteme')
-      Plug 'Valloric/YouCompleteMe', {'do': 'python install.py --js-completer'}
+      Plug 'Valloric/YouCompleteMe', {'do': 'python install.py --tern-completer'}
       Plug 'SirVer/ultisnips'
       Plug 'honza/vim-snippets'
     elseif count(g:spf13_bundle_groups, 'neocomplcache')
@@ -180,7 +180,7 @@
   " Javascript {
     if count(g:spf13_bundle_groups, 'javascript')
       Plug 'pangloss/vim-javascript'
-      Plug 'ternjs/tern_for_vim', {'do': 'npm install'}
+      "Plug 'ternjs/tern_for_vim', {'do': 'npm install'}
       Plug 'elzr/vim-json'
       Plug 'isRuslan/vim-es6'
       Plug 'posva/vim-vue'

@@ -227,7 +227,7 @@
   " The default leader is '\', but many people prefer ',' as it's in a standard
   " location. To override this behavior and set it back to '\' (or any other
   " character) add the following to your .vimrc.before.local file:
-  "   let g:spf13_leader='\'
+  " let g:spf13_leader='\'
   if !exists('g:spf13_leader')
     let mapleader = ','
   else
@@ -616,12 +616,17 @@
       let g:UltiSnipsExpandTrigger = '<Tab>'
       let g:UltiSnipsJumpForwardTrigger = '<C-b>'
       let g:UltiSnipsJumpBackwardTrigger = '<C-z>'
+
       let g:ycm_autoclose_preview_window_after_completion = 1
-      "let g:ycm_complete_in_strings = 1
+      let g:ycm_complete_in_strings = 1
       let g:ycm_complete_in_comments = 1
       let g:ycm_key_list_select_completion = ['<Down>']
       let g:ycm_key_list_previous_completion = ['<Up>']
       let g:ycm_key_detailed_diagnostics = '<leader><leader>d'
+      let g:ycm_semantic_triggers =  {
+        \ 'c,cpp,python,java,go,erlang,perl': ['re!\w{3}'],
+        \ 'cs,lua,javascript,jsx,typescript,tsx': ['re!\w{3}'],
+        \ }
       let g:ycm_filetype_blacklist = {
         \ 'tagbar' : 1,
         \ 'qf' : 1,
@@ -635,47 +640,27 @@
         \ 'json' : 1,
         \ 'out' : 1,
         \ 'gitcommit' : 1,
-        \}
+        \ }
 
-      " Enable omni completion.
-      "autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
-      autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS noci
-      autocmd FileType html,markdown setlocal omnifunc=htmlcomplete#CompleteTags
-      autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
-      autocmd FileType python setlocal omnifunc=pythoncomplete#Complete
-      autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
-      autocmd FileType ruby setlocal omnifunc=rubycomplete#Complete
-      autocmd FileType haskell setlocal omnifunc=necoghc#omnifunc
-
-
-      " Haskell post write lint and check with ghcmod
-      " $ `cabal install ghcmod` if missing and ensure
-      " ~/.cabal/bin is in your $PATH.
-      if !executable("ghcmod")
-        autocmd BufWritePost *.hs GhcModCheckAndLintAsync
-      endif
-
-      " For snippet_complete marker.
-      if !exists("g:spf13_no_conceal")
-        if has('conceal')
-          set conceallevel=2 concealcursor=i
-        endif
-      endif
-
-      " Disable the neosnippet preview candidate window
+      " Disable the snippet preview candidate window
       " When enabled, there can be too much visual noise
       " especially when splits are used.
       set completeopt-=preview
+      nnoremap <leader>yg :YcmCompleter GoTo<CR>
+      nnoremap <leader>yt :YcmCompleter GetType<CR>
+      nnoremap <leader>yd :YcmCompleter GetDoc<CR>
+      nnoremap <leader>yf :YcmCompleter FixIt<CR>
+      nnoremap <leader>yr :YcmCompleter RefactorRename<space>
     endif
   " }
 
   " Tern-js {
-    if isdirectory(expand("~/.vim/bundle/tern_for_vim/"))
-      let tern_show_signature_in_pum = 1
-      let tern_show_argument_hints = 'on_hold'
-      autocmd FileType javascript nnoremap K :TernDef<CR>
-      autocmd FileType javascript setlocal omnifunc=tern#Complete
-    endif
+    "if isdirectory(expand("~/.vim/bundle/tern_for_vim/"))
+      "let tern_show_signature_in_pum = 1
+      "let tern_show_argument_hints = 'on_hold'
+      "autocmd FileType javascript nnoremap K :TernDef<CR>
+      "autocmd FileType javascript setlocal omnifunc=tern#Complete
+    "endif
   " Autoformat {
     if isdirectory(expand("~/.vim/bundle/vim-autoformat/"))
       noremap <leader><leader>f :Autoformat<CR>

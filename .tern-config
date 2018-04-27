@@ -2,13 +2,14 @@
     "libs": [
         "browser",
         "jquery",
+        "react",
         "ecma6"
     ],
     "loadEagerly": [
         "src/**/*.js"
     ],
     "dontLoad": [
-        "lib/**/*.js"
+        "node_modules/**"
     ],
     "plugins": {
         "requirejs": {
@@ -18,6 +19,7 @@
         "node": {},
         "complete_strings": {},
         "modules": {},
+        "doc_comment": null,
         "es_modules": {},
         "webpack": {}
     }
