@@ -34,6 +34,7 @@ export PYTHON_HOME="$HOME/.local/lib/python2.7:/usr/lib/python2.7:/usr/lib64/pyt
 export GCC_HOME="/usr/lib/gcc/x86_64-redhat-linux/4.9.2"
 export NPM_CONFIG_PREFIX="$HOME/.npm-global"
 export JAVA_HOME="/usr/lib/jvm/java-8-openjdk"
+export CUDA_HOME="/usr/local/cuda"
 
 export LC_ALL="en_US.UTF-8"
 export LANG="en_US.UTF-8"
@@ -44,6 +45,11 @@ export PATH="$PATH:$PYTHON_HOME"
 export PATH="$PATH:$GCC_HOME/include/"
 export PATH="$PATH:$NPM_CONFIG_PREFIX/bin"
 export PATH="$PATH:$JAVA_HOME/bin"
+export PATH="$PATH:$CUDA_HOME/bin"
+
+export LD_LIBRARY_PATH="/usr/lib:/usr/local/lib:$HOME/.local/lib"
+export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:$HOME/.local/cuda/lib64"
+export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:$CUDA_HOME/extras/CUPTI/lib64"
 
 export TERM="xterm-256color"
 export GTK_IM_MODULE=fcitx
