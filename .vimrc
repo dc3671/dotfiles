@@ -61,8 +61,14 @@
     let g:ale_echo_msg_format = '%s [%severity%%/code%]'
     let g:ale_linters = {
       \'javascript': ['eslint'],
+      \'typescript': ['tslint'],
       \'python': ['pylint'],
       \'vue': ['prettier']
+    \}
+    let g:ale_fixers = {
+      \'javascript': ['eslint'],
+      \'typescript': ['tslint'],
+      \'python': ['pylint'],
     \}
     let g:vue_disable_pre_processors=1
     let g:vim_jsx_pretty_enable_jsx_highlight = 1
@@ -217,6 +223,7 @@
   "autocmd FileType go autocmd BufWritePre <buffer> Fmt
   "autocmd BufNewFile,BufRead *.vue set filetype=vue.html.javascript.css
   autocmd BufNewFile,BufRead *.js set filetype=javascript.jsx
+  autocmd BufNewFile,BufRead *.tsx set filetype=typescript.jsx
   autocmd BufNewFile,BufRead *.ejs set filetype=html
   autocmd FileType * setlocal expandtab shiftwidth=2 softtabstop=2
   "autocmd FileType vue syntax sync fromstart
@@ -664,11 +671,12 @@
   " Autoformat {
     if isdirectory(expand("~/.vim/bundle/vim-autoformat/"))
       noremap <leader><leader>f :Autoformat<CR>
+      "noremap <leader><leader>f :ALEFix<CR>
       noremap <leader><space> :RemoveTrailingSpaces<cr>
       let g:autoformat_autoindent = 0
       let g:autoformat_retab = 0
       let g:autoformat_remove_trailing_spaces = 0
-      let g:formatters_typescript = ['eslint_local']
+      "let g:formatters_typescript = ['eslint_local']
       "let g:autoformat_verbosemode = 1
     endif
   " }

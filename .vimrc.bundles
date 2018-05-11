@@ -64,6 +64,9 @@
 
   " General {
     if count(g:spf13_bundle_groups, 'general')
+      if has('unix') && !has('mac')
+        Plug 'lilydjwg/fcitx.vim'
+      endif
       Plug 'scrooloose/nerdtree'
       Plug 'spf13/vim-colors'
       Plug 'joshdick/onedark.vim'
@@ -112,7 +115,6 @@
       Plug 'Chun-Yang/vim-textobj-chunk'
       Plug 'whatyouhide/vim-textobj-xmlattr'
       Plug 'jceb/vim-textobj-uri'
-      "Plug 'lilydjwg/fcitx.vim'
       Plug 'Chiel92/vim-autoformat'
       Plug 'editorconfig/editorconfig-vim'
     endif
@@ -186,6 +188,7 @@
       Plug 'posva/vim-vue'
       "Plug 'mxw/vim-jsx'
       Plug 'maxmellon/vim-jsx-pretty'
+      "Plug 'peitalin/vim-jsx-typescript'
       Plug 'groenewege/vim-less'
       Plug 'kchmck/vim-coffee-script'
     endif
@@ -222,7 +225,7 @@
       Plug 'ap/vim-css-color'
       Plug 'othree/csscomplete.vim'
       Plug 'tpope/vim-haml'
-      "Plug 'mattn/emmet-vim'
+      Plug 'mattn/emmet-vim'
     endif
   " }
 
