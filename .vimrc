@@ -653,11 +653,11 @@
       " When enabled, there can be too much visual noise
       " especially when splits are used.
       set completeopt-=preview
-      nnoremap <leader>yg :YcmCompleter GoTo<CR>
-      nnoremap <leader>yt :YcmCompleter GetType<CR>
-      nnoremap <leader>yd :YcmCompleter GetDoc<CR>
-      nnoremap <leader>yf :YcmCompleter FixIt<CR>
-      nnoremap <leader>yr :YcmCompleter RefactorRename<space>
+      nnoremap <leader>D :YcmCompleter GoTo<CR>
+      nnoremap <leader>T :YcmCompleter GetType<CR>
+      nnoremap <leader>K :YcmCompleter GetDoc<CR>
+      nnoremap <leader>F :YcmCompleter FixIt<CR>
+      nnoremap <leader>R :YcmCompleter RefactorRename<space>
     endif
   " }
 
