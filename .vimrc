@@ -68,7 +68,7 @@
     let g:ale_fixers = {
       \'javascript': ['eslint'],
       \'typescript': ['tslint'],
-      \'python': ['pylint'],
+      \'python': ['autopep8'],
     \}
     let g:vue_disable_pre_processors=1
     let g:vim_jsx_pretty_enable_jsx_highlight = 1
@@ -205,10 +205,10 @@
 
   set wrap            " Do wrap long lines
   set autoindent          " Indent at the same level of the previous line
-  set shiftwidth=2        " Use indents of 4 spaces
+  set shiftwidth=4        " Use indents of 4 spaces
   set expandtab           " Tabs are spaces, not tabs
-  set tabstop=2           " An indentation every four columns
-  set softtabstop=2         " Let backspace delete indent
+  set tabstop=4           " An indentation every four columns
+  set softtabstop=4         " Let backspace delete indent
   set nojoinspaces        " Prevents inserting two spaces after punctuation on a join (J)
   set splitright          " Puts new vsplit windows to the right of the current
   set splitbelow          " Puts new split windows to the bottom of the current
@@ -225,7 +225,7 @@
   autocmd BufNewFile,BufRead *.js set filetype=javascript.jsx
   autocmd BufNewFile,BufRead *.tsx set filetype=typescript.jsx
   autocmd BufNewFile,BufRead *.ejs set filetype=html
-  autocmd FileType * setlocal expandtab shiftwidth=2 softtabstop=2
+  autocmd FileType javascript,vue,jsx,html,css setlocal expandtab shiftwidth=2 tabstop=2 softtabstop=2
   "autocmd FileType vue syntax sync fromstart
 " }
 
@@ -670,12 +670,12 @@
     "endif
   " Autoformat {
     if isdirectory(expand("~/.vim/bundle/vim-autoformat/"))
-      noremap <leader><leader>f :Autoformat<CR>
-      "noremap <leader><leader>f :ALEFix<CR>
+      "noremap <leader><leader>f :Autoformat<CR>
+      noremap <leader><leader>f :ALEFix<CR>
       noremap <leader><space> :RemoveTrailingSpaces<cr>
-      let g:autoformat_autoindent = 0
+      let g:autoformat_autoindent = 1
       let g:autoformat_retab = 0
-      let g:autoformat_remove_trailing_spaces = 0
+      let g:autoformat_remove_trailing_spaces = 1
       "let g:formatters_typescript = ['eslint_local']
       "let g:autoformat_verbosemode = 1
     endif
@@ -696,7 +696,7 @@
       let g:indent_guides_guide_size = 2
       let g:indent_guides_start_level = 1
       autocmd VimEnter,Colorscheme * :hi IndentGuidesOdd  guibg=#353535 ctermbg=240
-      autocmd VimEnter,Colorscheme * :hi IndentGuidesEven guibg=#3f3f3f ctermbg=black
+      autocmd VimEnter,Colorscheme * :hi IndentGuidesEven guibg=#3f3f3f ctermbg=240
     endif
   " }
 

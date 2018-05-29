@@ -95,7 +95,8 @@
       Plug 'jistr/vim-nerdtree-tabs'
       Plug 'flazz/vim-colorschemes'
       "Plug 'mbbill/undotree'
-      Plug 'nathanaelkane/vim-indent-guides'
+      "Plug 'nathanaelkane/vim-indent-guides'
+      Plug 'Yggdroot/indentLine'
       Plug 'mhinz/vim-signify'
       Plug 'tpope/vim-abolish'
       Plug 'osyo-manga/vim-over'
@@ -175,7 +176,7 @@
   " Python {
     if count(g:spf13_bundle_groups, 'python')
       " Pick either python-mode or pyflakes & pydoc
-      Plug 'python-mode/python-mode'
+      "Plug 'python-mode/python-mode'
     endif
   " }
 
