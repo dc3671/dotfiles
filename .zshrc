@@ -30,7 +30,7 @@ plugins=(git history-substring-search tmux)
 
 export HOME=~
 export FONTS_HOME="/usr/share/fonts"
-export PYTHON_HOME="$HOME/.local/lib/python2.7:/usr/lib/python2.7:/usr/lib64/python2.7:/usr/include/python2.7"
+export PYTHON_HOME="$HOME/.local/lib/python3.6:/usr/lib/python3.6:/usr/lib64/python3.6:/usr/include/python3.6"
 export GCC_HOME="/usr/lib/gcc/x86_64-redhat-linux/4.9.2"
 export NPM_CONFIG_PREFIX="$HOME/.npm-global"
 export JAVA_HOME="/usr/lib/jvm/java-8-openjdk"

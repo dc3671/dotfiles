@@ -620,15 +620,15 @@
       let g:ycm_collect_identifiers_from_tags_files = 1
 
       " remap Ultisnips for compatibility for YCM
-      let g:UltiSnipsExpandTrigger = '<Tab>'
-      let g:UltiSnipsJumpForwardTrigger = '<C-b>'
-      let g:UltiSnipsJumpBackwardTrigger = '<C-z>'
+      let g:UltiSnipsExpandTrigger = '<C-m>'
+      let g:UltiSnipsJumpForwardTrigger = ''
+      let g:UltiSnipsJumpBackwardTrigger = ''
 
       let g:ycm_autoclose_preview_window_after_completion = 1
       let g:ycm_complete_in_strings = 1
       let g:ycm_complete_in_comments = 1
-      let g:ycm_key_list_select_completion = ['<Down>']
-      let g:ycm_key_list_previous_completion = ['<Up>']
+      let g:ycm_key_list_select_completion = ['<TAB>', '<Down>']
+      let g:ycm_key_list_previous_completion = ['<S-TAB>', '<Up>']
       let g:ycm_key_detailed_diagnostics = '<leader><leader>d'
       let g:ycm_semantic_triggers =  {
         \ 'c,cpp,python,java,go,erlang,perl': ['re!\w{3}'],
