@@ -35,7 +35,8 @@ export GCC_HOME="/usr/lib/gcc/x86_64-redhat-linux/4.9.2"
 export NPM_CONFIG_PREFIX="$HOME/.npm-global"
 export JAVA_HOME="/usr/lib/jvm/java-8-openjdk"
 export CUDA_HOME="/usr/local/cuda-8.0"
-export CONDA_HOME=~/miniconda3
+export MINICONDA_HOME=~/miniconda3
+export ANACONDA_HOME="/opt/anaconda/anaconda3"
 
 export LC_ALL="en_US.UTF-8"
 export LANG="en_US.UTF-8"
@@ -47,7 +48,8 @@ export PATH="$GCC_HOME/include/:$PATH"
 export PATH="$NPM_CONFIG_PREFIX/bin:$PATH"
 export PATH="$JAVA_HOME/bin:$PATH"
 export PATH="$CUDA_HOME/bin:$PATH"
-export PATH="$CONDA_HOME/bin:$PATH"
+export PATH="$MINICONDA_HOME/bin:$PATH"
+export PATH="$ANACONDA_HOME/bin:$PATH"
 
 export LD_LIBRARY_PATH="/usr/lib:/usr/local/lib:$HOME/.local/lib"
 export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:$HOME/.local/cuda/lib64"
