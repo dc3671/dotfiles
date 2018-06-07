@@ -411,11 +411,11 @@
   inoremap <C-o> <Esc>o
   inoremap <C-a> <Home>
   inoremap <C-e> <End>
-  inoremap <C-h> <Left>
-  inoremap <C-j> <Down>
-  inoremap <C-k> <Up>
-  inoremap <C-l> <Right>
-  inoremap <C-d> <DELETE>
+  inoremap <A-h> <Left>
+  inoremap <A-j> <Down>
+  inoremap <A-k> <Up>
+  inoremap <A-l> <Right>
+  inoremap <C-d> <Backspace>
 
   " Go to home and end using capitalized directions
   noremap H 0
@@ -620,9 +620,10 @@
       let g:ycm_collect_identifiers_from_tags_files = 1
 
       " remap Ultisnips for compatibility for YCM
-      let g:UltiSnipsExpandTrigger = '<C-m>'
+      let g:UltiSnipsExpandTrigger = '<C-l>'
       let g:UltiSnipsJumpForwardTrigger = ''
       let g:UltiSnipsJumpBackwardTrigger = ''
+      let g:UltiSnipsSnippetsDir = '~/.vim/bundle/vim-snippet/Ultisnips'
 
       let g:ycm_autoclose_preview_window_after_completion = 1
       let g:ycm_complete_in_strings = 1
