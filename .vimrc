@@ -56,18 +56,18 @@
 
   " Linter, use Ale {
     syntax on           " Syntax highlighting
-    let g:ale_sign_error = '✗'
-    let g:ale_sign_warning = '⚠'
+    let g:ale_sign_error = '>>'
+    let g:ale_sign_warning = '??'
     let g:ale_echo_msg_format = '%s [%severity%%/code%]'
     let g:ale_linters = {
       \'javascript': ['eslint'],
-      \'typescript': ['tslint'],
+      \'typescript': ['eslint'],
       \'python': ['pylint'],
       \'vue': ['prettier']
     \}
     let g:ale_fixers = {
       \'javascript': ['eslint'],
-      \'typescript': ['tslint'],
+      \'typescript': ['eslint'],
       \'python': ['autopep8'],
     \}
     let g:vue_disable_pre_processors=1
@@ -222,8 +222,8 @@
   autocmd FileType c,cpp,java,go,php,javascript,puppet,python,rust,twig,xml,yml,perl,sql autocmd BufWritePre <buffer> if !exists('g:spf13_keep_trailing_whitespace') | call StripTrailingWhitespace() | endif
   "autocmd FileType go autocmd BufWritePre <buffer> Fmt
   "autocmd BufNewFile,BufRead *.vue set filetype=vue.html.javascript.css
-  autocmd BufNewFile,BufRead *.js set filetype=javascript.jsx
-  autocmd BufNewFile,BufRead *.tsx set filetype=typescript.jsx
+  "autocmd BufNewFile,BufRead *.js set filetype=javascript.jsx
+  autocmd BufNewFile,BufRead *.tsx,*.jsx set filetype=typescript.jsx
   autocmd BufNewFile,BufRead *.ejs set filetype=html
   autocmd FileType javascript,vue,jsx,html,css setlocal expandtab shiftwidth=2 tabstop=2 softtabstop=2
   "autocmd FileType vue syntax sync fromstart

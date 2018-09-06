@@ -181,10 +181,14 @@
       Plug 'isRuslan/vim-es6'
       Plug 'posva/vim-vue'
       "Plug 'mxw/vim-jsx'
-      Plug 'maxmellon/vim-jsx-pretty'
-      "Plug 'peitalin/vim-jsx-typescript'
+      Plug 'leafgarland/typescript-vim'
+      "Plug 'maxmellon/vim-jsx-pretty'
+      Plug 'peitalin/vim-jsx-typescript'
       Plug 'groenewege/vim-less'
       Plug 'kchmck/vim-coffee-script'
+      Plug 'Quramy/tsuquyomi'
+      Plug 'Quramy/vim-js-pretty-template'
+      Plug 'jason0x43/vim-js-indent'
     endif
   " }
 
