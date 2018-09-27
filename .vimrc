@@ -56,6 +56,7 @@
 
   " Linter, use Ale {
     syntax on           " Syntax highlighting
+    " let g:ale_lint_on_text_changed = 'never'
     let g:ale_sign_error = '>>'
     let g:ale_sign_warning = '??'
     let g:ale_echo_msg_format = '%s [%severity%%/code%]'
@@ -654,7 +655,7 @@
       " When enabled, there can be too much visual noise
       " especially when splits are used.
       set completeopt-=preview
-      nnoremap <leader>D :YcmCompleter GoTo<CR>
+      nnoremap <leader>D :YcmCompleter GoToDefinition<CR>
       nnoremap <leader>T :YcmCompleter GetType<CR>
       nnoremap <leader>K :YcmCompleter GetDoc<CR>
       nnoremap <leader>F :YcmCompleter FixIt<CR>
@@ -776,16 +777,9 @@
   if has('gui_running')
     set guioptions-=T       " Remove the toolbar
     set lines=40        " 40 lines of text instead of 24
-    if !exists("g:spf13_no_big_font")
-      if LINUX() && has("gui_running")
-        set guifont=Andale\ Mono\ Regular\ 12,Menlo\ Regular\ 11,Consolas\ Regular\ 12,Courier\ New\ Regular\ 14
-        "set guifont=Roboto\ Mono\ for\ Powerline:h18
-      elseif OSX() && has("gui_running")
-        set guifont=Andale\ Mono\ Regular:h12,Menlo\ Regular:h11,Consolas\ Regular:h12,Courier\ New\ Regular:h14
-      elseif WINDOWS() && has("gui_running")
-        set guifont=Andale_Mono:h10,Menlo:h10,Consolas:h10,Courier_New:h10
-      endif
-    endif
+    set guioptions=
+    set guifont=Droid\ Sans\ Mono\ for\ Powerline:h13
+    set linespace=2
   else
     if &term == 'xterm' || &term == 'screen'
       set t_Co=256      " Enable 256 colors to stop the CSApprox warning and make xterm vim shine
