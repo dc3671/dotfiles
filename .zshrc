@@ -39,6 +39,7 @@ export MINICONDA_HOME=~/miniconda3
 export ANACONDA_HOME="/opt/anaconda/anaconda3"
 export GOPATH="$HOME/golang"
 export GOROOT="/usr/local/opt/go/libexec"
+export AIRFLOW_HOME=~/airflow
 
 export LC_ALL="en_US.UTF-8"
 export LANG="en_US.UTF-8"
