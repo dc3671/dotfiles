@@ -126,6 +126,7 @@
       " Pick one of the checksyntax, jslint, or syntastic
       Plug 'sheerun/vim-polyglot'
       Plug 'w0rp/ale'
+      " Conflict with ale
       "Plug 'scrooloose/syntastic'
       Plug 'tpope/vim-fugitive'
       Plug 'mattn/webapi-vim'
@@ -170,6 +171,7 @@
     if count(g:spf13_bundle_groups, 'python')
       " Pick either python-mode or pyflakes & pydoc
       "Plug 'python-mode/python-mode'
+      Plug 'vim-python/python-syntax'
     endif
   " }
 

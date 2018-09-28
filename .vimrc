@@ -523,6 +523,7 @@
     "let g:loaded_restore_view = 0
     set sessionoptions=blank,buffers,curdir,folds,tabpages,winsize
     let g:session_autosave = 'no'
+    let g:session_autoload = 'no'
     if isdirectory(expand("~/.vim/bundle/vim-session/"))
       nmap <leader>sl :OpenSession<CR>
       nmap <leader>ss :SaveSession<Space>
@@ -535,6 +536,15 @@
   " JSON {
     nmap <leader>jt <Esc>:%!python -m json.tool<CR><Esc>:set filetype=json<CR>
     let g:vim_json_syntax_conceal = 0
+  " }
+
+  " Python Syntax {
+    if isdirectory(expand("~/.vim/bundle/python-syntax"))
+        "let g:python_highlight_builtins = 1
+        "let g:python_highlight_exceptions = 1
+        "let g:python_highlight_indent_errors = 1
+        let g:python_highlight_all = 1
+    endif
   " }
 
   " PyMode {
@@ -621,7 +631,7 @@
       let g:ycm_collect_identifiers_from_tags_files = 1
 
       " remap Ultisnips for compatibility for YCM
-      let g:UltiSnipsExpandTrigger = '<C-l>'
+      let g:UltiSnipsExpandTrigger = '<C-v>'
       let g:UltiSnipsJumpForwardTrigger = ''
       let g:UltiSnipsJumpBackwardTrigger = ''
       let g:UltiSnipsSnippetsDir = '~/.vim/bundle/vim-snippet/Ultisnips'
