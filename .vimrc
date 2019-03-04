@@ -63,7 +63,7 @@
     let g:ale_linters = {
       \'javascript': ['eslint'],
       \'typescript': ['eslint'],
-      \'python': ['pylint'],
+      \'python': ['autopep8'],
       \'vue': ['prettier']
     \}
     let g:ale_fixers = {
@@ -665,7 +665,7 @@
       " When enabled, there can be too much visual noise
       " especially when splits are used.
       set completeopt-=preview
-      nnoremap <leader>D :YcmCompleter GoToDefinition<CR>
+      nnoremap <leader>D :YcmCompleter GoTo<CR>
       nnoremap <leader>T :YcmCompleter GetType<CR>
       nnoremap <leader>K :YcmCompleter GetDoc<CR>
       nnoremap <leader>F :YcmCompleter FixIt<CR>
@@ -788,7 +788,12 @@
     set guioptions-=T       " Remove the toolbar
     set lines=40        " 40 lines of text instead of 24
     set guioptions=
-    set guifont=Droid\ Sans\ Mono\ for\ Powerline:h13
+    if OSX()
+      set guifont=Droid\ Sans\ Mono\ for\ Powerline:h13
+    endif
+    if LINUX()
+      set guifont=Droid\ Sans\ Mono\ for\ Powerline\ 10
+    endif
     set linespace=2
   else
     if &term == 'xterm' || &term == 'screen'
