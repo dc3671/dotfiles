@@ -224,9 +224,10 @@
   "autocmd FileType go autocmd BufWritePre <buffer> Fmt
   "autocmd BufNewFile,BufRead *.vue set filetype=vue.html.javascript.css
   "autocmd BufNewFile,BufRead *.js set filetype=javascript.jsx
-  autocmd BufNewFile,BufRead *.tsx,*.jsx set filetype=typescript.jsx
+  autocmd BufNewFile,BufRead *.tsx set filetype=typescript.tsx
+  autocmd BufNewFile,BufRead *.jsx set filetype=javascript.jsx
   autocmd BufNewFile,BufRead *.ejs set filetype=html
-  autocmd FileType javascript,vue,jsx,html,css setlocal expandtab shiftwidth=2 tabstop=2 softtabstop=2
+  autocmd FileType javascript,typescript,vue,html,css setlocal expandtab shiftwidth=2 tabstop=2 softtabstop=2
   "autocmd FileType vue syntax sync fromstart
 " }
 
@@ -476,8 +477,8 @@
     "au FileType xhtml,xml ru ftplugin/html/autoclosetag.vim
     "nmap <Leader>ac <Plug>ToggleAutoCloseMappings
     if isdirectory(expand("~/.vim/bundle/vim-closetag"))
-      let g:closetag_filenames = '*.html,*.xhtml,*.phtml,*.vue,*.php,*.jsx'
-      let g:closetag_xhtml_filenames = '*.html,*.xhtml,*.phtml,*.vue,*.php,*.jsx'
+      let g:closetag_filetypes = 'html,xhtml,phtml,vue,php,javascript,typescript'
+      let g:closetag_xhtml_filetypes = 'html,xhtml,phtml,vue,php,javascript,typescript'
     endif
   " }
 
@@ -498,7 +499,7 @@
     endif
   " }
 
-  " Tabularize {
+  " Tabularize, align multi lines along a symbol {
     if isdirectory(expand("~/.vim/bundle/tabular"))
       nmap <Leader>a& :Tabularize /&<CR>
       vmap <Leader>a& :Tabularize /&<CR>
