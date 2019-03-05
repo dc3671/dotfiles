@@ -725,14 +725,30 @@
     if isdirectory(expand("~/.vim/bundle/wildfire.vim"))
       " This selects the next closest text object.
       map <SPACE> <Plug>(wildfire-fuel)
-      " This selects the previous closest text object.
-      vmap <C-SPACE> <Plug>(wildfire-water)
+      " This selects the previous closest text object. (comflict with system shortcut)
+      "vmap <C-SPACE> <Plug>(wildfire-water)
       "nmap <leader>s <plug>(wildfire-quick-select)
       let g:wildfire_objects = {
         \ "*" : ["i'", 'i"', "i)", "i]", "i}", "ip"],
         \ "html,xml" : ["at"],
       \}
     endif
+  " }
+
+  " vim-textobj-user, to quickly select(v)/delete(d) specific text pattern {
+  " 
+    " 'kana/vim-textobj-indent'
+    " ai/ii for same or more indent, aI/iI for same
+    " 'beloglazov/vim-textobj-quotes'
+    " iq/aq for single ('), double ("), or back (`) quotes
+    " 'Julian/vim-textobj-brace'
+    " ij/aj for [], {}, or ().
+    " 'Chun-Yang/vim-textobj-chunk'
+    " ic/ac for a whole function/space, more useful than ai.
+    " 'whatyouhide/vim-textobj-xmlattr'
+    " ix works with the inner attribute, with no surrounding whitespace. ax works like aw does: it includes the whitespace before the attribute.
+    " 'jceb/vim-textobj-uri'
+    " iu/au for uri without/with trailing whitespaces
   " }
 
   " MatchTagAlways {
