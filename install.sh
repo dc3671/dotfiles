@@ -43,6 +43,7 @@ success     "Done."
 msg         ">>> Config zsh..."
 msg         ">>> Install oh-my-zsh..."
 git clone --depth=1 https://github.com/robbyrussell/oh-my-zsh.git ~/.oh-my-zsh
+git clone https://github.com/zsh-users/zsh-autosuggestions ~/.oh-my-zsh/custom/plugins/zsh-autosuggestions
 msg         ">>> Change shell to zsh"
 mv ~/.zshrc ~/.zshrc.bak >/dev/null 2>&1
 ln -s $PWD/.zshrc ~/.zshrc

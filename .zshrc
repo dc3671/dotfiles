@@ -24,7 +24,7 @@ ZSH_THEME="ys"
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(git-extras git-flow-avh history-substring-search dirhistory tmux npm yarn python pip docker command-not-found)
+plugins=(git-extras git-flow-avh history-substring-search dirhistory tmux npm yarn python pip docker command-not-found zsh-autosuggestions)
 
 # User configuration
 
