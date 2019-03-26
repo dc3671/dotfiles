@@ -47,7 +47,7 @@ git clone https://github.com/zsh-users/zsh-autosuggestions ~/.oh-my-zsh/custom/p
 msg         ">>> Change shell to zsh"
 mv ~/.zshrc ~/.zshrc.bak >/dev/null 2>&1
 ln -s $PWD/.zshrc ~/.zshrc
-chsh -s /bin/zsh
+chsh $USER -s /bin/zsh
 success     "Done. You may need to re-login or reopen terminal to see the effect"
 
 # vim
@@ -89,7 +89,7 @@ if [ "$TEST_CURRENT_SHELL" != "zsh" ]; then
   # If this platform provides a "chsh" command (not Cygwin), do it, man!
   if hash chsh >/dev/null 2>&1; then
     printf "${BLUE}Time to change your default shell to zsh!${NORMAL}\n"
-    chsh -s $(grep /zsh$ /etc/shells | tail -1)
+    chsh $USER -s $(grep /zsh$ /etc/shells | tail -1)
   # Else, suggest the user do so manually.
   else
     printf "I can't change your shell automatically because this system does not have chsh.\n"
