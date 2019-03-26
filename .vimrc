@@ -80,6 +80,8 @@
   set mousehide         " Hide the mouse cursor while typing
   scriptencoding utf-8
   set encoding=utf-8
+  set fileencodings=utf-8,gb2312,gb18030,gbk,ucs-bom,cp936,latin1
+  set termencoding=utf-8
 
   if has('clipboard')
     if has('unnamedplus')  " When possible use + register for copy-paste
@@ -464,7 +466,27 @@
 
   " Ctags {
     set tags=./tags;/,~/.vimtags
+    " for javascript support, `npm i -g jsctags`
+    " for typescript support, `npm install --global git+https://github.com/Perlence/tstags.git`
     let g:vim_tags_use_language_field = 1
+    let g:tagbar_type_typescript = {
+      \ 'ctagsbin' : 'tstags',
+      \ 'ctagsargs' : '-f-',
+      \ 'kinds': [
+        \ 'e:enums:0:1',
+        \ 'f:function:0:1',
+        \ 't:typealias:0:1',
+        \ 'M:Module:0:1',
+        \ 'I:import:0:1',
+        \ 'i:interface:0:1',
+        \ 'C:class:0:1',
+        \ 'm:method:0:1',
+        \ 'p:property:0:1',
+        \ 'v:variable:0:1',
+        \ 'c:const:0:1',
+      \ ],
+      \ 'sort' : 0
+    \ }
     " Make tags placed in .git/tags file available in all levels of a repository
     let gitroot = substitute(system('git rev-parse --show-toplevel'), '[\n\r]', '', 'g')
     if gitroot != ''
@@ -597,7 +619,7 @@
 
   " TagBar {
     if isdirectory(expand("~/.vim/bundle/tagbar/"))
-      nnoremap <silent> <leader>tt :TagbarToggle<CR>
+      nmap <F8> :TagbarToggle<CR>
     endif
   "}
 
@@ -727,7 +749,7 @@
       map <SPACE> <Plug>(wildfire-fuel)
       " This selects the previous closest text object. (comflict with system shortcut)
       "vmap <C-SPACE> <Plug>(wildfire-water)
-      "nmap <leader>s <plug>(wildfire-quick-select)
+      nmap <leader><leader>s <plug>(wildfire-quick-select)
       let g:wildfire_objects = {
         \ "*" : ["i'", 'i"', "i)", "i]", "i}", "ip"],
         \ "html,xml" : ["at"],
@@ -736,7 +758,7 @@
   " }
 
   " vim-textobj-user, to quickly select(v)/delete(d) specific text pattern {
-  " 
+  "
     " 'kana/vim-textobj-indent'
     " ai/ii for same or more indent, aI/iI for same
     " 'beloglazov/vim-textobj-quotes'
