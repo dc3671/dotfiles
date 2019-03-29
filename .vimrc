@@ -64,13 +64,17 @@
       \'javascript': ['eslint'],
       \'typescript': ['eslint'],
       \'python': ['autopep8'],
-      \'vue': ['prettier']
+      \'vue': ['prettier'],
+      \'cpp': ['clang++'],
     \}
+    let g:ale_cpp_clang_options = '-std=c++1z -Wall'
     let g:ale_fixers = {
       \'javascript': ['eslint'],
       \'typescript': ['eslint'],
       \'python': ['autopep8'],
+      \'cpp': ['clang-format'],
     \}
+    let g:ale_c_clangformat_options = '-style="{BasedOnStyle: google, IndentWidth: 4}"'
     let g:vue_disable_pre_processors=1
     let g:vim_jsx_pretty_enable_jsx_highlight = 1
     let g:vim_jsx_pretty_colorful_config = 1
