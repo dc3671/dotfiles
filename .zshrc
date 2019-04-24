@@ -61,6 +61,8 @@ export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:$HOME/.local/cuda/lib64"
 export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:$CUDA_HOME/extras/CUPTI/lib64"
 
 export TERM="xterm-256color"
+export CC='/usr/bin/clang'
+export CXX='/usr/bin/clang++'
 export GTK_IM_MODULE=fcitx
 export QT_IM_MODULE=fcitx
 export XMODIFIERS="@im=fcitx"
