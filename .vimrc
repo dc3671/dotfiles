@@ -73,6 +73,7 @@
       \'typescript': ['eslint'],
       \'python': ['autopep8'],
       \'cpp': ['clang-format'],
+      \'json': ['jq'],
     \}
     let g:ale_c_clangformat_options = '-style="{BasedOnStyle: google, IndentWidth: 4}"'
     let g:vue_disable_pre_processors=1
