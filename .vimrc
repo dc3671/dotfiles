@@ -663,6 +663,8 @@
       let g:UltiSnipsJumpBackwardTrigger = ''
       let g:UltiSnipsSnippetsDir = '~/.vim/bundle/vim-snippet/Ultisnips'
 
+      " not ask about loading config files
+      let g:ycm_confirm_extra_conf = 0
       let g:ycm_autoclose_preview_window_after_completion = 1
       let g:ycm_complete_in_strings = 1
       let g:ycm_complete_in_comments = 1
