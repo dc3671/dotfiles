@@ -24,7 +24,7 @@ ZSH_THEME="ys"
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(git-extras git-flow-avh history-substring-search dirhistory tmux npm yarn python pip docker command-not-found zsh-autosuggestions)
+plugins=(git-extras git-flow-avh history-substring-search dirhistory ssh-agent tmux npm yarn python pip docker command-not-found zsh-autosuggestions)
 
 # User configuration
 
@@ -76,7 +76,11 @@ export EDITOR='vim'
 export HOMEBREW_BOTTLE_DOMAIN=https://mirrors.tuna.tsinghua.edu.cn/homebrew-bottles
 umask 002
 
+zstyle :omz:plugins:ssh-agent agent-forwarding on
+zstyle :omz:plugins:ssh-agent identities id_rsa
+
 source $ZSH/oh-my-zsh.sh
+
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
 unsetopt PROMPT_SP
