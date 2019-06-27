@@ -660,8 +660,8 @@
 
       " remap Ultisnips for compatibility for YCM
       let g:UltiSnipsExpandTrigger = '<C-v>'
-      let g:UltiSnipsJumpForwardTrigger = ''
-      let g:UltiSnipsJumpBackwardTrigger = ''
+      let g:UltiSnipsJumpForwardTrigger = '<C-j>'
+      let g:UltiSnipsJumpBackwardTrigger = '<C-k>'
       let g:UltiSnipsSnippetsDir = '~/.vim/bundle/vim-snippet/Ultisnips'
 
       " not ask about loading config files
