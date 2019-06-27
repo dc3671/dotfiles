@@ -33,6 +33,8 @@ reference: https://github.com/Valloric/YouCompleteMe#installation
 
 ## Key Mappings ##
 
+**may already be depreciated**
+
 ### Tmux ###
 
 `<leader>` key has been changed to ctrl+x
