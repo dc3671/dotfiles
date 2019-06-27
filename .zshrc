@@ -35,8 +35,6 @@ export GCC_HOME="/usr/lib/gcc/x86_64-redhat-linux/4.9.2"
 export LLVM_HOME="/usr/lib/llvm-5.0"
 export NPM_CONFIG_PREFIX="$HOME/.npm-global"
 export JAVA_HOME="/usr/lib/jvm/default-java"
-export CUDA_HOME="/usr/local/cuda-10.1"
-export CUDA_BIN_PATH=$CUDA_HOME
 export MINICONDA_HOME=~/miniconda3
 export ANACONDA_HOME="/opt/anaconda/anaconda3"
 export GOPATH="$HOME/golang"
@@ -54,8 +52,6 @@ export PATH="$GCC_HOME/include:$PATH"
 export PATH="$LLVM_HOME/bin:$PATH"
 export PATH="$NPM_CONFIG_PREFIX/bin:$PATH"
 export PATH="$JAVA_HOME/bin:$PATH"
-export PATH="$CUDA_HOME/bin:$PATH"
-export PATH="$CUDA_HOME/include:$PATH"
 export PATH="$MINICONDA_HOME/bin:$PATH"
 export PATH="$ANACONDA_HOME/bin:$PATH"
 export PATH="$GOPATH/bin:$PATH"
@@ -63,7 +59,7 @@ export PATH="$GOROOT/bin:$PATH"
 export PATH="$MEGDL_HOME/bin:$PATH"
 
 export LD_LIBRARY_PATH="/usr/lib:/usr/local/lib:$HOME/.local/lib"
-export LD_LIBRARY_PATH="$CUDA_HOME/lib64:$LD_LIBRARY_PATH"
+export LIBRARY_PATH=$LD_LIBRARY_PATH
 
 export TERM="xterm-256color"
 export CC='/usr/bin/clang'
