@@ -234,7 +234,7 @@
   autocmd BufNewFile,BufRead *.tsx set filetype=typescript.tsx
   autocmd BufNewFile,BufRead *.jsx set filetype=javascript.jsx
   autocmd BufNewFile,BufRead *.ejs set filetype=html
-  autocmd FileType javascript,typescript,vue,html,css setlocal expandtab shiftwidth=2 tabstop=2 softtabstop=2
+  autocmd FileType javascript,typescript,vue,html,css,json,vim setlocal expandtab shiftwidth=2 tabstop=2 softtabstop=2
   "autocmd FileType vue syntax sync fromstart
 " }
 
