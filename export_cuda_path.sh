@@ -1,6 +1,7 @@
 export CUDA_HOME="/data/cuda/cuda-10.0/cuda"
 export CUDNN_HOME="/data/cuda/cuda-10.0/cudnn/v7.5.0"
 export CUDA_BIN_PATH=$CUDA_HOME
+export CUDA_TOOLKIT_ROOT_DIR=$CUDA_HOME
 export NVIDIA_HOME="/usr/local/nvidia"
 
 export PATH="$CUDA_HOME/bin:$PATH"
