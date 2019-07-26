@@ -815,6 +815,14 @@
     endif
   " }
 
+  " vim-ctrlspace {
+    if isdirectory(expand("~/.vim/bundle/vim-ctrlspace"))
+      let g:CtrlSpaceLoadLastWorkspaceOnStart = 1
+      let g:CtrlSpaceSaveWorkspaceOnSwitch = 1
+      let g:CtrlSpaceSaveWorkspaceOnExit = 1
+      let g:CtrlSpaceUseUnicode = 0
+    endif
+  " }
   " emoji related {
     "if emoji#available()
       "let g:gitgutter_sign_added = emoji#for('small_blue_diamond')

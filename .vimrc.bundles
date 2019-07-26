@@ -86,6 +86,7 @@
       Plug 'xolox/vim-session'
       "Plug 'tpope/vim-obsession'
       "Plug 'dhruvasagar/vim-prosession'
+      Plug 'vim-ctrlspace/vim-ctrlspace'
       Plug 'moll/vim-bbye'
       Plug 'vim-airline/vim-airline'
       Plug 'vim-airline/vim-airline-themes'
