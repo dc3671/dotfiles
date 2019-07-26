@@ -63,7 +63,7 @@
     let g:ale_linters = {
       \'javascript': ['eslint'],
       \'typescript': ['eslint'],
-      \'python': ['autopep8'],
+      \'python': ['pylint'],
       \'vue': ['prettier'],
       \'cpp': ['clang++'],
     \}
