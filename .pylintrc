@@ -61,10 +61,22 @@ confidence=
 # no Warning level messages displayed, use "--disable=all --enable=classes
 # --disable=W".
 disable=
+    no-self-use,
     no-value-for-parameter,
     missing-docstring,
     fixme,
     unnecessary-pass,
+    global-statement,
+    locally-disabled,
+    suppressed-message,
+    file-ignored,
+    too-many-ancestors,
+    too-few-public-methods,
+    too-many-public-methods,
+    too-many-instance-attributes,
+    too-many-lines,
+    too-many-arguments,
+    too-many-locals,
     # default disable
     print-statement,
     parameter-unpacking,

@@ -181,7 +181,7 @@ column_limit = 120
 
 # If an argument / parameter list is going to be split, then split before
 # the first argument.
-#split_before_first_argument = False
+split_before_first_argument = True
 
 # Set to True to prefer splitting before 'and' or 'or' rather than
 # after.
