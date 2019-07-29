@@ -71,7 +71,7 @@
     let g:ale_fixers = {
       \'javascript': ['eslint'],
       \'typescript': ['eslint'],
-      \'python': ['autopep8'],
+      \'python': ['yapf'],
       \'cpp': ['clang-format'],
       \'json': ['jq'],
     \}
