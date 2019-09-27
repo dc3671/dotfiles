@@ -59,7 +59,7 @@ based_on_style = pep8
 #        'key1': 'value1',
 #        'key2': 'value2',
 #    })
-#coalesce_brackets = False
+coalesce_brackets = True
 
 # The column limit.
 column_limit = 120
@@ -102,7 +102,7 @@ column_limit = 120
 #dedent_closing_brackets = False
 
 # Place each dictionary entry onto its own line.
-#each_dict_entry_on_separate_line = True
+each_dict_entry_on_separate_line = True
 
 # The regex for an i18n comment. The presence of this comment stops
 # reformatting of that line, because the comments are required to be
@@ -173,7 +173,7 @@ column_limit = 120
 #       variable: 'Hello world, have a nice day!'
 #       for variable in bar if variable != 42
 #   }
-#split_before_dict_set_generator = True
+split_before_dict_set_generator = False
 
 # Split after the opening paren which surrounds an expression if it doesn't
 # fit on a single line.
@@ -188,7 +188,7 @@ split_before_first_argument = True
 #split_before_logical_operator = True
 
 # Split named assignments onto individual lines.
-#split_before_named_assigns = True
+split_before_named_assigns = False
 
 # Set to True to split list comprehensions and generators that have
 # non-trivial expressions and multiple clauses before each of these
