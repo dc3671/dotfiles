@@ -228,6 +228,7 @@
   " .vimrc.before.local file:
   " let g:spf13_keep_trailing_whitespace = 1
   autocmd FileType c,cpp,java,go,php,javascript,puppet,python,rust,twig,xml,yml,perl,sql autocmd BufWritePre <buffer> if !exists('g:spf13_keep_trailing_whitespace') | call StripTrailingWhitespace() | endif
+  autocmd FileType cpp set syntax=cpp.doxygen
   "autocmd FileType go autocmd BufWritePre <buffer> Fmt
   "autocmd BufNewFile,BufRead *.vue set filetype=vue.html.javascript.css
   "autocmd BufNewFile,BufRead *.js set filetype=javascript.jsx
@@ -657,6 +658,7 @@
 
       " enable completion from tags
       let g:ycm_collect_identifiers_from_tags_files = 1
+      let g:ycm_python_binary_path = 'python'
 
       " remap Ultisnips for compatibility for YCM
       let g:UltiSnipsExpandTrigger = '<C-v>'
@@ -666,10 +668,10 @@
 
       " not ask about loading config files
       let g:ycm_confirm_extra_conf = 0
-      let g:ycm_autoclose_preview_window_after_completion = 1
+      let g:ycm_autoclose_preview_window_after_insertion = 1
       let g:ycm_complete_in_strings = 1
       let g:ycm_complete_in_comments = 1
-      let g:ycm_key_list_select_completion = ['<TAB>', '<Down>']
+      let g:ycm_key_list_select_completion = ['<TAB>', '<Down>', '<Enter>']
       let g:ycm_key_list_previous_completion = ['<S-TAB>', '<Up>']
       let g:ycm_key_detailed_diagnostics = '<leader><leader>d'
       let g:ycm_semantic_triggers =  {
@@ -691,10 +693,6 @@
         \ 'gitcommit' : 1,
         \ }
 
-      " Disable the snippet preview candidate window
-      " When enabled, there can be too much visual noise
-      " especially when splits are used.
-      set completeopt-=preview
       nnoremap <leader>D :YcmCompleter GoTo<CR>
       nnoremap <leader>T :YcmCompleter GetType<CR>
       nnoremap <leader>K :YcmCompleter GetDoc<CR>
@@ -802,6 +800,7 @@
       let g:airline#extensions#tabline#enabled = 1
       let g:airline#extensions#ale#enabled = 1
       let g:airline#extensions#tmuxline#enabled = 0
+      "let g:airline#extensions#tabline#ctrlspace_show_tab_nr = 1
       if isdirectory(expand("~/.vim/bundle/vim-airline-themes/"))
         if !exists('g:airline_theme')
           let g:airline_theme = 'solarized'
