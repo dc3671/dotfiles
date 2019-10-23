@@ -39,6 +39,7 @@ export MINICONDA_HOME="$HOME/miniconda3"
 export ANACONDA_HOME="/opt/anaconda/anaconda3"
 export GOPATH="$HOME/golang"
 export GOROOT="/usr/local/opt/go/libexec"
+export NVIDIA_HOME="/usr/local/nvidia"
 export MEGDL_HOME="$HOME/megdl"
 
 export LC_ALL="en_US.UTF-8"
@@ -55,9 +56,11 @@ export PATH="$MINICONDA_HOME/bin:$PATH"
 export PATH="$ANACONDA_HOME/bin:$PATH"
 export PATH="$GOPATH/bin:$PATH"
 export PATH="$GOROOT/bin:$PATH"
+export PATH="$NVIDIA_HOME/bin:$PATH"
 export PATH="$MEGDL_HOME/bin:$PATH"
 
 export LD_LIBRARY_PATH="/usr/lib:/usr/local/lib:$HOME/.local/lib"
+export LD_LIBRARY_PATH="$NVIDIA_HOME/lib64:$LD_LIBRARY_PATH"
 export LIBRARY_PATH=$LD_LIBRARY_PATH
 
 export TERM="xterm-256color"
