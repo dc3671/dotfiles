@@ -345,6 +345,8 @@
     cmap Tabe tabe
   endif
 
+  " replace-paste yanked text in vim without yanking the deleted lines
+  vnoremap p "_dP
   " Yank from the cursor to the end of the line, to be consistent with C and D.
   nnoremap Y y$
 
