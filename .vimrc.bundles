@@ -64,9 +64,9 @@
 
   " General {
     if count(g:spf13_bundle_groups, 'general')
-      if has('unix') && !has('mac')
-        Plug 'lilydjwg/fcitx.vim'
-      endif
+      "if has('unix') && !has('mac')
+        "Plug 'lilydjwg/fcitx.vim'
+      "endif
       Plug 'scrooloose/nerdtree'
       Plug 'spf13/vim-colors'
       Plug 'joshdick/onedark.vim'
@@ -183,6 +183,7 @@
       Plug 'elzr/vim-json'
       Plug 'isRuslan/vim-es6'
       Plug 'posva/vim-vue'
+      Plug 'prettier/vim-prettier'
       "Plug 'mxw/vim-jsx'
       Plug 'leafgarland/typescript-vim'
       "Plug 'maxmellon/vim-jsx-pretty'

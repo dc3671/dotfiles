@@ -72,6 +72,7 @@
       \'javascript': ['eslint'],
       \'typescript': ['eslint'],
       \'python': ['yapf'],
+      \'vue': ['prettier'],
       \'cpp': ['clang-format'],
       \'json': ['jq'],
     \}
@@ -676,7 +677,7 @@
       let g:ycm_key_detailed_diagnostics = '<leader><leader>d'
       let g:ycm_semantic_triggers =  {
         \ 'c,cpp,python,java,go,erlang,perl': ['re!\w{3}'],
-        \ 'cs,lua,javascript,jsx,typescript,tsx': ['re!\w{3}'],
+        \ 'cs,lua,javascript,jsx,typescript,tsx,vue': ['re!\w{3}'],
         \ }
       let g:ycm_filetype_blacklist = {
         \ 'tagbar' : 1,
@@ -692,6 +693,11 @@
         \ 'out' : 1,
         \ 'gitcommit' : 1,
         \ }
+      let g:ycm_language_server = [ {
+        \ 'name': 'vue',
+        \ 'filetypes': [ 'vue' ],
+        \ 'cmdline': [ 'vls' ]
+        \ } ]
 
       nnoremap <leader>D :YcmCompleter GoTo<CR>
       nnoremap <leader>T :YcmCompleter GetType<CR>
