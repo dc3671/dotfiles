@@ -39,68 +39,107 @@ program_must_exist "git"
 program_must_exist "zsh"
 success     "Done."
 
+PS3='Please choose which version to be installed: '
+options=("basic python version(without YouCompleteMe)" "python & C++ version(with YCM)" "python & frontend version(with YCM)" "full version")
+select opt in "${options[@]}"
+do
+    case "$REPLY" in
+        1)
+            echo "let g:cfg_bundle_preset = 'nano'" >> .vimrc.before
+            break
+            ;;
+        2)
+            echo "let g:cfg_bundle_preset = 'cpp'" >> .vimrc.before
+            break
+            ;;
+        3)
+            echo "let g:cfg_bundle_preset = 'frontend'" >> .vimrc.before
+            break
+            ;;
+        4)
+            echo "let g:cfg_bundle_preset = 'full'" >> .vimrc.before
+            break
+            ;;
+        *) echo "invalid option";;
+    esac
+done
+
 # zsh
-msg         ">>> Config zsh..."
-msg         ">>> Install oh-my-zsh..."
+msg         "[zsh] Config zsh..."
+msg         "[zsh] Install oh-my-zsh..."
 git clone --depth=1 https://github.com/robbyrussell/oh-my-zsh.git ~/.oh-my-zsh
 git clone https://github.com/zsh-users/zsh-autosuggestions ~/.oh-my-zsh/custom/plugins/zsh-autosuggestions
-msg         ">>> Change shell to zsh"
-mv ~/.zshrc ~/.zshrc.bak >/dev/null 2>&1
+msg         "[zsh] Change shell to zsh"
+mv ~/.zshrc ~/.zshrc.bkp >/dev/null 2>&1
 ln -s $PWD/.zshrc ~/.zshrc
 
 TEST_CURRENT_SHELL=$(expr "$SHELL" : '.*/\(.*\)')
 if [ "$TEST_CURRENT_SHELL" != "zsh" ]; then
   # If this platform provides a "chsh" command (not Cygwin), do it, man!
   if hash chsh >/dev/null 2>&1; then
-    msg "Time to change your default shell to zsh!"
+    msg "[zsh] Do you want to change your default shell to zsh? (password is needed) [y/n]"
+    read opt
+    case $opt in
+        y*|Y*|"") echo "[zsh] Changing the shell..." ;;
+        n*|N*) echo "[zsh] Shell change skipped."; break ;;
+        *) echo "[zsh] Invalid choice. Shell change skipped."; break ;;
+    esac
+
+    if ! chsh -s "$zsh"; then
+        error "[zsh] chsh command unsuccessful. Change your default shell manually."
+    else
+        export SHELL="$zsh"
+        success "[zsh] Shell successfully changed to '$zsh'."
+    fi
     chsh $USER -s $(grep /zsh$ /etc/shells | tail -1)
-    success "Done. You may need to re-login or reopen terminal to see the effect"
+    success "[zsh] Done. You may need to re-login or reopen terminal to see the effect"
   # Else, suggest the user do so manually.
   else
-    msg "I can't change your shell automatically.\nPlease manually change your default shell to zsh!"
+    msg "[zsh] I can't change your shell automatically.\nPlease manually change your default shell to zsh!"
   fi
 fi
 
 
 # vim
-msg         ">>> Config vim..."
-msg         ">>> Install Plug for vim plugins management..."
+msg         "[vim] Config vim..."
+msg         "[vim] Install Plug for vim plugins management..."
 curl -fLo ~/.vim/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim >/dev/null 2>&1
-mv ~/.vimrc ~/.vimrc.bak > /dev/null 2>&1
-mv ~/.vimrc.before ~/.vimrc.before.bak > /dev/null 2>&1
-mv ~/.vimrc.bundles ~/.vimrc.bundles.bak > /dev/null 2>&1
+mv ~/.vimrc ~/.vimrc.bkp > /dev/null 2>&1
+mv ~/.vimrc.before ~/.vimrc.before.bkp > /dev/null 2>&1
+mv ~/.vimrc.bundles ~/.vimrc.bundles.bkp > /dev/null 2>&1
 ln -s $PWD/.vimrc ~/.vimrc
 ln -s $PWD/.vimrc.before ~/.vimrc.before
 ln -s $PWD/.vimrc.bundles ~/.vimrc.bundles
 vim -u "$PWD/.vimrc.bundles" "+set nomore" "+PlugInstall!" "+PlugClean" "+qall"
 
 # eslint
-mv ~/.eslintrc.js ~/.eslintrc.js.bak >/dev/null 2>&1
+mv ~/.eslintrc.js ~/.eslintrc.js.bkp >/dev/null 2>&1
 ln -s $PWD/.eslintrc.js ~/.eslintrc.js
 
 # ternjs
-mv ~/.tern-config ~/.tern-config.bak >/dev/null 2>&1
+mv ~/.tern-config ~/.tern-config.bkp >/dev/null 2>&1
 ln -s $PWD/.tern-config ~/.tern-config
 
 # pylint
-mv ~/.pylintrc ~/.pylintrc.bak >/dev/null 2>&1
+mv ~/.pylintrc ~/.pylintrc.bkp >/dev/null 2>&1
 ln -s $PWD/.pylintrc ~/.pylintrc
 
 # yapf
-mv ~/.style.yapf ~/.style.yapf.bak >/dev/null 2>&1
+mv ~/.style.yapf ~/.style.yapf.bkp >/dev/null 2>&1
 ln -s $PWD/.style.yapf ~/.style.yapf
 
-success     "Done."
+success     "[vim] Done."
 
 # tmux
-msg         ">>> Config tmux..."
+msg         "[tmux] Config tmux..."
 mkdir -p ~/.tmux/plugins
 git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
 git clone https://github.com/tmux-plugins/tmux-sensible ~/.tmux/plugins/tmux-sensible
 git clone https://github.com/tmux-plugins/tmux-resurrect ~/.tmux/plugins/tmux-resurrect
-mv ~/.tmux.conf ~/.tmux.conf.bak >/dev/null 2>&1
+mv ~/.tmux.conf ~/.tmux.conf.bkp >/dev/null 2>&1
 ln -s $PWD/.tmux.conf ~/.tmux.conf
-success     "Done."
+success     "[tmux] Done."
 
 msg         "\nThanks for using my dotfiles."
 msg         "© `date +%Y` https://github.com/dc3671/dotfiles"
+exec zsh -l

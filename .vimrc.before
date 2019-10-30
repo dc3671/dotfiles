@@ -1,10 +1,2 @@
-" spf13 options {
-
-  " disable youcompleteme for easy use
-  "let g:spf13_bundle_groups = ['general', 'writing', 'programming', 'python', 'javascript', 'html', 'misc']
-  " enable youcompleteme for long-term efficiency
-  let g:spf13_bundle_groups = ['general', 'writing', 'programming', 'python', 'javascript', 'html', 'misc', 'youcompleteme']
-
-  let g:dc_enable_all_func = 1
-
-" }
+" use bundle_preset from 'full', 'cpp', 'frontend', 'nano' to get needed plugins
+" eg: let g:cfg_bundle_preset = 'full'
