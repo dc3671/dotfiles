@@ -73,6 +73,7 @@
       Plug 'moll/vim-bbye'
       " inline git management
       Plug 'tpope/vim-fugitive'
+      Plug 'zivyangll/git-blame.vim'
       "Plug 'mbbill/undotree'
     " }
 

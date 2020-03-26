@@ -90,12 +90,12 @@
     " If you prefer that functionality, add the following to your
     " .vimrc.before.local file:
     "let g:cfg_no_easyWindows = 1
-    if !exists('g:cfg_no_easyWindows')
-      noremap <C-J> <C-W>j
-      noremap <C-K> <C-W>k
-      noremap <C-L> <C-W>l
-      noremap <C-H> <C-W>h
-    endif
+    "if !exists('g:cfg_no_easyWindows')
+      "noremap <C-J> <C-W>j
+      "noremap <C-K> <C-W>k
+      "noremap <C-L> <C-W>l
+      "noremap <C-H> <C-W>h
+    "endif
 
     " Wrapped lines goes down/up to next row, rather than next line in file.
     noremap j gj
@@ -307,12 +307,6 @@
     hi Normal  ctermfg=252 ctermbg=none
   " }
 
-  " TagBar {
-    if isdirectory(expand("~/.vim/bundle/tagbar/"))
-      nmap <F8> :TagbarToggle<CR>
-    endif
-  " }
-
   " Rainbow {
     if isdirectory(expand("~/.vim/bundle/rainbow/"))
       let g:rainbow_active = 1 "0 if you want to enable it later via :RainbowToggle
@@ -460,6 +454,12 @@
     endif
   "}
 
+  " git-blame {
+    if isdirectory(expand("~/.vim/bundle/git-blame.vim/"))
+      nnoremap <Leader>s :<C-u>call gitblame#echo()<CR>
+    endif
+  "}
+
   " UndoTree {
     set backup          " Backups are nice ...
     if has('persistent_undo')
@@ -524,27 +524,30 @@
   " }
 
   " Linter & Formatter, use Ale {
-    " let g:ale_lint_on_text_changed = 'never'
-    let g:ale_sign_error = '>>'
-    let g:ale_sign_warning = '??'
-    let g:ale_echo_msg_format = '%s [%severity%%/code%]'
-    let g:ale_linters = {
-      \'javascript': ['eslint'],
-      \'typescript': ['eslint'],
-      \'python': ['pylint'],
-      \'vue': ['prettier'],
-      \'cpp': ['clang++'],
-    \}
-    let g:ale_cpp_clang_options = '-std=c++1z -Wall'
-    let g:ale_fixers = {
-      \'javascript': ['eslint'],
-      \'typescript': ['eslint'],
-      \'python': ['yapf'],
-      \'vue': ['prettier'],
-      \'cpp': ['clang-format'],
-      \'json': ['jq'],
-    \}
-    let g:ale_c_clangformat_options = '-style="{BasedOnStyle: google, IndentWidth: 4}"'
+    if isdirectory(expand("~/.vim/bundle/ale/"))
+      noremap <leader><leader>f :ALEFix<CR>
+      " let g:ale_lint_on_text_changed = 'never'
+      let g:ale_sign_error = '>>'
+      let g:ale_sign_warning = '??'
+      let g:ale_echo_msg_format = '%s [%severity%%/code%]'
+      let g:ale_linters = {
+        \'javascript': ['eslint'],
+        \'typescript': ['eslint'],
+        \'python': ['pylint'],
+        \'vue': ['prettier'],
+        \'cpp': ['clang++'],
+      \}
+      let g:ale_cpp_clang_options = '-std=c++1z -Wall'
+      let g:ale_fixers = {
+        \'javascript': ['eslint'],
+        \'typescript': ['eslint'],
+        \'python': ['yapf'],
+        \'vue': ['prettier'],
+        \'cpp': ['clang-format'],
+        \'json': ['jq'],
+      \}
+      let g:ale_c_clangformat_options = '-style="{BasedOnStyle: google, IndentWidth: 4}"'
+    endif
     let g:vue_disable_pre_processors=1
     let g:vim_jsx_pretty_enable_jsx_highlight = 1
     let g:vim_jsx_pretty_colorful_config = 1
@@ -553,7 +556,6 @@
   " Autoformat {
     if isdirectory(expand("~/.vim/bundle/vim-autoformat/"))
       "noremap <leader><leader>f :Autoformat<CR>
-      noremap <leader><leader>f :ALEFix<CR>
       noremap <leader><space> :RemoveTrailingSpaces<cr>
       let g:autoformat_autoindent = 1
       let g:autoformat_retab = 0
@@ -645,8 +647,9 @@
 
 " Searching {
 
-  " Ctags {
+  " TagBar & Ctags {
     if isdirectory(expand("~/.vim/bundle/tagbar"))
+      nmap <F8> :TagbarToggle<CR>
       set tags=./tags;/,~/.vimtags
       " for javascript support, `npm i -g jsctags`
       " for typescript support, `npm install --global git+https://github.com/Perlence/tstags.git`
@@ -700,7 +703,7 @@
 
 " }
 
-" Plugins {
+" Completer {
 
   " YouCompleteMe {
     if count(g:cfg_bundle_groups, 'youcompleteme')
