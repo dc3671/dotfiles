@@ -69,33 +69,17 @@
       let maplocalleader=g:localleader
     endif
 
-    " The default mappings for editing and applying the configuration
-    " are <leader>ev and <leader>sv respectively. Change them to your preference
-    " by adding the following to your .vimrc.before.local file:
-    let g:edit_config_mapping='<leader>ec'
-    let g:apply_config_mapping='<leader>sc'
-    if !exists('g:edit_config_mapping')
-      let s:edit_config_mapping = '<leader>ev'
-    else
-      let s:edit_config_mapping = g:edit_config_mapping
-    endif
-    if !exists('g:apply_config_mapping')
-      let s:apply_config_mapping = '<leader>sv'
-    else
-      let s:apply_config_mapping = g:apply_config_mapping
-    endif
-
     " Easier moving in tabs and windows
     " The lines conflict with the default digraph mapping of <C-K>
     " If you prefer that functionality, add the following to your
     " .vimrc.before.local file:
     "let g:cfg_no_easyWindows = 1
-    "if !exists('g:cfg_no_easyWindows')
-      "noremap <C-J> <C-W>j
-      "noremap <C-K> <C-W>k
-      "noremap <C-L> <C-W>l
-      "noremap <C-H> <C-W>h
-    "endif
+    if !exists('g:cfg_no_easyWindows')
+      noremap <C-J> <C-W>j
+      noremap <C-K> <C-W>k
+      noremap <C-L> <C-W>l
+      noremap <C-H> <C-W>h
+    endif
 
     " Wrapped lines goes down/up to next row, rather than next line in file.
     noremap j gj
@@ -462,11 +446,10 @@
 
   " UndoTree {
     set backup          " Backups are nice ...
-    if has('persistent_undo')
-      set undofile        " So is persistent undo ...
-      set undolevels=1000     " Maximum number of changes that can be undone
-      set undoreload=10000    " Maximum number lines to save for undo on a buffer reload
-    endif
+    set undofile        " So is persistent undo ...
+    set undolevels=1000     " Maximum number of changes that can be undone
+    set undoreload=10000    " Maximum number lines to save for undo on a buffer reload
+
     if isdirectory(expand("~/.vim/bundle/undotree/"))
       nnoremap <Leader>u :UndotreeToggle<CR>
       " If undotree is opened, it is likely one wants to interact with it.
@@ -759,79 +742,13 @@
     endif
   " }
 
-  " Tern-js {
-    "if isdirectory(expand("~/.vim/bundle/tern_for_vim/"))
-      "let tern_show_signature_in_pum = 1
-      "let tern_show_argument_hints = 'on_hold'
-      "autocmd FileType javascript nnoremap K :TernDef<CR>
-      "autocmd FileType javascript setlocal omnifunc=tern#Complete
-    "endif
-  " }
-
 " }
 
 " Languages {
 
-  " GoLang {
-    if count(g:cfg_bundle_groups, 'go')
-      let g:go_highlight_functions = 1
-      let g:go_highlight_methods = 1
-      let g:go_highlight_structs = 1
-      let g:go_highlight_operators = 1
-      let g:go_highlight_build_constraints = 1
-      let g:go_fmt_command = "goimports"
-      let g:syntastic_go_checkers = ['golint', 'govet', 'errcheck']
-      let g:syntastic_mode_map = { 'mode': 'active', 'passive_filetypes': ['go'] }
-      au FileType go nmap <Leader>s <Plug>(go-implements)
-      au FileType go nmap <Leader>i <Plug>(go-info)
-      au FileType go nmap <Leader>e <Plug>(go-rename)
-      au FileType go nmap <leader>r <Plug>(go-run)
-      au FileType go nmap <leader>b <Plug>(go-build)
-      au FileType go nmap <leader>t <Plug>(go-test)
-      au FileType go nmap <Leader>gd <Plug>(go-doc)
-      au FileType go nmap <Leader>gv <Plug>(go-doc-vertical)
-      au FileType go nmap <leader>co <Plug>(go-coverage)
-    endif
-  " }
-
   " JSON {
     nmap <leader>jt <Esc>:%!python -m json.tool<CR><Esc>:set filetype=json<CR>
     let g:vim_json_syntax_conceal = 0
-  " }
-
-  " Python Syntax {
-    if isdirectory(expand("~/.vim/bundle/python-syntax"))
-        "let g:python_highlight_builtins = 1
-        "let g:python_highlight_exceptions = 1
-        "let g:python_highlight_indent_errors = 1
-        let g:python_highlight_all = 1
-    endif
-  " }
-
-  " PyMode {
-    " Disable if python support not present
-    if !has('python') && !has('python3')
-      let g:pymode = 0
-    endif
-
-    if isdirectory(expand("~/.vim/bundle/python-mode"))
-      let g:pymode_folding = 0
-      let g:pymode_lint = 0
-
-      " Override run current python file key shortcut
-      let g:pymode_run_bind = "<leader><leader>r"
-
-      " Override view python doc key shortcut
-      let g:pymode_doc_bind = "K"
-      let g:pymode_trim_whitespaces = 0
-      let g:pymode_options = 0
-      " cancel annoying rope
-      let g:pymode_rope = 0
-      " Override go-to.definition key shortcut
-      let g:pymode_rope_goto_definition_bind = "<leader>d"
-      let g:pymode_rope_completion = 0 " use ycm
-      let g:pymode_breakpoint = 0
-    endif
   " }
 
 " }
@@ -868,10 +785,7 @@
           \ 'backup': 'backupdir',
           \ 'views': 'viewdir',
           \ 'swap': 'directory' }
-
-    if has('persistent_undo')
-      let dir_list['undo'] = 'undodir'
-    endif
+    let dir_list['undo'] = 'undodir'
 
     " To specify a different directory in which to place the vimbackup,
     " vimviews, vimundo, and vimswap files/directories, add the following to
@@ -957,17 +871,6 @@
   function! s:ExpandFilenameAndExecute(command, file)
     execute a:command . " " . expand(a:file, ":p")
   endfunction
-
-  function! s:EditConfig()
-    call <SID>ExpandFilenameAndExecute("tabedit", "~/.vimrc")
-    call <SID>ExpandFilenameAndExecute("vsplit", "~/.vimrc.before")
-    call <SID>ExpandFilenameAndExecute("vsplit", "~/.vimrc.bundles")
-
-    execute bufwinnr(".vimrc") . "wincmd w"
-  endfunction
-
-  execute "noremap " . s:edit_config_mapping " :call <SID>EditConfig()<CR>"
-  execute "noremap " . s:apply_config_mapping . " :source ~/.vimrc<CR>"
 
   " for tmux to automatically set paste and nopaste mode at the time pasting (as
   " happens in VIM UI)
