@@ -62,7 +62,7 @@ based_on_style = pep8
 coalesce_brackets = True
 
 # The column limit.
-column_limit = 120
+column_limit = 88
 
 # The style for continuation alignment. Possible values are:
 #
@@ -99,7 +99,7 @@ column_limit = 120
 #       start_ts=now()-timedelta(days=3),
 #       end_ts=now(),
 #   )        # <--- this bracket is dedented and on a separate line
-#dedent_closing_brackets = False
+dedent_closing_brackets = False
 
 # Place each dictionary entry onto its own line.
 each_dict_entry_on_separate_line = True
