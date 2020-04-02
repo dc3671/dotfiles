@@ -68,34 +68,37 @@ msg         "[zsh] Config zsh..."
 msg         "[zsh] Install oh-my-zsh..."
 git clone --depth=1 https://github.com/robbyrussell/oh-my-zsh.git ~/.oh-my-zsh
 git clone https://github.com/zsh-users/zsh-autosuggestions ~/.oh-my-zsh/custom/plugins/zsh-autosuggestions
-msg         "[zsh] Change shell to zsh"
 mv ~/.zshrc ~/.zshrc.bkp >/dev/null 2>&1
 ln -s $PWD/.zshrc ~/.zshrc
 
 TEST_CURRENT_SHELL=$(expr "$SHELL" : '.*/\(.*\)')
 if [ "$TEST_CURRENT_SHELL" != "zsh" ]; then
-  # If this platform provides a "chsh" command (not Cygwin), do it, man!
-  if hash chsh >/dev/null 2>&1; then
-    msg "[zsh] Do you want to change your default shell to zsh? (password is needed) [y/n]"
-    read opt
-    case $opt in
-        y*|Y*|"") echo "[zsh] Changing the shell..." ;;
-        n*|N*) echo "[zsh] Shell change skipped."; break ;;
-        *) echo "[zsh] Invalid choice. Shell change skipped."; break ;;
-    esac
+    msg "[zsh] Prepare to change shell to zsh."
+    # If this platform provides a "chsh" command (not Cygwin), do it, man!
+    if hash chsh >/dev/null 2>&1; then
+        flag_chsh=1
+        msg "[zsh] Do you want to change your default shell to zsh? (password is needed) [y/n]"
+        read opt
+        case $opt in
+            y*|Y*|"") msg "[zsh] Changing the shell..." ;;
+            n*|N*) msg "[zsh] Shell change skipped."; flag_chsh=0 ;;
+            *) msg "[zsh] Invalid choice. Shell change skipped."; flag_chsh=0 ;;
+        esac
 
-    if ! chsh -s "$zsh"; then
-        error "[zsh] chsh command unsuccessful. Change your default shell manually."
+        if $flag_chsh; then
+            if ! chsh $USER -s $(grep /zsh$ /etc/shells | tail -1); then
+                error "[zsh] chsh command unsuccessful. Change your default shell manually."
+            else
+                export SHELL="$zsh"
+                success "[zsh] Done. You may need to re-login or reopen terminal to see the effect"
+            fi
+        else
+            msg "[zsh] You can use 'chsh -s /bin/zsh' to set it as default manually."
+        fi
+    # Else, suggest the user do so manually.
     else
-        export SHELL="$zsh"
-        success "[zsh] Shell successfully changed to '$zsh'."
+        error"[zsh] Cannot find chsh command!"
     fi
-    chsh $USER -s $(grep /zsh$ /etc/shells | tail -1)
-    success "[zsh] Done. You may need to re-login or reopen terminal to see the effect"
-  # Else, suggest the user do so manually.
-  else
-    msg "[zsh] I can't change your shell automatically.\nPlease manually change your default shell to zsh!"
-  fi
 fi
 
 
