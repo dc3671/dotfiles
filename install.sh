@@ -10,7 +10,6 @@ success() {
 
 error() {
     msg "\33[31m[✘]\33[0m ${1}${2}"
-    exit 1
 }
 
 program_exists() {
