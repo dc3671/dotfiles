@@ -522,6 +522,7 @@
       \}
       let g:ale_cpp_clang_options = '-std=c++1z -Wall'
       let g:ale_fixers = {
+        \'*': ['prettier'],
         \'javascript': ['eslint'],
         \'typescript': ['eslint'],
         \'python': ['yapf'],
