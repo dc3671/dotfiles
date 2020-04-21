@@ -85,7 +85,7 @@ if [ "$TEST_CURRENT_SHELL" != "zsh" ]; then
             *) msg "[zsh] Invalid choice. Shell change skipped."; flag_chsh=0 ;;
         esac
 
-        if $flag_chsh; then
+        if [ "$flag_chsh" != 0 ]; then
             if ! chsh $USER -s $(grep /zsh$ /etc/shells | tail -1); then
                 error "[zsh] chsh command unsuccessful. Change your default shell manually."
             else

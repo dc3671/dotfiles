@@ -139,11 +139,11 @@
 
   if count(g:cfg_bundle_groups, 'youcompleteme')
     if g:cfg_bundle_preset == 'cpp'
-      Plug 'Valloric/YouCompleteMe', {'do': 'python install.py --clang-completer'}
+      Plug 'Valloric/YouCompleteMe', {'do': 'python3 install.py --clang-completer'}
     elseif g:cfg_bundle_preset == 'frontend'
-      Plug 'Valloric/YouCompleteMe', {'do': 'python install.py --js-completer'}
+      Plug 'Valloric/YouCompleteMe', {'do': 'python3 install.py --js-completer'}
     elseif g:cfg_bundle_preset == "full"
-      Plug 'Valloric/YouCompleteMe', {'do': 'python install.py --clang-completer --js-completer'}
+      Plug 'Valloric/YouCompleteMe', {'do': 'python3 install.py --clang-completer --js-completer'}
     endif
     " Snips {
       Plug 'SirVer/ultisnips'
