@@ -525,10 +525,9 @@
         \'*': ['prettier'],
         \'javascript': ['eslint'],
         \'typescript': ['eslint'],
-        \'python': ['yapf'],
+        \'python': ['black'],
         \'vue': ['prettier'],
         \'cpp': ['clang-format'],
-        \'json': ['jq'],
       \}
       let g:ale_c_clangformat_options = '-style="{BasedOnStyle: google, IndentWidth: 4}"'
     endif
@@ -708,7 +707,7 @@
       let g:ycm_autoclose_preview_window_after_insertion = 1
       let g:ycm_complete_in_strings = 1
       let g:ycm_complete_in_comments = 1
-      let g:ycm_key_list_select_completion = ['<TAB>', '<Down>', '<Enter>']
+      let g:ycm_key_list_select_completion = ['<TAB>', '<Down>']
       let g:ycm_key_list_previous_completion = ['<S-TAB>', '<Up>']
       let g:ycm_key_detailed_diagnostics = '<leader><leader>d'
       let g:ycm_semantic_triggers =  {
