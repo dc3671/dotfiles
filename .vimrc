@@ -509,6 +509,7 @@
   " Linter & Formatter, use Ale {
     if isdirectory(expand("~/.vim/bundle/ale/"))
       noremap <leader><leader>f :ALEFix<CR>
+      noremap <leader>F :ALEFix<CR>
       " let g:ale_lint_on_text_changed = 'never'
       let g:ale_sign_error = '>>'
       let g:ale_sign_warning = '??'
@@ -518,7 +519,7 @@
         \'typescript': ['eslint'],
         \'python': ['pylint'],
         \'vue': ['prettier'],
-        \'cpp': ['clang++'],
+        \'cpp': ['cpplint'],
       \}
       let g:ale_cpp_clang_options = '-std=c++1z -Wall'
       let g:ale_fixers = {
@@ -528,6 +529,7 @@
         \'python': ['black'],
         \'vue': ['prettier'],
         \'cpp': ['clang-format'],
+        \'sh': ['shfmt'],
       \}
       let g:ale_c_clangformat_options = '-style="{BasedOnStyle: google, IndentWidth: 4}"'
     endif
@@ -737,7 +739,6 @@
       nnoremap <leader>D :YcmCompleter GoTo<CR>
       nnoremap <leader>T :YcmCompleter GetType<CR>
       nnoremap <leader>K :YcmCompleter GetDoc<CR>
-      nnoremap <leader>F :YcmCompleter FixIt<CR>
       nnoremap <leader>R :YcmCompleter RefactorRename<space>
     endif
   " }
