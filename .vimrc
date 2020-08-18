@@ -510,6 +510,8 @@
     if isdirectory(expand("~/.vim/bundle/ale/"))
       noremap <leader><leader>f :ALEFix<CR>
       noremap <leader>F :ALEFix<CR>
+      noremap <leader>aj :ALENext<CR>
+      noremap <leader>ak :ALEPrevious<CR>
       " let g:ale_lint_on_text_changed = 'never'
       let g:ale_sign_error = '>>'
       let g:ale_sign_warning = '??'
@@ -531,7 +533,7 @@
         \'cpp': ['clang-format'],
         \'sh': ['shfmt'],
       \}
-      let g:ale_c_clangformat_options = '-style="{BasedOnStyle: google, IndentWidth: 4}"'
+      let g:ale_c_clangformat_options = '-style="{BasedOnStyle: google, IndentWidth: 4, AccessModifierOffset: -3}"'
     endif
     let g:vue_disable_pre_processors=1
     let g:vim_jsx_pretty_enable_jsx_highlight = 1
