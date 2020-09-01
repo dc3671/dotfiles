@@ -390,26 +390,10 @@
     endif
   " }
 
-  " Session & Buffer {
-    " restore_view
-    "let g:loaded_restore_view = 0
-    if !exists('g:cfg_no_views')
-      " Add exclusions to mkview and loadview
-      " eg: *.*, svn-commit.tmp
-      let g:skipview_files = [
-        \ '\[example pattern\]'
-        \ ]
+  " vim-bbye {
+    if isdirectory(expand("~/.vim/bundle/vim-bbye/"))
+      nnoremap qq :Bdelete<cr>
     endif
-    set sessionoptions=blank,buffers,curdir,folds,tabpages,winsize
-    let g:session_autosave = 'no'
-    let g:session_autoload = 'no'
-    if isdirectory(expand("~/.vim/bundle/vim-session/"))
-      nmap <leader>sl :OpenSession<CR>
-      nmap <leader>ss :SaveSession<Space>
-      nmap <leader>sd :CloseSesslon<CR>
-    endif
-    " vim-bbye
-    nnoremap qq :Bdelete<cr>
   " }
 
   " vim-ctrlspace {
@@ -445,7 +429,7 @@
 
   " git-blame {
     if isdirectory(expand("~/.vim/bundle/git-blame.vim/"))
-      nnoremap <Leader>s :<C-u>call gitblame#echo()<CR>
+      nnoremap <Leader><leader>b :<C-u>call gitblame#echo()<CR>
     endif
   "}
 
@@ -523,23 +507,11 @@
         \'cpp': ['clang-format'],
         \'sh': ['shfmt'],
       \}
-      let g:ale_c_clangformat_options = '-style="{BasedOnStyle: google, IndentWidth: 4, AccessModifierOffset: -3}"'
+      "let g:ale_c_clangformat_options = '-style="{BasedOnStyle: google, IndentWidth: 4, AccessModifierOffset: -3, AlignAfterOpenBracket: AlwaysBreak}"'
     endif
     let g:vue_disable_pre_processors=1
     let g:vim_jsx_pretty_enable_jsx_highlight = 1
     let g:vim_jsx_pretty_colorful_config = 1
-  " }
-
-  " Autoformat {
-    if isdirectory(expand("~/.vim/bundle/vim-autoformat/"))
-      "noremap <leader><leader>f :Autoformat<CR>
-      noremap <leader><space> :RemoveTrailingSpaces<cr>
-      let g:autoformat_autoindent = 1
-      let g:autoformat_retab = 0
-      let g:autoformat_remove_trailing_spaces = 1
-      "let g:formatters_typescript = ['eslint_local']
-      "let g:autoformat_verbosemode = 1
-    endif
   " }
 
   " AutoCloseTag {
