@@ -495,19 +495,10 @@
     "autocmd FileType vue syntax sync fromstart
 
     " Restore cursor to file position in previous editing session
-    "   let g:cfg_no_restore_cursor = 1
+    "let g:cfg_no_restore_cursor = 1
     if !exists('g:cfg_no_restore_cursor')
-      function! ResCur()
-        if line("'\"") <= line("$")
-          silent! normal! g`"
-          return 1
-        endif
-      endfunction
-
-      augroup resCur
-        autocmd!
-        autocmd BufWinEnter * call ResCur()
-      augroup END
+      autocmd BufLeave,BufWinLeave * silent! mkview
+      autocmd BufReadPost * silent! loadview
     endif
   " }
 
