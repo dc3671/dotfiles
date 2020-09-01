@@ -665,7 +665,16 @@
 
   " fzf, alternate to ctrlp {
     if isdirectory(expand("~/.vim/bundle/fzf.vim/"))
-      nnoremap <silent> <C-p> :Files<CR>
+      function! s:find_files()
+        let git_dir = system('git rev-parse --show-toplevel 2> /dev/null')[:-2]
+        if git_dir != ''
+          execute 'GFiles' git_dir
+        else
+          execute 'Files'
+        endif
+      endfunction
+      command! ProjectFiles execute s:find_files()
+      nnoremap <silent> <C-p> :ProjectFiles<CR>
       nnoremap <silent> <C-t> :Tags<CR>
       nnoremap <leader><leader>/ :Ag<space>
     endif
