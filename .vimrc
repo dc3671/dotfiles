@@ -324,7 +324,7 @@
       let g:airline#extensions#tabline#enabled = 1
       let g:airline#extensions#ale#enabled = 1
       let g:airline#extensions#tmuxline#enabled = 0
-      "let g:airline#extensions#tabline#ctrlspace_show_tab_nr = 1
+      let g:airline#extensions#tabline#ctrlspace_show_tab_nr = 1
       if isdirectory(expand("~/.vim/bundle/vim-airline-themes/"))
         if !exists('g:airline_theme')
           let g:airline_theme = 'solarized'
@@ -414,10 +414,15 @@
 
   " vim-ctrlspace {
     if isdirectory(expand("~/.vim/bundle/vim-ctrlspace"))
+      set showtabline=0
       let g:CtrlSpaceLoadLastWorkspaceOnStart = 1
       let g:CtrlSpaceSaveWorkspaceOnSwitch = 1
       let g:CtrlSpaceSaveWorkspaceOnExit = 1
       let g:CtrlSpaceUseUnicode = 0
+      let g:CtrlSpaceSymbols = { "CTab": "CTAB", "Tabs": "TABS" }
+      if executable("ag")
+        let g:CtrlSpaceGlobCommand = 'ag -l --nocolor -g ""'
+      endif
     endif
   " }
 
