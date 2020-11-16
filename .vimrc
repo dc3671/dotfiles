@@ -392,7 +392,7 @@
 
   " vim-bbye {
     if isdirectory(expand("~/.vim/bundle/vim-bbye/"))
-      nnoremap qq :Bdelete<cr>
+      nnoremap qq :Bwipeout<cr>
     endif
   " }
 
