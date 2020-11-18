@@ -240,8 +240,7 @@
 
   " Basic {
     syntax on           " Syntax highlighting
-    set background=dark     " Assume a dark background
-    colorscheme onedark
+    colorscheme pencil
     set tabpagemax=15         " Only show 15 tabs
     set showmode          " Display the current mode
     set cursorline          " Highlight current line
