@@ -68,6 +68,7 @@ msg         "[zsh] Config zsh..."
 msg         "[zsh] Install oh-my-zsh..."
 git clone --depth=1 https://github.com/robbyrussell/oh-my-zsh.git ~/.oh-my-zsh
 git clone https://github.com/zsh-users/zsh-autosuggestions ~/.oh-my-zsh/custom/plugins/zsh-autosuggestions
+git clone --depth=1 https://gitee.com/romkatv/powerlevel10k.git ~/.oh-my-zsh/custom/themes/powerlevel10k
 mv ~/.zshrc ~/.zshrc.bkp >/dev/null 2>&1
 ln -s $PWD/.zshrc ~/.zshrc
 
@@ -138,6 +139,8 @@ mkdir -p ~/.tmux/plugins
 git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
 git clone https://github.com/tmux-plugins/tmux-sensible ~/.tmux/plugins/tmux-sensible
 git clone https://github.com/tmux-plugins/tmux-resurrect ~/.tmux/plugins/tmux-resurrect
+git clone https://github.com/beeryardtech/tmux-net-speed.git ~/.tmux/plugins/tmux-net-speed
+git clone https://github.com/samoshkin/tmux-plugin-sysstat.git ~/.tmux/plugins/tmux-plugin-sysstat
 mv ~/.tmux.conf ~/.tmux.conf.bkp >/dev/null 2>&1
 ln -s $PWD/.tmux.conf ~/.tmux.conf
 success     "[tmux] Done."

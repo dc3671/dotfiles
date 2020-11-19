@@ -240,7 +240,10 @@
 
   " Basic {
     syntax on           " Syntax highlighting
-    colorscheme pencil
+    let g:edge_style = 'aura'
+    let g:edge_enable_italic = 0
+    let g:edge_disable_italic_comment = 1
+    colorscheme edge
     set tabpagemax=15         " Only show 15 tabs
     set showmode          " Display the current mode
     set cursorline          " Highlight current line
@@ -319,19 +322,19 @@
 
       " See `:echo g:airline_theme_map` for some more choices
       " Default in terminal vim is 'dark'
-      let g:airline_theme = 'powerlineish'
       let g:airline#extensions#tabline#enabled = 1
       let g:airline#extensions#ale#enabled = 1
       let g:airline#extensions#tmuxline#enabled = 0
       let g:airline#extensions#tabline#ctrlspace_show_tab_nr = 1
       if isdirectory(expand("~/.vim/bundle/vim-airline-themes/"))
+        let g:airline_theme = 'edge'
         if !exists('g:airline_theme')
           let g:airline_theme = 'solarized'
         endif
-        if !exists('g:airline_powerline_fonts')
+        if exists('g:airline_powerline_fonts')
           " Use the default set of separators with a few customizations
-          let g:airline_left_sep='›'  " Slightly fancier than '>'
-          let g:airline_right_sep='‹' " Slightly fancier than '<'
+          let g:airline_left_sep=''
+          let g:airline_right_sep=''
         endif
       endif
     endif
