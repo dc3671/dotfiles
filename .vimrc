@@ -289,6 +289,7 @@
     set foldlevelstart=99       " default not folding
     set list
     set listchars=tab:›\ ,trail:•,extends:#,nbsp:. " Highlight problematic whitespace
+    set nomodeline
     " for transparent probelm with konsole
     hi Normal  ctermfg=252 ctermbg=none
   " }
