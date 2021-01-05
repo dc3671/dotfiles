@@ -323,10 +323,11 @@
 
       " See `:echo g:airline_theme_map` for some more choices
       " Default in terminal vim is 'dark'
-      let g:airline#extensions#tabline#enabled = 1
+      let g:airline#extensions#tabline#enabled = 0  " too slow
+      let g:airline#extensions#tabline#ctrlspace_show_tab_nr = 1
       let g:airline#extensions#ale#enabled = 1
       let g:airline#extensions#tmuxline#enabled = 0
-      let g:airline#extensions#tabline#ctrlspace_show_tab_nr = 1
+      let g:airline#extensions#ycm#enabled = 1
       if isdirectory(expand("~/.vim/bundle/vim-airline-themes/"))
         let g:airline_theme = 'edge'
         if !exists('g:airline_theme')
@@ -357,6 +358,7 @@
 
   " Basic {
     if has('clipboard')
+      " use `:xrestore` to reload register
       if has('unnamedplus')  " When possible use + register for copy-paste
         set clipboard=unnamed,unnamedplus
       else     " On mac and Windows, use * register for copy-paste
@@ -647,6 +649,7 @@
       command! ProjectFiles execute s:find_files()
       nnoremap <silent> <C-p> :ProjectFiles<CR>
       nnoremap <silent> <C-t> :Tags<CR>
+      nnoremap <silent> <C-b> :Buffers<CR>
       nnoremap <leader><leader>/ :Ag<space>
     endif
   " }
@@ -685,6 +688,7 @@
       " not ask about loading config files
       let g:ycm_confirm_extra_conf = 0
       let g:ycm_autoclose_preview_window_after_insertion = 1
+      let g:ycm_auto_hover = ''
       let g:ycm_complete_in_strings = 1
       let g:ycm_complete_in_comments = 1
       let g:ycm_key_list_select_completion = ['<TAB>', '<Down>']
@@ -716,7 +720,7 @@
 
       nnoremap <leader>D :YcmCompleter GoTo<CR>
       nnoremap <leader>T :YcmCompleter GetType<CR>
-      nnoremap <leader>K :YcmCompleter GetDoc<CR>
+      nmap <leader>K <plug>(YCMHover)
       nnoremap <leader>R :YcmCompleter RefactorRename<space>
     endif
   " }
