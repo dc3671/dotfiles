@@ -693,7 +693,7 @@
       let g:ycm_complete_in_comments = 1
       let g:ycm_key_list_select_completion = ['<TAB>', '<Down>']
       let g:ycm_key_list_previous_completion = ['<S-TAB>', '<Up>']
-      let g:ycm_key_detailed_diagnostics = '<leader><leader>d'
+      let g:ycm_show_diagnostics_ui = 0
       let g:ycm_semantic_triggers =  {
         \ 'c,cpp,python,java,go,erlang,perl': ['re!\w{3}'],
         \ 'cs,lua,javascript,jsx,typescript,tsx,vue': ['re!\w{3}'],
