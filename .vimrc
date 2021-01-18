@@ -489,8 +489,10 @@
     if isdirectory(expand("~/.vim/bundle/ale/"))
       noremap <leader><leader>f :ALEFix<CR>
       noremap <leader>F :ALEFix<CR>
-      noremap <leader>aj :ALENext<CR>
-      noremap <leader>ak :ALEPrevious<CR>
+      noremap ]a :ALENextWrap<CR>
+      noremap [a :ALEPreviousWrap<CR>
+      noremap ]A :ALELast
+      noremap [A :ALEFirst
       " let g:ale_lint_on_text_changed = 'never'
       let g:ale_sign_error = '>>'
       let g:ale_sign_warning = '??'
@@ -693,7 +695,10 @@
       let g:ycm_complete_in_comments = 1
       let g:ycm_key_list_select_completion = ['<TAB>', '<Down>']
       let g:ycm_key_list_previous_completion = ['<S-TAB>', '<Up>']
-      let g:ycm_show_diagnostics_ui = 0
+      let g:ycm_show_diagnostics_ui = 1
+      let g:ycm_error_symbol = '>>'
+      let g:ycm_warning_symbol = '??'
+      let g:ycm_enable_diagnostic_highlighting = 0
       let g:ycm_semantic_triggers =  {
         \ 'c,cpp,python,java,go,erlang,perl': ['re!\w{3}'],
         \ 'cs,lua,javascript,jsx,typescript,tsx,vue': ['re!\w{3}'],
