@@ -73,6 +73,7 @@
       Plug 'moll/vim-bbye'
       " inline git management
       Plug 'tpope/vim-fugitive'
+      Plug 'airblade/vim-gitgutter'
       Plug 'zivyangll/git-blame.vim'
       "Plug 'mbbill/undotree'
     " }
@@ -95,7 +96,7 @@
       Plug 'godlygeek/tabular'
       "Plug 'luochen1990/rainbow'
       " Show git changes
-      Plug 'mhinz/vim-signify'
+      "Plug 'mhinz/vim-signify'
     " }
 
     " Edit {
@@ -103,6 +104,8 @@
       "Plug 'Chiel92/vim-autoformat'
       " syntax support for every language
       Plug 'sheerun/vim-polyglot'
+      " many useful jump mappings with [ and ]
+      Plug 'tpope/vim-unimpaired'
       Plug 'tpope/vim-surround'
       Plug 'tpope/vim-repeat'
       Plug 'rhysd/conflict-marker.vim'
