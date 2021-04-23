@@ -37,35 +37,23 @@ plugins=(git-extras git-flow-avh history-substring-search dirhistory ssh-agent t
 # User configuration
 
 export HOME=~
-export FONTS_HOME="/usr/share/fonts"
-export PYTHON_HOME="$HOME/.local/lib/python3.6:/usr/lib/python3.6:/usr/lib64/python3.6:/usr/include/python3.6"
-export GCC_HOME="/usr/lib/gcc/x86_64-redhat-linux/4.9.2"
 export LLVM_HOME="/usr/lib/llvm-5.0"
 export NPM_CONFIG_PREFIX="$HOME/.npm-global"
 export JAVA_HOME="/usr/lib/jvm/default-java"
-export MINICONDA_HOME="$HOME/miniconda3"
-export ANACONDA_HOME="/opt/anaconda/anaconda3"
 export GOPATH="$HOME/golang"
 export GOROOT="/usr/local/opt/go/libexec"
 export NVIDIA_HOME="/usr/local/nvidia"
-export MEGDL_HOME="$HOME/megdl"
 
 export LC_ALL="en_US.UTF-8"
 export LANG="en_US.UTF-8"
 
 export PATH="/bin:/sbin:/usr/local/bin:/usr/local/sbin:$HOME/.local/bin:/usr/bin:/usr/sbin"
-export PATH="$FONTS_HOME:$PATH"
-export PATH="$PYTHON_HOME:$PATH"
-export PATH="$GCC_HOME/include:$PATH"
 export PATH="$LLVM_HOME/bin:$PATH"
 export PATH="$NPM_CONFIG_PREFIX/bin:$PATH"
 export PATH="$JAVA_HOME/bin:$PATH"
-export PATH="$MINICONDA_HOME/bin:$PATH"
-export PATH="$ANACONDA_HOME/bin:$PATH"
 export PATH="$GOPATH/bin:$PATH"
 export PATH="$GOROOT/bin:$PATH"
 export PATH="$NVIDIA_HOME/bin:$PATH"
-export PATH="$MEGDL_HOME/bin:$PATH"
 
 export LD_LIBRARY_PATH="$NVIDIA_HOME/lib64"
 export LIBRARY_PATH=$LD_LIBRARY_PATH
