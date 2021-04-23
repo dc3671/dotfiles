@@ -44,6 +44,9 @@
     set iskeyword-=#          " '#' is an end of word designator
     set iskeyword-=-          " '-' is an end of word designator
     filetype plugin indent on   " Automatically detect file types.
+    " for better cursor move speed
+    set regexpengine=1
+    set synmaxcol=200
   " }
 
   " Encoding {
