@@ -65,8 +65,9 @@
       "if has('unix') && !has('mac')
         "Plug 'lilydjwg/fcitx.vim'
       "endif
-      Plug 'scrooloose/nerdtree'
-      Plug 'jistr/vim-nerdtree-tabs'
+      "Plug 'scrooloose/nerdtree'
+      "Plug 'jistr/vim-nerdtree-tabs'
+      Plug 'lambdalisue/fern.vim'
       Plug 'vim-ctrlspace/vim-ctrlspace'
       Plug 'editorconfig/editorconfig-vim'
       Plug 'majutsushi/tagbar'
