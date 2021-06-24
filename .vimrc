@@ -401,7 +401,7 @@
     if isdirectory(expand("~/.vim/bundle/fern.vim"))
       let g:fern#disable_default_mappings = 1
 
-      noremap <C-e> :Fern . -drawer -reveal=% -toggle -width=35<CR>
+      nnoremap <silent> <C-e> :Fern . -drawer -reveal=% -toggle -width=35<CR>
 
       function! FernInit() abort
         nmap <buffer><expr>
@@ -422,6 +422,7 @@
         nmap <buffer> K <Plug>(fern-action-mark-toggle)
         nmap <buffer> b <Plug>(fern-action-open:split)
         nmap <buffer> v <Plug>(fern-action-open:vsplit)
+        nmap <buffer> t <Plug>(fern-action-open:tabedit)
         nmap <buffer><nowait> < <Plug>(fern-action-leave)
         nmap <buffer><nowait> > <Plug>(fern-action-enter)
       endfunction
@@ -547,7 +548,7 @@
       \}
       let g:ale_cpp_clang_options = '-std=c++1z -Wall'
       let g:ale_fixers = {
-        \'*': ['prettier', 'trim_whitespace'],
+        \'*': ['trim_whitespace'],
         \'javascript': ['eslint'],
         \'typescript': ['eslint'],
         \'python': ['black', 'isort'],
@@ -555,7 +556,15 @@
         \'cpp': ['clang-format'],
         \'sh': ['shfmt'],
       \}
-      "let g:ale_c_clangformat_options = '-style="{BasedOnStyle: google, IndentWidth: 4, AccessModifierOffset: -3, AlignAfterOpenBracket: AlwaysBreak}"'
+      "let g:ale_c_clangformat_options = '-style="{
+        "\BasedOnStyle: google,
+        "\IndentWidth: 4,
+        "\AccessModifierOffset: -4,
+        "\AlignAfterOpenBracket: AlwaysBreak,
+        "\BinPackArguments: false,
+        "\BinPackParameters: false,
+        "\IncludeBlocks: Regroup}"'
+      let g:ale_c_clangformat_options = '-style=file'
     endif
     let g:vue_disable_pre_processors=1
     let g:vim_jsx_pretty_enable_jsx_highlight = 1
