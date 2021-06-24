@@ -728,6 +728,7 @@
       " enable completion from tags
       let g:ycm_collect_identifiers_from_tags_files = 1
       let g:ycm_python_binary_path = 'python'
+      let g:ycm_clangd_args=['--header-insertion=never']
 
       " remap Ultisnips for compatibility for YCM
       let g:UltiSnipsExpandTrigger = '<C-v>'
