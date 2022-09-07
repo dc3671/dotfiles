@@ -107,6 +107,7 @@ fi
 msg         "[vim] Config vim..."
 msg         "[vim] Install Plug for vim plugins management..."
 git clone --depth=1 https://github.com/junegunn/vim-plug.git $PWD/vim-plug
+mkdir -p ~/.vim/autoload
 cp $PWD/vim-plug/plug.vim ~/.vim/autoload/plug.vim
 rm -rf $PWD/vim-plug
 #curl -fLo ~/.vim/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim >/dev/null 2>&1

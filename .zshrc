@@ -32,11 +32,10 @@ ZSH_THEME="powerlevel10k/powerlevel10k"
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(git git-extras dirhistory ssh-agent tmux npm yarn python pip docker command-not-found zsh-autosuggestions)
+plugins=(git git-extras dirhistory ssh-agent tmux python pip docker command-not-found zsh-autosuggestions)
 
 # User configuration
 export HOME=~
-export NVIDIA_HOME="/usr/local/nvidia"
 
 export LC_ALL="en_US.UTF-8"
 export LANG="en_US.UTF-8"
@@ -45,14 +44,8 @@ export LANG="en_US.UTF-8"
 export DISPLAY="$(/sbin/ip route | awk '/default/ { print $3 }'):0"
 
 export PATH="/bin:/sbin:/usr/local/bin:/usr/local/sbin:$HOME/.local/bin:/usr/bin:/usr/sbin"
-export PATH="$NVIDIA_HOME/bin:$PATH"
-
-export LD_LIBRARY_PATH="$NVIDIA_HOME/lib64"
-export LIBRARY_PATH=$LD_LIBRARY_PATH
 
 export TERM="xterm-256color"
-export CC="/usr/bin/clang"
-export CXX="/usr/bin/clang++"
 export GIT_SSL_NO_VERIFY=1
 export EDITOR="vim"
 umask 002
@@ -74,10 +67,10 @@ unsetopt PROMPT_SP
 # For a full list of active aliases, run `alias`.
 #
 # Example aliases
-
 alias sudo="sudo -E"
 alias vi="vim"
 alias cp="cp -r"
 alias rm="rm -r"
 alias mkdir="mkdir -p"
 alias sa="sudo apt-get"
+alias sd="sudo dnf"
