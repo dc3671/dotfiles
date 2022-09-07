@@ -294,7 +294,8 @@
     set listchars=tab:›\ ,trail:•,extends:#,nbsp:. " Highlight problematic whitespace
     set nomodeline
     " for transparent probelm with konsole
-    hi Normal  ctermfg=252 ctermbg=none
+    hi Normal ctermfg=none ctermbg=none
+    hi EndOfBuffer ctermfg=none ctermbg=none
   " }
 
   " Rainbow {
