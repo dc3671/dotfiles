@@ -68,7 +68,7 @@ msg         "[zsh] Config zsh..."
 msg         "[zsh] Install oh-my-zsh..."
 git clone --depth=1 https://github.com/robbyrussell/oh-my-zsh.git ~/.oh-my-zsh
 git clone https://github.com/zsh-users/zsh-autosuggestions ~/.oh-my-zsh/custom/plugins/zsh-autosuggestions
-git clone --depth=1 https://gitee.com/romkatv/powerlevel10k.git ~/.oh-my-zsh/custom/themes/powerlevel10k
+git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ~/.oh-my-zsh/custom/themes/powerlevel10k
 mv ~/.zshrc ~/.zshrc.bkp >/dev/null 2>&1
 ln -s $PWD/.zshrc ~/.zshrc
 
@@ -106,7 +106,10 @@ fi
 # vim
 msg         "[vim] Config vim..."
 msg         "[vim] Install Plug for vim plugins management..."
-curl -fLo ~/.vim/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim >/dev/null 2>&1
+git clone --depth=1 https://github.com/junegunn/vim-plug.git $PWD/vim-plug
+cp $PWD/vim-plug/plug.vim ~/.vim/autoload/plug.vim
+rm -rf $PWD/vim-plug
+#curl -fLo ~/.vim/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim >/dev/null 2>&1
 mv ~/.vimrc ~/.vimrc.bkp > /dev/null 2>&1
 mv ~/.vimrc.before ~/.vimrc.before.bkp > /dev/null 2>&1
 mv ~/.vimrc.bundles ~/.vimrc.bundles.bkp > /dev/null 2>&1
