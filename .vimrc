@@ -699,6 +699,7 @@
       endfunction
       command! ProjectFiles execute s:find_files()
       nnoremap <silent> <C-p> :ProjectFiles<CR>
+      nnoremap <silent> <C-f> :Files<CR>
       nnoremap <silent> <C-t> :Tags<CR>
       nnoremap <silent> <C-b> :Buffers<CR>
       nnoremap <leader><leader>/ :Ag<space>

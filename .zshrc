@@ -41,7 +41,7 @@ export LC_ALL="en_US.UTF-8"
 export LANG="en_US.UTF-8"
 
 # fix WSL2 clipboard
-export DISPLAY="$(/sbin/ip route | awk '/default/ { print $3 }'):0"
+#export DISPLAY="$(/sbin/ip route | awk '/default/ { print $3 }'):0"
 
 export PATH="/bin:/sbin:/usr/local/bin:/usr/local/sbin:$HOME/.local/bin:/usr/bin:/usr/sbin"
 
@@ -60,6 +60,7 @@ source $ZSH/oh-my-zsh.sh
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
 unsetopt PROMPT_SP
+setopt ignoreeof
 
 # Set personal aliases, overriding those provided by oh-my-zsh libs,
 # plugins, and themes. Aliases can be placed here, though oh-my-zsh
