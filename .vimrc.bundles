@@ -147,11 +147,11 @@
 
   if count(g:cfg_bundle_groups, 'youcompleteme')
     if g:cfg_bundle_preset == 'cpp'
-      Plug 'ycm-core/YouCompleteMe', {'do': 'python3 install.py --clang-completer --clangd-completer'}
+      Plug 'ycm-core/YouCompleteMe', {'do': 'python3 install.py --system-libclang --clang-completer --clangd-completer'}
     elseif g:cfg_bundle_preset == 'frontend'
       Plug 'ycm-core/YouCompleteMe', {'do': 'python3 install.py --js-completer'}
     elseif g:cfg_bundle_preset == "full"
-      Plug 'ycm-core/YouCompleteMe', {'do': 'python3 install.py --clang-completer --clangd-completer --js-completer'}
+      Plug 'ycm-core/YouCompleteMe', {'do': 'python3 install.py --system-libclang --clang-completer --clangd-completer --js-completer'}
     endif
     " Snips {
       Plug 'SirVer/ultisnips'
