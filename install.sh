@@ -135,6 +135,10 @@ ln -s $PWD/.pylintrc ~/.pylintrc
 mv ~/.style.yapf ~/.style.yapf.bkp >/dev/null 2>&1
 ln -s $PWD/.style.yapf ~/.style.yapf
 
+# gdbinit
+mv ~/.gdbinit ~/.gdbinit.bkp >/dev/null 2>&1
+ln -s $PWD/.gdbinit ~/.gdbinit
+
 success     "[vim] Done."
 
 # tmux
