@@ -78,6 +78,9 @@
       Plug 'tpope/vim-sleuth'
       Plug 'airblade/vim-gitgutter'
       Plug 'zivyangll/git-blame.vim'
+      if has('vim9script')
+        Plug 'Eliot00/git-lens.vim'
+      endif
       "Plug 'mbbill/undotree'
     " }
 
@@ -106,7 +109,7 @@
       Plug 'w0rp/ale'
       "Plug 'Chiel92/vim-autoformat'
       " syntax support for every language
-      Plug 'sheerun/vim-polyglot'
+      "Plug 'sheerun/vim-polyglot'
       " many useful jump mappings with [ and ]
       Plug 'tpope/vim-unimpaired'
       Plug 'tpope/vim-surround'

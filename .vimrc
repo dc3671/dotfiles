@@ -476,6 +476,7 @@
     if isdirectory(expand("~/.vim/bundle/git-blame.vim/"))
       nnoremap <Leader><leader>b :<C-u>call gitblame#echo()<CR>
     endif
+    let g:GIT_LENS_ENABLED = 1
   "}
 
   " UndoTree {
