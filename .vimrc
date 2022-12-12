@@ -508,14 +508,15 @@
     set splitbelow          " Puts new split windows to the bottom of the current
     set matchpairs+=<:>       " Match, to be used with %
     set pastetoggle=<F12>       " pastetoggle (sane indentation on pastes)
-    autocmd FileType cpp set syntax=cpp.doxygen
+    set timeoutlen=1000 ttimeoutlen=0 " Remove ESC key code delays.
+    "autocmd FileType cpp set syntax=cpp.doxygen
     "autocmd FileType go autocmd BufWritePre <buffer> Fmt
     "autocmd BufNewFile,BufRead *.vue set filetype=vue.html.javascript.css
     "autocmd BufNewFile,BufRead *.js set filetype=javascript.jsx
     autocmd BufNewFile,BufRead *.tsx set filetype=typescript.tsx
     autocmd BufNewFile,BufRead *.jsx set filetype=javascript.jsx
     autocmd BufNewFile,BufRead *.ejs set filetype=html
-    autocmd FileType javascript,typescript,vue,html,css,json,vim setlocal expandtab shiftwidth=2 tabstop=2 softtabstop=2
+    autocmd FileType javascript,typescript,vue,html,css,json,vim,cpp setlocal expandtab shiftwidth=2 tabstop=2 softtabstop=2
     "autocmd FileType vue syntax sync fromstart
 
     " Restore cursor to file position in previous editing session
