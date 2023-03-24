@@ -416,9 +416,10 @@
         nmap <buffer> <2-LeftMouse> <Plug>(fern-my-open-expand-collapse)
         nmap <buffer> n <Plug>(fern-action-new-path)
         nmap <buffer> d <Plug>(fern-action-remove)
+        nmap <buffer> y <Plug>(fern-action-copy)
         nmap <buffer> m <Plug>(fern-action-move)
         nmap <buffer> M <Plug>(fern-action-rename)
-        nmap <buffer> h <Plug>(fern-action-hidden-toggle)
+        nmap <buffer> h <Plug>(fern-action-hidden)
         nmap <buffer> r <Plug>(fern-action-reload)
         nmap <buffer> K <Plug>(fern-action-mark-toggle)
         nmap <buffer> b <Plug>(fern-action-open:split)
@@ -557,6 +558,7 @@
         \'python': ['black', 'isort'],
         \'vue': ['prettier'],
         \'cpp': ['clang-format'],
+        \'cuda': ['clang-format'],
         \'sh': ['shfmt'],
       \}
       "let g:ale_c_clangformat_options = '-style="{
