@@ -234,7 +234,9 @@
     noremap L $
 
     " select all
+    noremap <C-a> ggVG
     noremap <Leader>sa ggVG
+    noremap <C-x> <Nop>
   " }
 
 " }
