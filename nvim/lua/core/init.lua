@@ -1,15 +1,30 @@
 -- basicsinit
 vim.cmd('syntax on')
 vim.cmd('filetype plugin indent on')
-vim.g.loaded_netrw = 1
-vim.g.loaded_netrwPlugin = 1
+-- avoid annoying shift key
+vim.cmd([[ command! -bang -nargs=* -complete=file E e<bang> <args> ]])
+vim.cmd([[ command! -bang -nargs=* -complete=file W w<bang> <args> ]])
+vim.cmd([[ command! -bang -nargs=* -complete=file Wq wq<bang> <args> ]])
+vim.cmd([[ command! -bang -nargs=* -complete=file WQ wq<bang> <args> ]])
+vim.cmd([[ command! -bang Wa wa<bang> ]])
+vim.cmd([[ command! -bang WA wa<bang> ]])
+vim.cmd([[ command! -bang Q q<bang> ]])
+vim.cmd([[ command! -bang QA qa<bang> ]])
+vim.cmd([[ command! -bang Qa qa<bang> ]])
+
 vim.opt.number         = true
-vim.opt.relativenumber = false 
-vim.opt.termguicolors  = true
+vim.opt.relativenumber = false
 vim.opt.shiftround     = true
 vim.opt.updatetime     = 100
 vim.opt.cursorline     = true
 vim.opt.autowrite      = true
+vim.opt.ignorecase     = true
+vim.opt.foldmethod     = 'indent'
+vim.opt.foldlevelstart = 99
+-- Puts new split windows to the right and bottom of the current
+vim.opt.splitright     = true
+vim.opt.splitbelow     = true
+
 if (vim.fn.has('termguicolors') == 1) then
     vim.opt.termguicolors = true
 end
@@ -23,7 +38,8 @@ vim.opt.expandtab     = true
 vim.opt.autowrite     = false
 vim.opt.wrap          = false
 vim.opt.formatoptions = ''
---vim.opt.listchars     = { tab = '›', trail = '•', extends = '#' }
+vim.opt.list          = true
+vim.opt.listchars     = { tab = ' ›', trail = '•', extends = '#', nbsp = '.' }
 
 require("core.plugins")
 --require("core.gui")
@@ -43,6 +59,9 @@ vim.g.loaded_netrw             = 1
 vim.g.loaded_netrwPlugin       = 1
 vim.g.loaded_tutor_mode_plugin = 1
 vim.g.loaded_remote_plugins    = 1
+
+vim.diagnostic.config { virtual_text = false }
+
 require("core.theme")
 
 require('image').setup {
@@ -54,8 +73,11 @@ require('image').setup {
 -- Load plugin configs
 -- plugins without extra configs are configured directly here
 require("impatient")
--- require("nvim-tree").setup {}
--- require("nvim_comment").setup {}
+require('Comment').setup {}
+require("nvim-surround").setup {}
+require('unimpaired').setup {}
+require("nvim-autopairs").setup {}
+require("fzf-lua").setup { fzf_opts = { ['--layout'] = 'default' } }
 
 require("indent_blankline").setup {
     space_char_blankline = " ",
@@ -63,16 +85,15 @@ require("indent_blankline").setup {
     show_current_context_start = true,
 }
 
+require("configs.lsp").config()
 require("configs.autocomplete").config()
 require("configs.statusline").config()
 require("configs.treesitter").config()
-require("configs.startscreen").config()
 require("configs.git").config()
 require("configs.bufferline").config()
 require("configs.grammar").config()
 require("configs.terminal").config()
 require("configs.ide").config()
 require("configs.scrollbar").config()
---require("configs.telescope").config()
 
 require("core.keymaps")

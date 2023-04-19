@@ -20,9 +20,9 @@ vim.keymap.set('n', '<leader>vd', set_bg_dark)
 -- scrolling
 vim.keymap.set('n', 'zl', 'zL')
 vim.keymap.set('n', 'zh', 'zH')
--- quick move in normal mode 
-vim.keymap.set({'n', 'v'}, 'H', '0')
-vim.keymap.set({'n', 'v'}, 'L', '$')
+-- quick move in normal mode
+vim.keymap.set({ 'n', 'v' }, 'H', '0')
+vim.keymap.set({ 'n', 'v' }, 'L', '$')
 -- quick move in insert mode
 vim.keymap.set('i', '<C-o>', '<Esc>o')
 vim.keymap.set('i', '<C-a>', '<Home>')
@@ -32,7 +32,7 @@ vim.keymap.set('i', '<A-h>', '<Left>')
 vim.keymap.set('i', '<A-j>', '<Down>')
 vim.keymap.set('i', '<A-k>', '<Up>')
 vim.keymap.set('i', '<A-l>', '<Right>')
--- select all 
+-- select all
 vim.keymap.set('n', '<leader>sa', 'ggVG')
 -- replace paste yanked text without yanking the deleted text
 vim.keymap.set('v', 'p', '"_dP')
@@ -79,25 +79,26 @@ vim.keymap.set('n', '<leader>/', ':set invhlsearch<cr>')
 -- g: goto
 -- w: workspace
 -- e: diagnostics
-vim.keymap.set('n', '<leader>ee', ':Lspsaga show_line_diagnostics<cr>')
-vim.keymap.set('n', '<leader>ef', ':Lspsaga show_cursor_diagnostics<cr>')
-vim.keymap.set('n', '<leader>el', ':TroubleToggle<cr>') -- Show list of diagnostics across the workspace
-vim.keymap.set('n', '<leader>et', ':Trouble<cr>') -- Focus onto the trouble window
-vim.keymap.set('n', '<leader>lq', vim.diagnostic.setloclist)
-vim.keymap.set('n', '<leader>lk', ':Lspsaga hover_doc<cr>')
-vim.keymap.set('n', '<leader>ld', ':Lspsaga preview_definition<cr>')
-vim.keymap.set('n', '<leader>lr', ':Lspsaga rename<cr>')
-vim.keymap.set('n', '<leader>lh', vim.lsp.buf.signature_help)
-vim.keymap.set('n', '<leader>lf', vim.lsp.buf.formatting)
-vim.keymap.set('n', '<leader>la', ':Lspsaga code_action<cr>')
-vim.keymap.set('n', '<F12>', ':Lspsaga code_action<cr>')
+-- vim.keymap.set('n', '<leader>ee', ':Lspsaga show_line_diagnostics<cr>')
+-- vim.keymap.set('n', '<leader>ef', ':Lspsaga show_cursor_diagnostics<cr>')
+vim.keymap.set('n', '<leader>ef', vim.diagnostic.open_float)
+vim.keymap.set('n', '<leader>ee', ':TroubleToggle workspace_diagnostics<cr>') -- Show list of diagnostics across the workspace
+vim.keymap.set('n', '<leader>el', ':TroubleToggle document_diagnostics<cr>')
+vim.keymap.set('n', '<leader>lk', function() vim.lsp.buf.hover {} end)
+vim.keymap.set('n', '<leader>ld', function() vim.lsp.buf.definition {} end)
+vim.keymap.set('n', '<leader>lt', function() vim.lsp.buf.type_definition {} end)
+vim.keymap.set('n', '<leader>li', function() vim.lsp.buf.implementation {} end)
+vim.keymap.set('n', '<leader>lr', function() vim.lsp.buf.rename {} end)
+vim.keymap.set('n', '<leader>lh', function() vim.lsp.buf.signature_help {} end)
+vim.keymap.set('n', '<leader>la', function() vim.lsp.buf.code_action {} end)
+vim.keymap.set({ 'n', 'v' }, '<leader>lf', function() vim.lsp.buf.format { async = true } end)
 
 vim.keymap.set('n', '<leader>gd', ':Glance definitions<CR>')
 vim.keymap.set('n', '<F4>', ':Glance references<CR>')
 vim.keymap.set('n', '<leader>gt', ':Glance type_definitions<CR>')
 vim.keymap.set('n', '<leader>gi', ':Glance implementations<CR>')
-vim.keymap.set('n', '<leader>gN', ':Lspsaga diagnostic_jump_prev<cr>')
-vim.keymap.set('n', '<leader>gn', ':Lspsaga diagnostic_jump_next<cr>')
+vim.keymap.set('n', '[e', vim.diagnostic.goto_prev)
+vim.keymap.set('n', ']e', vim.diagnostic.goto_next)
 
 vim.keymap.set('n', '<leader>wa', vim.lsp.buf.add_workspace_folder)
 vim.keymap.set('n', '<leader>wr', vim.lsp.buf.remove_workspace_folder)
@@ -107,7 +108,7 @@ vim.keymap.set('n', '<leader>wl', function() print(vim.inspect(vim.lsp.buf.list_
 -- use <f5> to toggle terminal, this can be set in lua/configs/terminal.lua
 -- the default position is also set in lua/configs/terminal.lua
 local terminal = require('toggleterm.terminal')
-vim.keymap.set('t', '<C-g>', '<C-\\><C-n>')
+--vim.keymap.set('t', '<C-g>', '<C-\\><C-n>')
 vim.keymap.set('n', '<leader>tt', ':ToggleTerm direction=tab<cr>')
 vim.keymap.set('n', '<leader>tn', function() terminal.Terminal:new():toggle() end)
 vim.keymap.set('n', '<leader>tf', ':ToggleTerm direction=float<cr>')
@@ -116,8 +117,8 @@ vim.keymap.set('n', '<leader>tv', ':ToggleTerm direction=vertical<cr>')
 
 -- h: git
 vim.keymap.set('n', '<leader>hu', ':Gitsigns undo_stage_hunk<cr>')
-vim.keymap.set('n', '<leader>hn', ':Gitsigns next_hunk<cr>')
-vim.keymap.set('n', '<leader>hN', ':Gitsigns next_hunk<cr>')
+vim.keymap.set('n', ']h', ':Gitsigns next_hunk<cr>')
+vim.keymap.set('n', '[h', ':Gitsigns prev_hunk<cr>')
 vim.keymap.set('n', '<leader>hc', ':Gitsigns preview_hunk<cr>')
 vim.keymap.set('n', '<leader>hr', ':Gitsigns reset_hunk<cr>')
 vim.keymap.set('n', '<leader>hR', ':Gitsigns reset_buffer')

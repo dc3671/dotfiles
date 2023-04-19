@@ -1,6 +1,8 @@
 lua require('core.init')
 
-set clipboard^=unnamed,unnamedplus
+if has('clipboard') && (executable('pbcopy') || executable('xclip') || executable('xsel'))
+    set clipboard^=unnamed,unnamedplus
+endif
 
 if has('unix')
 	set thesaurus+=/usr/share/dict/words

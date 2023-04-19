@@ -28,11 +28,11 @@ function M.config()
             }),
             -- Accept currently selected item...
             -- Set `select` to `false` to only confirm explicitly selected items:
-            ['<CR>'] = cmp.mapping.confirm({ select = true }),
+            ['<tab>'] = cmp.mapping.confirm({ select = true }),
         },
         sources = cmp.config.sources({
             { name = 'nvim_lsp' },
-            -- { name = 'luasnip' }, -- For luasnip users.
+            { name = 'luasnip' }, -- For luasnip users.
             -- { name = 'ultisnips' }, -- For ultisnips users.
             -- { name = 'snippy' }, -- For snippy users.
         }, { { name = 'buffer' } })
@@ -61,20 +61,10 @@ function M.config()
         })
     })
     local has_words_before = function()
-        local line, col = unpack(vim.api.nvim_win_get_cursor(0))
+        local line, col = vim.api.nvim_win_get_cursor(0)
         return col ~= 0 and vim.api.nvim_buf_get_lines(0, line - 1, line, true)[1]:sub(col, col):match("%s") == nil
     end
     local luasnip = require("luasnip")
-
-    local nlspsettings = require("nlspsettings")
-
-    nlspsettings.setup({
-        config_home = vim.fn.stdpath('config') .. '/nlsp-settings',
-        local_settings_dir = ".nlsp-settings",
-        local_settings_root_markers_fallback = { '.git' },
-        append_default_schemas = true,
-        loader = 'json'
-    })
 
     cmp.setup({
         mapping = {
@@ -114,16 +104,6 @@ function M.config()
             callback({ items = items })
         end,
     })
-
-    -- nvim-lspconfig config
-    -- List of all pre-configured LSP servers:
-    -- github.com/neovim/nvim-lspconfig/blob/master/doc/server_configurations.md
-    local servers = { 'rust_analyzer', 'pylsp', 'clangd', 'html', 'cssls' }
-    for _, lsp in pairs(servers) do
-        require('lspconfig')[lsp].setup {}
-    end
-
-    require("lspsaga").setup({})
 
     local glance = require('glance')
     local actions = glance.actions
@@ -242,3 +222,4 @@ function M.config()
 end
 
 return M
+

@@ -38,18 +38,52 @@ return require('packer').startup(function()
     -- use 'B4mbus/oxocarbon-lua.nvim'
     -- use 'Th3Whit3Wolf/one-nvim'
 
-    -- language
+    -- package management
+    use {
+        "williamboman/mason.nvim",
+        run = function()
+            local ms_update = require('mason.install').update({ with_sync = true })
+            ms_update()
+        end,
+    }
+    -- lsp
+    use "williamboman/mason-lspconfig.nvim"
     use 'neovim/nvim-lspconfig'
-    use 'glepnir/lspsaga.nvim'
+    --use 'glepnir/lspsaga.nvim'             -- improve lsp like rename and diagnostic
+    -- linter and formatter
+    use {
+        "jose-elias-alvarez/null-ls.nvim", -- lsp based format
+        requires = { "nvim-lua/plenary.nvim" }
+    }
+    -- autocomplete
     use 'hrsh7th/cmp-nvim-lsp'
     use 'hrsh7th/cmp-buffer'
     use 'hrsh7th/cmp-path'
     use 'hrsh7th/cmp-cmdline'
     use 'hrsh7th/nvim-cmp'
-    use 'L3MON4D3/LuaSnip'
-    use 'nvim-treesitter/nvim-treesitter'
-    use 'simrat39/rust-tools.nvim'
     use 'dnlhc/glance.nvim'
+    use 'L3MON4D3/LuaSnip'
+    -- syntax highlight
+    use {
+        'nvim-treesitter/nvim-treesitter',
+        run = function()
+            local ts_update = require('nvim-treesitter.install').update({ with_sync = true })
+            ts_update()
+        end,
+    }
+    use {
+        "nvim-treesitter/nvim-treesitter-textobjects",
+        after = "nvim-treesitter",
+        requires = "nvim-treesitter/nvim-treesitter",
+    }
+    use 'RRethy/nvim-treesitter-textsubjects'
+    use "kylechui/nvim-surround"
+    use "windwp/nvim-autopairs"
+    -- quick move using [ and ]
+    use 'tummetott/unimpaired.nvim'
+    -- multi cursors
+    use 'mg979/vim-visual-multi'
+    -- enable loading outside json configs
     use 'tamago324/nlsp-settings.nvim'
 
     use {
@@ -58,10 +92,7 @@ return require('packer').startup(function()
     }
 
     -- git
-    use {
-        'lewis6991/gitsigns.nvim',
-        tag = 'release',
-    }
+    use 'lewis6991/gitsigns.nvim'
 
     -- status line
     use {
@@ -85,22 +116,25 @@ return require('packer').startup(function()
     --    requires = 'nvim-lua/plenary.nvim'
     --}
 
+    use {
+        'rmagatti/auto-session',
+        config = function()
+            require("auto-session").setup {
+                log_level = "error",
+                auto_session_suppress_dirs = { "~/", "~/Projects", "~/Downloads", "/" },
+            }
+        end
+    }
+
     -- indent guide
     use 'lukas-reineke/indent-blankline.nvim'
-
-    -- startup screen
-    use 'leslie255/aleph-nvim'
 
     -- scroll bar
     use 'petertriho/nvim-scrollbar'
 
     -- comments toggle
-    use "terrortylor/nvim-comment"
+    use 'numToStr/Comment.nvim'
 
     -- ascii image
     use 'samodostal/image.nvim'
-
-    -- AI completion!
-    use 'aduros/ai.vim'
-
 end)
