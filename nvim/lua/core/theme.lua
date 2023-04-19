@@ -1,6 +1,7 @@
 -- themes
 
 -- themes with special settings
+vim.cmd("set background=dark")
 
 -- sonokai
 --sonokai styles: default, atlantis, andromeda, shusia, maia, espresso
@@ -48,6 +49,7 @@
 -- edge
 vim.g.edge_style = 'aura' -- neon, aura
 vim.g.edge_better_performance = 1
+vim.g.edge_disable_italic_comment = 1
 vim.cmd("colorscheme edge")
 
 -- github
@@ -55,5 +57,3 @@ vim.cmd("colorscheme edge")
 
 -- oxocarbon
 -- vim.cmd("colorscheme oxocarbon-lua")
-
-vim.cmd("set background=dark")

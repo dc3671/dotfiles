@@ -81,8 +81,8 @@ function M.config()
         },
         -- default panel sizes for the different positions
         panel_sizes = {
-            left = 40,
-            right = 40,
+            left = 35,
+            right = 35,
             bottom = 15
         }
     })
