@@ -1,6 +1,7 @@
 local M = {}
 function M.config()
     -- nvim-treesitter config
+    require('nvim-treesitter.install').update({ with_sync = true })
     require 'nvim-treesitter.configs'.setup {
         -- ensure_installed = "maintained", -- for installing all maintained parsers
         ensure_installed = { "c", "cpp", "lua" }, -- for installing specific parsers

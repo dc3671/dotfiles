@@ -33,35 +33,52 @@ program_must_exist() {
 }
 
 msg         ">>> Start checking basic requirement..."
-program_must_exist "vim"
+program_must_exist "nvim"
 program_must_exist "git"
 program_must_exist "zsh"
+program_must_exist "tmux"
 success     "Done."
 
-PS3='Please choose which version to be installed: '
-options=("basic python version(without YouCompleteMe)" "python & C++ version(with YCM)" "python & frontend version(with YCM)" "full version")
-select opt in "${options[@]}"
-do
-    case "$REPLY" in
-        1)
-            echo "let g:cfg_bundle_preset = 'nano'" >> .vimrc.before
-            break
-            ;;
-        2)
-            echo "let g:cfg_bundle_preset = 'cpp'" >> .vimrc.before
-            break
-            ;;
-        3)
-            echo "let g:cfg_bundle_preset = 'frontend'" >> .vimrc.before
-            break
-            ;;
-        4)
-            echo "let g:cfg_bundle_preset = 'full'" >> .vimrc.before
-            break
-            ;;
-        *) echo "invalid option";;
-    esac
-done
+# PS3='Please choose which version to be installed: '
+# options=("basic python version(without YouCompleteMe)" "python & C++ version(with YCM)" "python & frontend version(with YCM)" "full version")
+# select opt in "${options[@]}"
+# do
+#     case "$REPLY" in
+#         1)
+#             echo "let g:cfg_bundle_preset = 'nano'" >> .vimrc.before
+#             break
+#             ;;
+#         2)
+#             echo "let g:cfg_bundle_preset = 'cpp'" >> .vimrc.before
+#             break
+#             ;;
+#         3)
+#             echo "let g:cfg_bundle_preset = 'frontend'" >> .vimrc.before
+#             break
+#             ;;
+#         4)
+#             echo "let g:cfg_bundle_preset = 'full'" >> .vimrc.before
+#             break
+#             ;;
+#         *) echo "invalid option";;
+#     esac
+# done
+
+# vim
+#msg         "[vim] Config vim..."
+#msg         "[vim] Install Plug for vim plugins management..."
+#git clone --depth=1 https://github.com/junegunn/vim-plug.git $PWD/vim-plug
+#mkdir -p ~/.vim/autoload
+#cp $PWD/vim-plug/plug.vim ~/.vim/autoload/plug.vim
+#rm -rf $PWD/vim-plug
+##curl -fLo ~/.vim/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim >/dev/null 2>&1
+#mv ~/.vimrc ~/.vimrc.bkp > /dev/null 2>&1
+#mv ~/.vimrc.before ~/.vimrc.before.bkp > /dev/null 2>&1
+#mv ~/.vimrc.bundles ~/.vimrc.bundles.bkp > /dev/null 2>&1
+#ln -s $PWD/.vimrc ~/.vimrc
+#ln -s $PWD/.vimrc.before ~/.vimrc.before
+#ln -s $PWD/.vimrc.bundles ~/.vimrc.bundles
+#vim -u "$PWD/.vimrc.bundles" "+set nomore" "+PlugInstall!" "+PlugClean" "+qall"
 
 # zsh
 msg         "[zsh] Config zsh..."
@@ -102,44 +119,38 @@ if [ "$TEST_CURRENT_SHELL" != "zsh" ]; then
     fi
 fi
 
-
-# vim
-msg         "[vim] Config vim..."
-msg         "[vim] Install Plug for vim plugins management..."
-git clone --depth=1 https://github.com/junegunn/vim-plug.git $PWD/vim-plug
-mkdir -p ~/.vim/autoload
-cp $PWD/vim-plug/plug.vim ~/.vim/autoload/plug.vim
-rm -rf $PWD/vim-plug
-#curl -fLo ~/.vim/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim >/dev/null 2>&1
-mv ~/.vimrc ~/.vimrc.bkp > /dev/null 2>&1
-mv ~/.vimrc.before ~/.vimrc.before.bkp > /dev/null 2>&1
-mv ~/.vimrc.bundles ~/.vimrc.bundles.bkp > /dev/null 2>&1
-ln -s $PWD/.vimrc ~/.vimrc
-ln -s $PWD/.vimrc.before ~/.vimrc.before
-ln -s $PWD/.vimrc.bundles ~/.vimrc.bundles
-vim -u "$PWD/.vimrc.bundles" "+set nomore" "+PlugInstall!" "+PlugClean" "+qall"
+# nvim
+msg         "[nvim] Config nvim..."
+msg         "[nvim] Install Packer for nvim plugins management..."
+if [[ ! -d ~/.local/share/nvim/site/pack/packer/start/packer.nvim ]]; then
+    git clone --depth=1 https://github.com/wbthomason/packer.nvim \
+        ~/.local/share/nvim/site/pack/packer/start/packer.nvim
+fi
+nvim -u "$PWD/init.before.vim" --headless -c 'autocmd User PackerComplete quitall' -c 'PackerSync'
+mkdir -p ~/.config
+mv ~/.config/nvim ~/.config/nvim.bkp >/dev/null 2>&1
+ln -s $PWD/nvim ~/.config/nvim
+success     "[nvim] Done."
 
 # eslint
-mv ~/.eslintrc.js ~/.eslintrc.js.bkp >/dev/null 2>&1
-ln -s $PWD/.eslintrc.js ~/.eslintrc.js
+#mv ~/.eslintrc.js ~/.eslintrc.js.bkp >/dev/null 2>&1
+#ln -s $PWD/.eslintrc.js ~/.eslintrc.js
 
 # ternjs
-mv ~/.tern-config ~/.tern-config.bkp >/dev/null 2>&1
-ln -s $PWD/.tern-config ~/.tern-config
+#mv ~/.tern-config ~/.tern-config.bkp >/dev/null 2>&1
+#ln -s $PWD/.tern-config ~/.tern-config
 
 # pylint
-mv ~/.pylintrc ~/.pylintrc.bkp >/dev/null 2>&1
-ln -s $PWD/.pylintrc ~/.pylintrc
+#mv ~/.pylintrc ~/.pylintrc.bkp >/dev/null 2>&1
+#ln -s $PWD/.pylintrc ~/.pylintrc
 
 # yapf
-mv ~/.style.yapf ~/.style.yapf.bkp >/dev/null 2>&1
-ln -s $PWD/.style.yapf ~/.style.yapf
+#mv ~/.style.yapf ~/.style.yapf.bkp >/dev/null 2>&1
+#ln -s $PWD/.style.yapf ~/.style.yapf
 
 # gdbinit
 mv ~/.gdbinit ~/.gdbinit.bkp >/dev/null 2>&1
 ln -s $PWD/.gdbinit ~/.gdbinit
-
-success     "[vim] Done."
 
 # tmux
 msg         "[tmux] Config tmux..."

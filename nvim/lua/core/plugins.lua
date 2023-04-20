@@ -39,13 +39,7 @@ return require('packer').startup(function()
     -- use 'Th3Whit3Wolf/one-nvim'
 
     -- package management
-    use {
-        "williamboman/mason.nvim",
-        run = function()
-            local ms_update = require('mason.install').update({ with_sync = true })
-            ms_update()
-        end,
-    }
+    use "williamboman/mason.nvim"
     -- lsp
     use "williamboman/mason-lspconfig.nvim"
     use 'neovim/nvim-lspconfig'
@@ -64,13 +58,7 @@ return require('packer').startup(function()
     use 'dnlhc/glance.nvim'
     use 'L3MON4D3/LuaSnip'
     -- syntax highlight
-    use {
-        'nvim-treesitter/nvim-treesitter',
-        run = function()
-            local ts_update = require('nvim-treesitter.install').update({ with_sync = true })
-            ts_update()
-        end,
-    }
+    use 'nvim-treesitter/nvim-treesitter'
     use {
         "nvim-treesitter/nvim-treesitter-textobjects",
         after = "nvim-treesitter",
@@ -116,15 +104,7 @@ return require('packer').startup(function()
     --    requires = 'nvim-lua/plenary.nvim'
     --}
 
-    use {
-        'rmagatti/auto-session',
-        config = function()
-            require("auto-session").setup {
-                log_level = "error",
-                auto_session_suppress_dirs = { "~/", "~/Projects", "~/Downloads", "/" },
-            }
-        end
-    }
+    use 'rmagatti/auto-session'
 
     -- indent guide
     use 'lukas-reineke/indent-blankline.nvim'
