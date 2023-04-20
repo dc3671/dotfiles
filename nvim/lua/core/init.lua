@@ -78,6 +78,10 @@ require("nvim-surround").setup {}
 require('unimpaired').setup {}
 require("nvim-autopairs").setup {}
 require("fzf-lua").setup { fzf_opts = { ['--layout'] = 'default' } }
+require("auto-session").setup {
+    log_level = "error",
+    auto_session_suppress_dirs = { "~/", "~/Projects", "~/Downloads", "/" },
+}
 
 require("indent_blankline").setup {
     space_char_blankline = " ",

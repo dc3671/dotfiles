@@ -47,7 +47,7 @@ export PATH="/bin:/sbin:/usr/local/bin:/usr/local/sbin:$HOME/.local/bin:/usr/bin
 
 export TERM="xterm-256color"
 export GIT_SSL_NO_VERIFY=1
-export EDITOR="vim"
+export EDITOR="nvim"
 umask 002
 
 zstyle :omz:plugins:ssh-agent agent-forwarding on >/dev/null 2>&1
