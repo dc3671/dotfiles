@@ -36,8 +36,12 @@ vim.opt.softtabstop   = 4
 vim.opt.mouse         = 'a'
 vim.opt.expandtab     = true
 vim.opt.autowrite     = false
-vim.opt.wrap          = false
+vim.opt.wrap          = true
 vim.opt.formatoptions = ''
+-- undo
+vim.opt.undofile      = true
+vim.opt.undolevels    = 1000  -- Maximum number of changes that can be undone
+vim.opt.undoreload    = 10000 -- Maximum number lines to save for undo on a buffer reload
 vim.opt.list          = true
 vim.opt.listchars     = { tab = ' ›', trail = '•', extends = '#', nbsp = '.' }
 

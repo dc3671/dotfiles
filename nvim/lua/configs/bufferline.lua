@@ -1,8 +1,10 @@
 local M = {}
 
 function M.config()
-    require('bufferline').setup {
+    local bufferline = require('bufferline')
+    bufferline.setup {
         options = {
+            style_preset = 4,
             mode = "buffers", -- set to "tabs" to only show tabpages instead
             numbers = "none",
             close_command = "bdelete! %d", -- can be a string | function, see "Mouse actions"

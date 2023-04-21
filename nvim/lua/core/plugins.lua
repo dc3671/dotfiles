@@ -105,6 +105,7 @@ return require('packer').startup(function()
     --}
 
     use 'rmagatti/auto-session'
+    --use 'mbbill/undotree'
 
     -- indent guide
     use 'lukas-reineke/indent-blankline.nvim'
