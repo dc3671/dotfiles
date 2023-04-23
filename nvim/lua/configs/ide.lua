@@ -29,6 +29,7 @@ function M.config()
                 hide = "X",
             },
             Explorer = {
+                show_file_permissions = false,
                 list_directories_first = true,
                 disabled_keymaps = false,
                 keymaps = {

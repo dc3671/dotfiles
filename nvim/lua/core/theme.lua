@@ -47,11 +47,19 @@ vim.cmd("set background=dark")
 --vim.cmd("colorscheme kanagawa")
 
 -- edge
-vim.g.edge_style = 'aura' -- neon, aura
-vim.g.edge_better_performance = 1
-vim.g.edge_disable_italic_comment = 1
-vim.cmd("colorscheme edge")
+-- vim.g.edge_style = 'aura' -- neon, aura
+-- vim.g.edge_better_performance = 1
+-- vim.g.edge_disable_italic_comment = 1
+-- vim.cmd("colorscheme edge")
 
+-- onedark
+require('onedark').setup {
+    style = 'warmer',
+    code_style = {
+        comments = 'none',
+    }
+}
+require('onedark').load()
 -- github
 -- vim.cmd("colorscheme github_dark_default")
 

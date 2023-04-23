@@ -127,3 +127,23 @@ vim.keymap.set('n', '<leader>hR', ':Gitsigns reset_buffer')
 vim.keymap.set('n', '<leader>hb', ':Gitsigns blame_line<cr>')
 vim.keymap.set('n', '<leader>hd', ':Gitsigns diffthis<cr>')
 vim.keymap.set('n', '<leader>hs', ':<C-U>Gitsigns select_hunk<CR>')
+-- git conflict
+vim.keymap.set('n', '<leader>co', '<Plug>(git-conflict-ours)')
+vim.keymap.set('n', '<leader>ct', '<Plug>(git-conflict-theirs)')
+vim.keymap.set('n', '<leader>cb', '<Plug>(git-conflict-both)')
+vim.keymap.set('n', '<leader>c0', '<Plug>(git-conflict-none)')
+vim.keymap.set('n', ']x', '<Plug>(git-conflict-prev-conflict)')
+vim.keymap.set('n', '[x', '<Plug>(git-conflict-next-conflict)')
+-- replace across multi files
+vim.keymap.set('n', '<leader>ss', '<cmd>lua require("spectre").open()<CR>', {
+    desc = "Open Spectre"
+})
+vim.keymap.set('n', '<leader>sw', '<cmd>lua require("spectre").open_visual({select_word=true})<CR>', {
+    desc = "Search current word"
+})
+vim.keymap.set('v', '<leader>sw', '<esc><cmd>lua require("spectre").open_visual()<CR>', {
+    desc = "Search current word"
+})
+vim.keymap.set('n', '<leader>sp', '<cmd>lua require("spectre").open_file_search({select_word=true})<CR>', {
+    desc = "Search on current file"
+})

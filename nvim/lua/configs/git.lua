@@ -40,6 +40,7 @@ function M.config()
             enable = false
         },
     }
+    require('git-conflict').setup {}
 end
 
 return M

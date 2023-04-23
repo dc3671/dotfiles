@@ -26,7 +26,7 @@ return require('packer').startup(function()
     -- use 'sainnhe/sonokai'
     -- use 'tiagovla/tokyodark.nvim'
     -- use 'projekt0n/github-nvim-theme'
-    -- use 'joshdick/onedark.vim'
+    use 'navarasu/onedark.nvim'
     -- use { 'catppuccin/nvim', as='catppuccin' }
     -- use { 'sonph/onehalf', rtp='vim/' }
     -- use 'liuchengxu/space-vim-dark'
@@ -81,6 +81,7 @@ return require('packer').startup(function()
 
     -- git
     use 'lewis6991/gitsigns.nvim'
+    use 'akinsho/git-conflict.nvim'
 
     -- status line
     use {
@@ -96,6 +97,10 @@ return require('packer').startup(function()
     use { 'ibhagwan/fzf-lua',
         -- optional for icon support
         requires = { 'nvim-tree/nvim-web-devicons' }
+    }
+    use {
+        'nvim-pack/nvim-spectre',
+        requires = 'nvim-lua/plenary.nvim'
     }
     -- file telescope
     --use 'BurntSushi/ripgrep'

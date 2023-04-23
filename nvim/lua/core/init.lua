@@ -66,6 +66,8 @@ vim.g.loaded_remote_plugins    = 1
 
 vim.diagnostic.config { virtual_text = false }
 
+require("core.keymaps")
+
 require("core.theme")
 
 require('image').setup {
@@ -77,11 +79,23 @@ require('image').setup {
 -- Load plugin configs
 -- plugins without extra configs are configured directly here
 require("impatient")
-require('Comment').setup {}
+require('Comment').setup {
+    ignore = '^$',
+    padding = false,
+    toggler = {
+        line = '<leader>cc',
+        block = '<leader>bc',
+    },
+    opleader = {
+        line = '<leader>c',
+        block = '<leader>b',
+    },
+}
 require("nvim-surround").setup {}
 require('unimpaired').setup {}
 require("nvim-autopairs").setup {}
 require("fzf-lua").setup { fzf_opts = { ['--layout'] = 'default' } }
+require('spectre').setup { default = { find = { cmd = "ag" }}}
 require("auto-session").setup {
     log_level = "error",
     auto_session_suppress_dirs = { "~/", "~/Projects", "~/Downloads", "/" },
@@ -104,4 +118,3 @@ require("configs.terminal").config()
 require("configs.ide").config()
 require("configs.scrollbar").config()
 
-require("core.keymaps")
