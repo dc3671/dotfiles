@@ -94,8 +94,11 @@ require('Comment').setup {
 require("nvim-surround").setup {}
 require('unimpaired').setup {}
 require("nvim-autopairs").setup {}
-require("fzf-lua").setup { fzf_opts = { ['--layout'] = 'default' } }
-require('spectre').setup { default = { find = { cmd = "ag" }}}
+require("fzf-lua").setup {
+    winopts = { preview = { flip_columns = 180 } },
+    fzf_opts = { ['--layout'] = 'default' }
+}
+require('spectre').setup { default = { find = { cmd = "ag" } } }
 require("auto-session").setup {
     log_level = "error",
     auto_session_suppress_dirs = { "~/", "~/Projects", "~/Downloads", "/" },
@@ -117,4 +120,3 @@ require("configs.grammar").config()
 require("configs.terminal").config()
 require("configs.ide").config()
 require("configs.scrollbar").config()
-
