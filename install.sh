@@ -128,8 +128,8 @@ if [[ ! -d ~/.local/share/nvim/site/pack/packer/start/packer.nvim ]]; then
 fi
 mkdir -p ~/.config
 mv ~/.config/nvim ~/.config/nvim.bkp >/dev/null 2>&1
+ln -s $PWD/nvim ~/.config/
 nvim -u "$PWD/init.before.vim" --headless -c 'autocmd User PackerComplete quitall' -c 'PackerSync'
-ln -s $PWD/nvim ~/.config/nvim
 success     "[nvim] Done."
 
 # eslint
