@@ -19,6 +19,7 @@ vim.opt.updatetime     = 100
 vim.opt.cursorline     = true
 vim.opt.autowrite      = true
 vim.opt.ignorecase     = true
+vim.opt.virtualedit    = 'onemore'       -- Allow for cursor beyond last character
 vim.opt.foldmethod     = 'indent'
 vim.opt.foldlevelstart = 99
 -- Puts new split windows to the right and bottom of the current
