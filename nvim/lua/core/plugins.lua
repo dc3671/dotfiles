@@ -9,7 +9,8 @@ return require('packer').startup(function()
     -- IDE-like side panels
     --use 'ldelossa/nvim-ide'
     use 'nvim-tree/nvim-tree.lua'
-    use 'simrat39/symbols-outline.nvim'
+    use 'stevearc/aerial.nvim'
+    --use 'simrat39/symbols-outline.nvim'
 
     -- starup time optimise
     use 'dstein64/vim-startuptime'

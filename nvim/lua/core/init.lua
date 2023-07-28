@@ -95,7 +95,7 @@ require('Comment').setup {
 require("nvim-surround").setup {}
 require('unimpaired').setup {}
 require("nvim-autopairs").setup {}
-require("symbols-outline").setup {}
+require("aerial").setup {}
 require("fzf-lua").setup {
     winopts = { preview = { flip_columns = 180 } },
     fzf_opts = { ['--layout'] = 'default' }
@@ -121,5 +121,5 @@ require("configs.bufferline").config()
 require("configs.grammar").config()
 require("configs.terminal").config()
 require("configs.nvimtree").config()
-require("configs.ide").config()
+--require("configs.ide").config()
 require("configs.scrollbar").config()
