@@ -7,9 +7,9 @@ return require('packer').startup(function()
     use 'MunifTanjim/nui.nvim'
 
     -- IDE-like side panels
-    use 'ldelossa/nvim-ide'
-    -- use 'nvim-tree/nvim-tree.lua'
-    -- use 'simrat39/symbols-outline.nvim'
+    --use 'ldelossa/nvim-ide'
+    use 'nvim-tree/nvim-tree.lua'
+    use 'simrat39/symbols-outline.nvim'
 
     -- starup time optimise
     use 'dstein64/vim-startuptime'
@@ -61,7 +61,6 @@ return require('packer').startup(function()
     use 'nvim-treesitter/nvim-treesitter'
     use {
         "nvim-treesitter/nvim-treesitter-textobjects",
-        after = "nvim-treesitter",
         requires = "nvim-treesitter/nvim-treesitter",
     }
     use 'RRethy/nvim-treesitter-textsubjects'

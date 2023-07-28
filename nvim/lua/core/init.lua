@@ -19,7 +19,7 @@ vim.opt.updatetime     = 100
 vim.opt.cursorline     = true
 vim.opt.autowrite      = true
 vim.opt.ignorecase     = true
-vim.opt.virtualedit    = 'onemore'       -- Allow for cursor beyond last character
+vim.opt.virtualedit    = 'onemore' -- Allow for cursor beyond last character
 vim.opt.foldmethod     = 'indent'
 vim.opt.foldlevelstart = 99
 -- Puts new split windows to the right and bottom of the current
@@ -95,6 +95,7 @@ require('Comment').setup {
 require("nvim-surround").setup {}
 require('unimpaired').setup {}
 require("nvim-autopairs").setup {}
+require("symbols-outline").setup {}
 require("fzf-lua").setup {
     winopts = { preview = { flip_columns = 180 } },
     fzf_opts = { ['--layout'] = 'default' }
@@ -119,5 +120,6 @@ require("configs.git").config()
 require("configs.bufferline").config()
 require("configs.grammar").config()
 require("configs.terminal").config()
+require("configs.nvimtree").config()
 require("configs.ide").config()
 require("configs.scrollbar").config()

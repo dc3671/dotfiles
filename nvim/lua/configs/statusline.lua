@@ -15,7 +15,7 @@ function M.config()
 			-- left
 			lualine_a = { 'mode' },
 			lualine_b = { 'branch', 'diff', 'diagnostics' },
-			lualine_c = { 'filename' },
+			lualine_c = { {'filename', path = 1} },
 			-- right
 			lualine_x = { 'encoding', 'fileformat', 'filetype' },
 			lualine_z = { 'location' }
@@ -29,7 +29,7 @@ function M.config()
 			lualine_z = {}
 		},
 		tabline = {},
-		extensions = { 'fzf' }
+		extensions = { 'fzf', 'symbols-outline', 'nvim-tree' }
 	}
 end
 

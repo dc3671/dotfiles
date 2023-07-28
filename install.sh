@@ -87,7 +87,7 @@ git clone --depth=1 https://github.com/robbyrussell/oh-my-zsh.git ~/.oh-my-zsh
 git clone https://github.com/zsh-users/zsh-autosuggestions ~/.oh-my-zsh/custom/plugins/zsh-autosuggestions
 git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ~/.oh-my-zsh/custom/themes/powerlevel10k
 mv ~/.zshrc ~/.zshrc.bkp >/dev/null 2>&1
-ln -s $PWD/.zshrc ~/.zshrc
+ln -sf $PWD/.zshrc ~/.zshrc
 
 TEST_CURRENT_SHELL=$(expr "$SHELL" : '.*/\(.*\)')
 if [ "$TEST_CURRENT_SHELL" != "zsh" ]; then
@@ -128,7 +128,7 @@ if [[ ! -d ~/.local/share/nvim/site/pack/packer/start/packer.nvim ]]; then
 fi
 mkdir -p ~/.config
 mv ~/.config/nvim ~/.config/nvim.bkp >/dev/null 2>&1
-ln -s $PWD/nvim ~/.config/
+ln -sf $PWD/nvim ~/.config/
 nvim -u "$PWD/init.before.vim" --headless -c 'autocmd User PackerComplete quitall' -c 'PackerSync'
 success     "[nvim] Done."
 
@@ -150,7 +150,7 @@ success     "[nvim] Done."
 
 # gdbinit
 mv ~/.gdbinit ~/.gdbinit.bkp >/dev/null 2>&1
-ln -s $PWD/.gdbinit ~/.gdbinit
+ln -sf $PWD/.gdbinit ~/.gdbinit
 
 # tmux
 msg         "[tmux] Config tmux..."
@@ -161,7 +161,7 @@ git clone https://github.com/tmux-plugins/tmux-resurrect ~/.tmux/plugins/tmux-re
 git clone https://github.com/beeryardtech/tmux-net-speed.git ~/.tmux/plugins/tmux-net-speed
 git clone https://github.com/samoshkin/tmux-plugin-sysstat.git ~/.tmux/plugins/tmux-plugin-sysstat
 mv ~/.tmux.conf ~/.tmux.conf.bkp >/dev/null 2>&1
-ln -s $PWD/.tmux.conf ~/.tmux.conf
+ln -sf $PWD/.tmux.conf ~/.tmux.conf
 success     "[tmux] Done."
 
 msg         "\nThanks for using my dotfiles."

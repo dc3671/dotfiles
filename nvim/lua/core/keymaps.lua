@@ -43,8 +43,10 @@ vim.keymap.set('v', '<', '<gv')
 vim.keymap.set('v', '>', '>gv')
 
 -- w: workspace
-vim.keymap.set('n', '<C-e>', ':Workspace LeftPanelToggle<cr>')
-vim.keymap.set('n', '<C-t>', ':Workspace RightPanelToggle<cr>')
+--vim.keymap.set('n', '<C-e>', ':Workspace LeftPanelToggle<cr>')
+--vim.keymap.set('n', '<C-t>', ':Workspace RightPanelToggle<cr>')
+vim.keymap.set('n', '<C-e>', ':NvimTreeToggle<cr>')
+vim.keymap.set('n', '<C-t>', ':SymbolsOutline<cr>')
 -- y: fzf
 vim.keymap.set("n", "<C-f>", "<cmd>lua require('fzf-lua').files()<CR>", { silent = true })
 vim.keymap.set("n", "<C-p>", "<cmd>lua require('fzf-lua').git_files()<CR>", { silent = true })
