@@ -51,6 +51,7 @@ require("core.plugins")
 -- disable some useless standard plugins to save startup time
 -- these features have been better covered by plugins
 vim.g.loaded_matchparen        = 1
+vim.g.loaded_matchbracket      = 1
 vim.g.loaded_matchit           = 1
 vim.g.loaded_logiPat           = 1
 vim.g.loaded_rrhelper          = 1
@@ -106,11 +107,7 @@ require("auto-session").setup {
     auto_session_suppress_dirs = { "~/", "~/Projects", "~/Downloads", "/" },
 }
 
-require("indent_blankline").setup {
-    space_char_blankline = " ",
-    show_current_context = true,
-    show_current_context_start = true,
-}
+require("ibl").setup {}
 
 require("configs.lsp").config()
 require("configs.autocomplete").config()
