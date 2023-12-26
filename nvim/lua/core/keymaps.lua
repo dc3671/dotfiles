@@ -64,6 +64,8 @@ vim.keymap.set('n', '<c-h>', '<c-w>h')
 -- Wrapped lines goes down/up to next row, rather than next line in file.
 vim.keymap.set('n', 'j', 'gj')
 vim.keymap.set('n', 'k', 'gk')
+vim.keymap.set('v', 'j', 'gj')
+vim.keymap.set('v', 'k', 'gk')
 -- window resize
 vim.keymap.set('n', '<m-9>', '<c-w><')
 vim.keymap.set('n', '<m-0>', '<c-w>>')
