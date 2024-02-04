@@ -58,6 +58,7 @@ return require('packer').startup(function()
     use 'hrsh7th/nvim-cmp'
     use 'dnlhc/glance.nvim'
     use 'L3MON4D3/LuaSnip'
+    use 'saadparwaiz1/cmp_luasnip'
     -- syntax highlight
     use 'nvim-treesitter/nvim-treesitter'
     use {

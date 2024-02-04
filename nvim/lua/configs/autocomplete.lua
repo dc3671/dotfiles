@@ -3,115 +3,81 @@ local M = {}
 function M.config()
     -- Setup nvim-cmp.
     local cmp = require 'cmp'
+    local luasnip = require("luasnip")
+    local has_words_before = function()
+        unpack = unpack or table.unpack
+        local line, col = unpack(vim.api.nvim_win_get_cursor(0))
+        return col ~= 0 and vim.api.nvim_buf_get_lines(0, line - 1, line, true)[1]:sub(col, col):match("%s") == nil
+    end
     cmp.setup({
         snippet = {
             -- REQUIRED - you must specify a snippet engine
             expand = function(args)
-                -- luasnip
-                require('luasnip').lsp_expand(args.body)
-                -- vsnip
-                -- vim.fn["vsnip#anonymous"](args.body)
-                -- snippy
-                -- require('snippy').expand_snippet(args.body)
-                -- ultisnip
-                -- vim.fn["UltiSnips#Anon"](args.body)
+                luasnip.lsp_expand(args.body) -- For `luasnip` users.
+                -- require('snippy').expand_snippet(args.body) -- For `snippy` users.
+                -- vim.fn["UltiSnips#Anon"](args.body) -- For `ultisnips` users.
             end,
         },
-        mapping = {
-            ['<C-b>'] = cmp.mapping(cmp.mapping.scroll_docs(-4), { 'i', 'c' }),
-            ['<C-f>'] = cmp.mapping(cmp.mapping.scroll_docs(4), { 'i', 'c' }),
-            ['<C-Space>'] = cmp.mapping(cmp.mapping.complete(), { 'i', 'c' }),
-            ['<C-y>'] = cmp.config.disable,
-            ['<C-e>'] = cmp.mapping({
-                i = cmp.mapping.abort(),
-                c = cmp.mapping.close(),
-            }),
-            ['<tab>'] = cmp.mapping.select_next_item(),
-            ['<s-tab>'] = cmp.mapping.select_prev_item(),
-            -- Accept currently selected item...
-            -- Set `select` to `false` to only confirm explicitly selected items:
-            --['<tab>'] = cmp.mapping.confirm({ select = false }),
-        },
+        mapping = cmp.mapping.preset.insert({
+            ['<C-b>'] = cmp.mapping.scroll_docs(-4),
+            ['<C-f>'] = cmp.mapping.scroll_docs(4),
+            ['<C-Space>'] = cmp.mapping.complete(),
+            ['<C-e>'] = cmp.mapping.abort(),
+            ["<Tab>"] = function(fallback)
+                if cmp.visible() then
+                    cmp.select_next_item()
+                else
+                    fallback()
+                end
+            end,
+            ["<S-Tab>"] = function(fallback)
+                if cmp.visible() then
+                    cmp.select_prev_item()
+                else
+                    fallback()
+                end
+            end,
+        }),
         sources = cmp.config.sources({
             { name = 'nvim_lsp' },
             { name = 'luasnip' }, -- For luasnip users.
-            -- { name = 'ultisnips' }, -- For ultisnips users.
-            -- { name = 'snippy' }, -- For snippy users.
-        }, { { name = 'buffer' } })
+        }, {
+            { name = 'buffer' },
+        })
     })
 
-    -- You can also set special config for specific filetypes:
-    --    cmp.setup.filetype('gitcommit', {
-    --        sources = cmp.config.sources({
-    --            { name = 'cmp_git' },
-    --        }, {
-    --            { name = 'buffer' },
-    --        })
-    --    })
+    -- Set configuration for specific filetype.
+    cmp.setup.filetype('gitcommit', {
+        sources = cmp.config.sources({
+            { name = 'git' }, -- You can specify the `git` source if [you were installed it](https://github.com/petertriho/cmp-git).
+        }, {
+            { name = 'buffer' },
+        })
+    })
 
-    -- nvim-cmp for commands
-    cmp.setup.cmdline('/', {
+    -- Use buffer source for `/` and `?` (if you enabled `native_menu`, this won't work anymore).
+    cmp.setup.cmdline({ '/', '?' }, {
+        mapping = cmp.mapping.preset.cmdline(),
         sources = {
             { name = 'buffer' }
         }
     })
+
+    -- Use cmdline & path source for ':' (if you enabled `native_menu`, this won't work anymore).
     cmp.setup.cmdline(':', {
+        mapping = cmp.mapping.preset.cmdline(),
         sources = cmp.config.sources({
             { name = 'path' }
         }, {
             { name = 'cmdline' }
         })
     })
-    local has_words_before = function()
-        local line, col = vim.api.nvim_win_get_cursor(0)
-        return col ~= 0 and vim.api.nvim_buf_get_lines(0, line - 1, line, true)[1]:sub(col, col):match("%s") == nil
-    end
-    local luasnip = require("luasnip")
-
-    cmp.setup({
-        mapping = {
-            ["<C-n>"] = cmp.mapping(function(fallback)
-                if cmp.visible() then
-                    cmp.select_next_item()
-                elseif luasnip.expand_or_jumpable() then
-                    luasnip.expand_or_jump()
-                elseif has_words_before() then
-                    cmp.complete()
-                else
-                    fallback()
-                end
-            end, { "i", "s" }),
-            ["<C-p>"] = cmp.mapping(function(fallback)
-                if cmp.visible() then
-                    cmp.select_prev_item()
-                elseif luasnip.jumpable(-1) then
-                    luasnip.jump(-1)
-                else
-                    fallback()
-                end
-            end, { "i", "s" }),
-        },
-    })
-    local devicons = require('nvim-web-devicons')
-    cmp.register_source('devicons', {
-        complete = function(_, _, callback)
-            local items = {}
-            for _, icon in pairs(devicons.get_icons()) do
-                table.insert(items, {
-                    label = icon.icon .. '  ' .. icon.name,
-                    insertText = icon.icon,
-                    filterText = icon.name,
-                })
-            end
-            callback({ items = items })
-        end,
-    })
 
     local glance = require('glance')
     local actions = glance.actions
 
     glance.setup({
-        height = 18, -- Height of the window
+        height = 18,         -- Height of the window
         zindex = 45,
         preview_win_opts = { -- Configure preview window options
             cursorline = true,
@@ -125,19 +91,19 @@ function M.config()
         },
         list = {
             position = 'right', -- Position of the list window 'left'|'right'
-            width = 0.33, -- 33% width relative to the active window, min 0.1, max 0.5
+            width = 0.33,       -- 33% width relative to the active window, min 0.1, max 0.5
         },
-        theme = { -- This feature might not work properly in nvim-0.7.2
-            enable = true, -- Will generate colors for the plugin based on your current colorscheme
-            mode = 'auto', -- 'brighten'|'darken'|'auto', 'auto' will set mode based on the brightness of your colorscheme
+        theme = {               -- This feature might not work properly in nvim-0.7.2
+            enable = true,      -- Will generate colors for the plugin based on your current colorscheme
+            mode = 'auto',      -- 'brighten'|'darken'|'auto', 'auto' will set mode based on the brightness of your colorscheme
         },
         mappings = {
             list = {
-                ['j'] = actions.next, -- Bring the cursor to the next item in the list
+                ['j'] = actions.next,     -- Bring the cursor to the next item in the list
                 ['k'] = actions.previous, -- Bring the cursor to the previous item in the list
                 ['<Down>'] = actions.next,
                 ['<Up>'] = actions.previous,
-                ['<Tab>'] = actions.next_location, -- Bring the cursor to the next location skipping groups in the list
+                ['<Tab>'] = actions.next_location,       -- Bring the cursor to the next location skipping groups in the list
                 ['<S-Tab>'] = actions.previous_location, -- Bring the cursor to the previous location skipping groups in the list
                 ['<C-u>'] = actions.preview_scroll_win(5),
                 ['<C-d>'] = actions.preview_scroll_win(-5),
@@ -187,29 +153,29 @@ function M.config()
         action_keys = { -- key mappings for actions in the trouble list
             -- map to {} to remove a mapping, for example:
             -- close = {},
-            close = "q", -- close the list
-            cancel = "<esc>", -- cancel the preview and get back to your last window / buffer / cursor
-            refresh = "r", -- manually refresh
-            jump = { "<cr>", "<tab>" }, -- jump to the diagnostic or open / close folds
-            open_split = { "<c-x>" }, -- open buffer in new split
-            open_vsplit = { "<c-v>" }, -- open buffer in new vsplit
-            open_tab = { "<c-t>" }, -- open buffer in new tab
-            jump_close = { "o" }, -- jump to the diagnostic and close the list
-            toggle_mode = "m", -- toggle between "workspace" and "document" diagnostics mode
-            toggle_preview = "P", -- toggle auto_preview
-            hover = "K", -- opens a small popup with the full multiline message
-            preview = "p", -- preview the diagnostic location
-            close_folds = { "zM", "zm" }, -- close all folds
-            open_folds = { "zR", "zr" }, -- open all folds
-            toggle_fold = { "zA", "za" }, -- toggle fold of current file
-            previous = "k", -- previous item
-            next = "j" -- next item
+            close = "q",                   -- close the list
+            cancel = "<esc>",              -- cancel the preview and get back to your last window / buffer / cursor
+            refresh = "r",                 -- manually refresh
+            jump = { "<cr>", "<tab>" },    -- jump to the diagnostic or open / close folds
+            open_split = { "<c-x>" },      -- open buffer in new split
+            open_vsplit = { "<c-v>" },     -- open buffer in new vsplit
+            open_tab = { "<c-t>" },        -- open buffer in new tab
+            jump_close = { "o" },          -- jump to the diagnostic and close the list
+            toggle_mode = "m",             -- toggle between "workspace" and "document" diagnostics mode
+            toggle_preview = "P",          -- toggle auto_preview
+            hover = "K",                   -- opens a small popup with the full multiline message
+            preview = "p",                 -- preview the diagnostic location
+            close_folds = { "zM", "zm" },  -- close all folds
+            open_folds = { "zR", "zr" },   -- open all folds
+            toggle_fold = { "zA", "za" },  -- toggle fold of current file
+            previous = "k",                -- previous item
+            next = "j"                     -- next item
         },
-        indent_lines = true, -- add an indent guide below the fold icons
-        auto_open = false, -- automatically open the list when you have diagnostics
-        auto_close = false, -- automatically close the list when you have no diagnostics
-        auto_preview = true, -- automatically preview the location of the diagnostic. <esc> to close preview and go back to last window
-        auto_fold = false, -- automatically fold a file trouble list at creation
+        indent_lines = true,               -- add an indent guide below the fold icons
+        auto_open = false,                 -- automatically open the list when you have diagnostics
+        auto_close = false,                -- automatically close the list when you have no diagnostics
+        auto_preview = true,               -- automatically preview the location of the diagnostic. <esc> to close preview and go back to last window
+        auto_fold = false,                 -- automatically fold a file trouble list at creation
         auto_jump = { "lsp_definitions" }, -- for the given modes, automatically jump if there is only a single result
         signs = {
             -- icons / text used for a diagnostic
@@ -225,23 +191,24 @@ function M.config()
     -- then check for diagnostics under the cursor
     function OpenDiagnosticIfNoFloat()
         for _, winid in pairs(vim.api.nvim_tabpage_list_wins(0)) do
-        if vim.api.nvim_win_get_config(winid).zindex then
-            return
-        end
+            if vim.api.nvim_win_get_config(winid).zindex then
+                return
+            end
         end
         -- THIS IS FOR BUILTIN LSP
         vim.diagnostic.open_float(0, {
-        scope = "cursor",
-        focusable = false,
-        close_events = {
-            "CursorMoved",
-            "CursorMovedI",
-            "BufHidden",
-            "InsertCharPre",
-            "WinLeave",
-        },
+            scope = "cursor",
+            focusable = false,
+            close_events = {
+                "CursorMoved",
+                "CursorMovedI",
+                "BufHidden",
+                "InsertCharPre",
+                "WinLeave",
+            },
         })
     end
+
     -- Show diagnostics under the cursor when holding position
     vim.api.nvim_create_augroup("lsp_diagnostics_hold", { clear = true })
     vim.api.nvim_create_autocmd({ "CursorHold" }, {
@@ -252,4 +219,3 @@ function M.config()
 end
 
 return M
-

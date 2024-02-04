@@ -15,9 +15,13 @@ function M.config()
     -- List of all pre-configured LSP servers:
     -- github.com/neovim/nvim-lspconfig/blob/master/doc/server_configurations.md
     local servers = { 'pylsp', 'clangd', 'vimls', 'lua_ls' }
+    -- integrate lspconfig to autocomplete
+    local capabilities = require('cmp_nvim_lsp').default_capabilities()
     for _, lsp in pairs(servers) do
         if vim.fn.executable(lsp) then
-            require('lspconfig')[lsp].setup {}
+            require('lspconfig')[lsp].setup {
+                capabilities = capabilities
+            }
         end
     end
     local mason_ok, mason = pcall(require, "mason")
