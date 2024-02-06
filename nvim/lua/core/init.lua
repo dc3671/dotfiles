@@ -25,6 +25,8 @@ vim.opt.foldlevelstart = 99
 -- Puts new split windows to the right and bottom of the current
 vim.opt.splitright     = true
 vim.opt.splitbelow     = true
+-- Limit max popup menu height for autocomplete
+vim.opt.pumheight      = 30
 
 if (vim.fn.has('termguicolors') == 1) then
     vim.opt.termguicolors = true
