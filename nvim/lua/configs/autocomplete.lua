@@ -2,20 +2,15 @@ local M = {}
 
 function M.config()
     -- Setup nvim-cmp.
-    local cmp = require 'cmp'
-    local luasnip = require("luasnip")
-    local has_words_before = function()
-        unpack = unpack or table.unpack
-        local line, col = unpack(vim.api.nvim_win_get_cursor(0))
-        return col ~= 0 and vim.api.nvim_buf_get_lines(0, line - 1, line, true)[1]:sub(col, col):match("%s") == nil
+    local function replace_keys(str)
+        return vim.api.nvim_replace_termcodes(str, true, true, true)
     end
+    local cmp = require 'cmp'
     cmp.setup({
         snippet = {
             -- REQUIRED - you must specify a snippet engine
             expand = function(args)
-                luasnip.lsp_expand(args.body) -- For `luasnip` users.
-                -- require('snippy').expand_snippet(args.body) -- For `snippy` users.
-                -- vim.fn["UltiSnips#Anon"](args.body) -- For `ultisnips` users.
+                vim.fn["vsnip#anonymous"](args.body)
             end,
         },
         mapping = cmp.mapping.preset.insert({
@@ -23,26 +18,40 @@ function M.config()
             ['<C-f>'] = cmp.mapping.scroll_docs(4),
             ['<C-Space>'] = cmp.mapping.complete(),
             ['<C-e>'] = cmp.mapping.abort(),
-            ["<Tab>"] = function(fallback)
-                if cmp.visible() then
+            ['<C-j>'] = cmp.mapping.confirm({ select = true }),
+            ['<CR>'] = cmp.mapping(function(fallback)
+                if vim.call('vsnip#expandable') ~= 0 then
+                    vim.fn.feedkeys(replace_keys('<Plug>(vsnip-expand)'), '')
+                else
+                    fallback()
+                end
+            end, { 'i', 's' }),
+            ['<Tab>'] = cmp.mapping(function(fallback)
+                if vim.call('vsnip#jumpable', 1) ~= 0 then
+                    vim.fn.feedkeys(replace_keys('<Plug>(vsnip-jump-next)'), '')
+                elseif cmp.visible() then
                     cmp.select_next_item()
                 else
                     fallback()
                 end
-            end,
-            ["<S-Tab>"] = function(fallback)
-                if cmp.visible() then
+            end, { 'i', 's' }),
+            ['<S-Tab>'] = cmp.mapping(function(fallback)
+                if vim.call('vsnip#jumpable', -1) ~= 0 then
+                    vim.fn.feedkeys(replace_keys('<Plug>(vsnip-jump-prev)'), '')
+                elseif cmp.visible() then
                     cmp.select_prev_item()
                 else
                     fallback()
                 end
-            end,
+            end, { 'i', 's' }),
         }),
         sources = cmp.config.sources({
             { name = 'nvim_lsp' },
-            { name = 'luasnip' }, -- For luasnip users.
+            { name = 'vsnip' },
         }, {
             { name = 'buffer' },
+        }, {
+            { name = 'path' },
         })
     })
 
