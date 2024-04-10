@@ -1,6 +1,12 @@
 local M = {}
 
 function M.config()
+    -- Setup github copilot.
+    vim.keymap.set('i', '<C-e>', 'copilot#Accept("\\<CR>")', {
+        expr = true,
+        replace_keycodes = false
+    })
+    vim.g.copilot_no_tab_map = true
     -- Setup nvim-cmp.
     local function replace_keys(str)
         return vim.api.nvim_replace_termcodes(str, true, true, true)
@@ -17,8 +23,22 @@ function M.config()
             ['<C-b>'] = cmp.mapping.scroll_docs(-4),
             ['<C-f>'] = cmp.mapping.scroll_docs(4),
             ['<C-Space>'] = cmp.mapping.complete(),
-            ['<C-e>'] = cmp.mapping.abort(),
-            ['<C-j>'] = cmp.mapping.confirm({ select = true }),
+            ['<C-e>'] = cmp.mapping(function(fallback)
+                fallback()
+            end, { 'i' }),
+            ['<C-k>'] = cmp.mapping.confirm({ select = true }),
+            ['<C-j>'] = cmp.mapping(function(fallback)
+                if vim.call('vsnip#jumpable', 1) ~= 0 then
+                    vim.fn.feedkeys(replace_keys('<Plug>(vsnip-jump-next)'), '')
+                    fallback()
+                end
+            end, { 'i', 's' }),
+            ['<C-l>'] = cmp.mapping(function(fallback)
+                if vim.call('vsnip#jumpable', -1) ~= 0 then
+                    vim.fn.feedkeys(replace_keys('<Plug>(vsnip-jump-prev)'), '')
+                    fallback()
+                end
+            end, { 'i', 's' }),
             ['<CR>'] = cmp.mapping(function(fallback)
                 if vim.call('vsnip#expandable') ~= 0 then
                     vim.fn.feedkeys(replace_keys('<Plug>(vsnip-expand)'), '')
@@ -27,18 +47,14 @@ function M.config()
                 end
             end, { 'i', 's' }),
             ['<Tab>'] = cmp.mapping(function(fallback)
-                if vim.call('vsnip#jumpable', 1) ~= 0 then
-                    vim.fn.feedkeys(replace_keys('<Plug>(vsnip-jump-next)'), '')
-                elseif cmp.visible() then
+                if cmp.visible() then
                     cmp.select_next_item()
                 else
                     fallback()
                 end
             end, { 'i', 's' }),
             ['<S-Tab>'] = cmp.mapping(function(fallback)
-                if vim.call('vsnip#jumpable', -1) ~= 0 then
-                    vim.fn.feedkeys(replace_keys('<Plug>(vsnip-jump-prev)'), '')
-                elseif cmp.visible() then
+                if cmp.visible() then
                     cmp.select_prev_item()
                 else
                     fallback()

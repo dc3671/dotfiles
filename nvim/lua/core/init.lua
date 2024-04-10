@@ -85,7 +85,7 @@ require('image').setup {
 require("impatient")
 require('Comment').setup {
     ignore = '^$',
-    padding = false,
+    padding = true,
     toggler = {
         line = '<leader>cc',
         block = '<leader>bc',
