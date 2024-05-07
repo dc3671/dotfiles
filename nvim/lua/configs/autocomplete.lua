@@ -13,12 +13,6 @@ function M.config()
     end
     local cmp = require 'cmp'
     cmp.setup({
-        snippet = {
-            -- REQUIRED - you must specify a snippet engine
-            expand = function(args)
-                vim.fn["vsnip#anonymous"](args.body)
-            end,
-        },
         mapping = cmp.mapping.preset.insert({
             ['<C-b>'] = cmp.mapping.scroll_docs(-4),
             ['<C-f>'] = cmp.mapping.scroll_docs(4),
@@ -27,25 +21,6 @@ function M.config()
                 fallback()
             end, { 'i' }),
             ['<C-k>'] = cmp.mapping.confirm({ select = true }),
-            ['<C-j>'] = cmp.mapping(function(fallback)
-                if vim.call('vsnip#jumpable', 1) ~= 0 then
-                    vim.fn.feedkeys(replace_keys('<Plug>(vsnip-jump-next)'), '')
-                    fallback()
-                end
-            end, { 'i', 's' }),
-            ['<C-l>'] = cmp.mapping(function(fallback)
-                if vim.call('vsnip#jumpable', -1) ~= 0 then
-                    vim.fn.feedkeys(replace_keys('<Plug>(vsnip-jump-prev)'), '')
-                    fallback()
-                end
-            end, { 'i', 's' }),
-            ['<CR>'] = cmp.mapping(function(fallback)
-                if vim.call('vsnip#expandable') ~= 0 then
-                    vim.fn.feedkeys(replace_keys('<Plug>(vsnip-expand)'), '')
-                else
-                    fallback()
-                end
-            end, { 'i', 's' }),
             ['<Tab>'] = cmp.mapping(function(fallback)
                 if cmp.visible() then
                     cmp.select_next_item()
@@ -63,7 +38,6 @@ function M.config()
         }),
         sources = cmp.config.sources({
             { name = 'nvim_lsp' },
-            { name = 'vsnip' },
         }, {
             { name = 'buffer' },
         }, {
