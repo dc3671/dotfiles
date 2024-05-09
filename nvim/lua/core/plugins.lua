@@ -119,7 +119,7 @@ return require('packer').startup(function()
     use 'rmagatti/auto-session'
     --use 'mbbill/undotree'
     -- remote ssh copy without xclip
-    use 'ojroques/nvim-osc52'
+    -- use 'ojroques/nvim-osc52'
 
     -- indent guide
     use 'lukas-reineke/indent-blankline.nvim'
