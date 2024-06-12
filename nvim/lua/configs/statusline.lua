@@ -14,11 +14,11 @@ function M.config()
         sections = {
             -- left
             lualine_a = { 'mode' },
-            lualine_b = { 'branch', 'diff', 'diagnostics' },
+            lualine_b = { 'branch', 'diff' },
             lualine_c = { { 'filename', path = 1 } },
             -- right
             lualine_x = { 'aerial' },
-            lualine_y = { 'encoding', 'fileformat', 'filetype' },
+            lualine_y = { 'filetype' },
             lualine_z = {
                 {
                     -- custom location
