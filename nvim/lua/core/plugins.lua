@@ -72,7 +72,7 @@ return require('packer').startup(function()
     use 'RRethy/nvim-treesitter-textsubjects'
     use "kylechui/nvim-surround"
     use "windwp/nvim-autopairs"
-    use "p00f/nvim-ts-rainbow"
+    use "hiphish/rainbow-delimiters.nvim"
     use "theHamsta/nvim-treesitter-pairs"
     -- quick move using [ and ]
     use 'tummetott/unimpaired.nvim'
