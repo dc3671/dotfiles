@@ -2,7 +2,7 @@ local M = {}
 
 function M.config()
     -- Setup github copilot.
-    vim.keymap.set('i', '<C-e>', 'copilot#Accept("\\<CR>")', {
+    vim.keymap.set('i', '<C-e>', 'copilot#Accept("\\<End>")', {
         expr = true,
         replace_keycodes = false
     })
