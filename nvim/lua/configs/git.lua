@@ -9,6 +9,7 @@ function M.config()
             changedelete = { text = '~' },
             untracked    = { text = '┆' },
         },
+        current_line_blame = true,
     }
     require('git-conflict').setup {}
 end
