@@ -100,7 +100,7 @@ return require('packer').startup(function()
     use 'akinsho/toggleterm.nvim'
 
     -- fzf
-    use { 'junegunn/fzf', run = './install --bin', }
+    use { 'junegunn/fzf', run = './install --all --no-update-rc', }
     use { 'ibhagwan/fzf-lua',
         -- optional for icon support
         requires = { 'nvim-tree/nvim-web-devicons' }
