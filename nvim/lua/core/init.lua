@@ -101,7 +101,10 @@ require("nvim-autopairs").setup {}
 require("aerial").setup {}
 require("fzf-lua").setup {
     winopts = { preview = { flip_columns = 180 } },
-    fzf_opts = { ['--layout'] = 'default' }
+    fzf_opts = { ['--layout'] = 'default' },
+    -- files = { find_opts = [[-type f -not -path '*/\.git/*' -not -name '*.cubin.cpp*' -printf '%P\n']] },
+    git = { files = { cmd = 'git ls-files --exclude-standard -- ":!:*.cubin.cpp*"' } },
+    grep = { grep_opts = "--exclude-dir='.git' --exclude-from='.gitignore' --exclude='*.cubin.cpp*' --binary-files=without-match --line-number --recursive --color=auto --perl-regexp -e" }
 }
 require('spectre').setup { default = { find = { cmd = "ag" } } }
 require("auto-session").setup {
