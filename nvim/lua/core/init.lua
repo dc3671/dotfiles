@@ -1,4 +1,5 @@
 -- basicsinit
+vim.deprecate = function() end
 vim.cmd('syntax on')
 vim.cmd('filetype plugin indent on')
 -- avoid annoying shift key
