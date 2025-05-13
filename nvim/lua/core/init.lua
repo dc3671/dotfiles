@@ -109,7 +109,7 @@ require("fzf-lua").setup {
     git = { files = { cmd = 'git ls-files --exclude-standard -- ":!:*.cubin.cpp*"' } },
     grep = { rg_opts = '--column --line-number --no-heading --color=always -g "!*.cubin.cpp*" --smart-case --max-columns=4096 -e' }
 }
-require('spectre').setup { default = { find = { cmd = "ag" } } }
+require('spectre').setup { default = { find = { cmd = "rg" } } }
 require("auto-session").setup {
     log_level = "error",
     auto_session_suppress_dirs = { "~/", "~/Projects", "~/Downloads", "/" },
