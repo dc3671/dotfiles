@@ -40,8 +40,10 @@ function M.config()
     if null_ls_ok then
         local sources = {
             -- python
-            null_ls.builtins.formatting.black,
             null_ls.builtins.formatting.isort,
+            -- null_ls.builtins.formatting.black,
+            null_ls.builtins.formatting.yapf,
+            null_ls.builtins.formatting.autoflake,
             -- lua
             null_ls.builtins.formatting.lua_format,
             -- shell

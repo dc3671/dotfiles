@@ -100,12 +100,18 @@ require("nvim-surround").setup {}
 require('unimpaired').setup {}
 require("nvim-autopairs").setup {}
 require("aerial").setup {}
+require("CopilotChat").setup {
+    selection = function(source)
+        local select = require("CopilotChat.select")
+        return select.visual(source) or select.buffer(source)
+    end
+}
 require("fzf-lua").setup {
-    winopts = { preview = { flip_columns = 180 } },
+    winopts = { preview = { flip_columns = 150 } },
     fzf_opts = { ['--layout'] = 'default' },
-    -- files = { find_opts = [[-type f -not -path '*/\.git/*' -not -name '*.cubin.cpp*' -printf '%P\n']] },
+    files = { rg_opts = [[--color=never --files --hidden --follow -g "!.git" -g "!*.cubin.cpp*"]], },
     git = { files = { cmd = 'git ls-files --exclude-standard -- ":!:*.cubin.cpp*"' } },
-    grep = { grep_opts = "--exclude-dir='.git' --exclude-from='.gitignore' --exclude='*.cubin.cpp*' --binary-files=without-match --line-number --recursive --color=auto --perl-regexp -e" }
+    grep = { rg_opts = '--column --line-number --no-heading --color=always -g "!*.cubin.cpp*" --smart-case --max-columns=4096 -e' }
 }
 require('spectre').setup { default = { find = { cmd = "ag" } } }
 require("auto-session").setup {

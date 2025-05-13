@@ -28,6 +28,9 @@ vim.keymap.set('i', '<C-o>', '<Esc>o')
 vim.keymap.set('i', '<C-a>', '<Home>')
 vim.keymap.set('i', '<C-e>', '<End>')
 vim.keymap.set('i', '<C-d>', '<Backspace>')
+vim.keymap.set('i', '<C-b>', '<Left>')
+vim.keymap.set('i', '<C-f>', '<Right>')
+vim.keymap.set('i', '<C-d>', '<Delete>')
 vim.keymap.set('i', '<A-h>', '<Left>')
 vim.keymap.set('i', '<A-j>', '<Down>')
 vim.keymap.set('i', '<A-k>', '<Up>')
@@ -52,6 +55,12 @@ vim.keymap.set("n", "<C-f>", "<cmd>lua require('fzf-lua').files()<CR>", { silent
 vim.keymap.set("n", "<C-p>", "<cmd>lua require('fzf-lua').git_files()<CR>", { silent = true })
 vim.keymap.set("n", "<C-b>", "<cmd>lua require('fzf-lua').buffers()<CR>", { silent = true })
 vim.keymap.set("n", "<C-g>", "<cmd>lua require('fzf-lua').grep()<CR>", { silent = true })
+-- copilot
+vim.keymap.set('n', '<leader>pp', ':CopilotChat')
+vim.keymap.set({ 'n', 'v' }, '<leader>pe', ':CopilotChatExplain<CR>')
+vim.keymap.set({ 'n', 'v' }, '<leader>pr', ':CopilotChatReview<CR>')
+vim.keymap.set({ 'n', 'v' }, '<leader>pf', ':CopilotChatFix<CR>')
+vim.keymap.set({ 'n', 'v' }, '<leader>po', ':CopilotChatOptimize<CR>')
 -- w: window
 vim.keymap.set('n', '<leader>w1', '<c-w>o')
 vim.keymap.set('n', '<leader>wx', ':x<cr>')
@@ -79,12 +88,11 @@ vim.keymap.set('n', 'qq', ':Bwipeout<cr>')
 -- p: plugins
 vim.keymap.set('n', '<leader>pi', ':PackerInstall<cr>')
 vim.keymap.set('n', '<leader>pc', ':PackerClean<cr>')
--- s: search
-vim.keymap.set('n', '<leader>fw', '/\\<lt>\\><left><left>')
-vim.keymap.set('n', '<leader>fc', '/\\v^[<\\|=>]{7}( .*\\|$)<CR>')
+-- f: find
+vim.keymap.set('n', '<leader>fw', '/\\<lt>\\><left><left>')        -- find word
+vim.keymap.set('n', '<leader>fc', '/\\v^[<\\|=>]{7}( .*\\|$)<CR>') -- find conflicts
 vim.keymap.set('n', '<leader>/', ':set invhlsearch<cr>')
 -- l/g/w: language
--- l: general
 -- g: goto
 -- w: workspace
 -- e: diagnostics
@@ -93,6 +101,7 @@ vim.keymap.set('n', '<leader>/', ':set invhlsearch<cr>')
 vim.keymap.set('n', '<leader>ef', vim.diagnostic.open_float)
 vim.keymap.set('n', '<leader>ee', ':TroubleToggle workspace_diagnostics<cr>') -- Show list of diagnostics across the workspace
 vim.keymap.set('n', '<leader>el', ':TroubleToggle document_diagnostics<cr>')
+-- l: language server
 vim.keymap.set('n', '<leader>lk', function() vim.lsp.buf.hover {} end)
 vim.keymap.set('n', '<leader>ld', function() vim.lsp.buf.definition {} end)
 vim.keymap.set('n', '<leader>lt', function() vim.lsp.buf.type_definition {} end)

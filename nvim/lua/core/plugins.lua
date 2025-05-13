@@ -60,7 +60,10 @@ return require('packer').startup(function()
     --use 'hrsh7th/vim-vsnip'
     use 'rafamadriz/friendly-snippets'
 
-    use 'github/copilot.vim'
+    use {
+        "CopilotC-Nvim/CopilotChat.nvim" ,
+        requires = { 'github/copilot.vim', "nvim-lua/plenary.nvim" },
+    }
 
     use 'dnlhc/glance.nvim'
     -- syntax highlight
