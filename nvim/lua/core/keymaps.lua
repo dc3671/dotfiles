@@ -1,165 +1,177 @@
 vim.g.mapleader = ','
 
+-- Background toggle functions
 local function set_bg_light()
-    vim.cmd('set background=light')
     local colors_name = vim.g.colors_name
+    vim.cmd('set background=light')
     vim.cmd('colorscheme shine')
     vim.cmd('colorscheme ' .. colors_name)
 end
 
 local function set_bg_dark()
-    vim.cmd('set background=dark')
     local colors_name = vim.g.colors_name
+    vim.cmd('set background=dark')
     vim.cmd('colorscheme ron')
     vim.cmd('colorscheme ' .. colors_name)
 end
 
--- keymaps
-vim.keymap.set('n', '<leader>vl', set_bg_light)
-vim.keymap.set('n', '<leader>vd', set_bg_dark)
--- scrolling
-vim.keymap.set('n', 'zl', 'zL')
-vim.keymap.set('n', 'zh', 'zH')
--- quick move in normal mode
-vim.keymap.set({ 'n', 'v' }, 'H', '0')
-vim.keymap.set({ 'n', 'v' }, 'L', '$')
--- quick move in insert mode
-vim.keymap.set('i', '<C-o>', '<Esc>o')
-vim.keymap.set('i', '<C-a>', '<Home>')
-vim.keymap.set('i', '<C-e>', '<End>')
-vim.keymap.set('i', '<C-d>', '<Backspace>')
-vim.keymap.set('i', '<C-b>', '<Left>')
-vim.keymap.set('i', '<C-f>', '<Right>')
-vim.keymap.set('i', '<C-d>', '<Delete>')
-vim.keymap.set('i', '<A-h>', '<Left>')
-vim.keymap.set('i', '<A-j>', '<Down>')
-vim.keymap.set('i', '<A-k>', '<Up>')
-vim.keymap.set('i', '<A-l>', '<Right>')
--- select all
-vim.keymap.set('n', '<C-a>', 'ggVG')
-vim.keymap.set('n', '<leader>sa', 'ggVG')
-vim.keymap.set('n', '<C-x>', '<Nop>')
--- replace paste yanked text without yanking the deleted text
-vim.keymap.set('v', 'p', '"_dP')
+-- Keymap helper
+local keymap = vim.keymap.set
+
+-- Background toggles
+keymap('n', '<leader>vl', set_bg_light)
+keymap('n', '<leader>vd', set_bg_dark)
+
+-- Scrolling
+keymap('n', 'zl', 'zL')
+keymap('n', 'zh', 'zH')
+
+-- Quick move in normal/visual mode
+keymap({ 'n', 'v' }, 'H', '0')
+keymap({ 'n', 'v' }, 'L', '$')
+
+-- Quick move in insert mode
+local insert_moves = {
+    ['<C-o>'] = '<Esc>o',
+    ['<C-a>'] = '<Home>',
+    ['<C-e>'] = '<End>',
+    ['<C-b>'] = '<Left>',
+    ['<C-f>'] = '<Right>',
+    ['<C-d>'] = '<Delete>',
+    ['<A-h>'] = '<Left>',
+    ['<A-j>'] = '<Down>',
+    ['<A-k>'] = '<Up>',
+    ['<A-l>'] = '<Right>',
+}
+for lhs, rhs in pairs(insert_moves) do
+    keymap('i', lhs, rhs)
+end
+
+-- Select all
+keymap('n', '<C-a>', 'ggVG')
+keymap('n', '<leader>sa', 'ggVG')
+keymap('n', '<C-x>', '<Nop>')
+
+-- Replace paste yanked text without yanking the deleted text
+keymap('v', 'p', '"_dP')
+
 -- Visual shifting (does not exit Visual mode)
-vim.keymap.set('v', '<', '<gv')
-vim.keymap.set('v', '>', '>gv')
+keymap('v', '<', '<gv')
+keymap('v', '>', '>gv')
 
--- w: workspace
---vim.keymap.set('n', '<C-e>', ':Workspace LeftPanelToggle<cr>')
---vim.keymap.set('n', '<C-t>', ':Workspace RightPanelToggle<cr>')
-vim.keymap.set('n', '<C-e>', ':NvimTreeToggle<cr>')
-vim.keymap.set('n', '<C-t>', ':AerialToggle!<cr>')
--- y: fzf
-vim.keymap.set("n", "<C-f>", "<cmd>lua require('fzf-lua').files()<CR>", { silent = true })
-vim.keymap.set("n", "<C-p>", "<cmd>lua require('fzf-lua').git_files()<CR>", { silent = true })
-vim.keymap.set("n", "<C-b>", "<cmd>lua require('fzf-lua').buffers()<CR>", { silent = true })
-vim.keymap.set("n", "<C-g>", "<cmd>lua require('fzf-lua').grep()<CR>", { silent = true })
--- copilot
-vim.keymap.set('n', '<leader>pp', ':CopilotChat')
-vim.keymap.set({ 'n', 'v' }, '<leader>pe', ':CopilotChatExplain<CR>')
-vim.keymap.set({ 'n', 'v' }, '<leader>pr', ':CopilotChatReview<CR>')
-vim.keymap.set({ 'n', 'v' }, '<leader>pf', ':CopilotChatFix<CR>')
-vim.keymap.set({ 'n', 'v' }, '<leader>po', ':CopilotChatOptimize<CR>')
--- w: window
-vim.keymap.set('n', '<leader>w1', '<c-w>o')
-vim.keymap.set('n', '<leader>wx', ':x<cr>')
-vim.keymap.set('n', '<leader>w2', ':sp<cr>')
-vim.keymap.set('n', '<leader>w3', ':vs<cr>')
-vim.keymap.set('n', '<c-j>', '<c-w>j')
-vim.keymap.set('n', '<c-k>', '<c-w>k')
-vim.keymap.set('n', '<c-l>', '<c-w>l')
-vim.keymap.set('n', '<c-h>', '<c-w>h')
--- Wrapped lines goes down/up to next row, rather than next line in file.
-vim.keymap.set('n', 'j', 'gj')
-vim.keymap.set('n', 'k', 'gk')
-vim.keymap.set('v', 'j', 'gj')
-vim.keymap.set('v', 'k', 'gk')
--- window resize
-vim.keymap.set('n', '<m-9>', '<c-w><')
-vim.keymap.set('n', '<m-0>', '<c-w>>')
-vim.keymap.set('n', '<m-->', '<c-w>-')
-vim.keymap.set('n', '<m-=>', '<c-w>+')
--- b: buffer
-vim.keymap.set('n', 'm', ':bn<cr>')
-vim.keymap.set('n', 'M', ':bp<cr>')
-vim.keymap.set('n', 't', '<C-^>')
-vim.keymap.set('n', 'qq', ':Bwipeout<cr>')
--- p: plugins
-vim.keymap.set('n', '<leader>pi', ':PackerInstall<cr>')
-vim.keymap.set('n', '<leader>pc', ':PackerClean<cr>')
--- f: find
-vim.keymap.set('n', '<leader>fw', '/\\<lt>\\><left><left>')        -- find word
-vim.keymap.set('n', '<leader>fc', '/\\v^[<\\|=>]{7}( .*\\|$)<CR>') -- find conflicts
-vim.keymap.set('n', '<leader>/', ':set invhlsearch<cr>')
--- l/g/w: language
--- g: goto
--- w: workspace
--- e: diagnostics
--- vim.keymap.set('n', '<leader>ee', ':Lspsaga show_line_diagnostics<cr>')
--- vim.keymap.set('n', '<leader>ef', ':Lspsaga show_cursor_diagnostics<cr>')
-vim.keymap.set('n', '<leader>ef', vim.diagnostic.open_float)
-vim.keymap.set('n', '<leader>ee', ':TroubleToggle workspace_diagnostics<cr>') -- Show list of diagnostics across the workspace
-vim.keymap.set('n', '<leader>el', ':TroubleToggle document_diagnostics<cr>')
--- l: language server
-vim.keymap.set('n', '<leader>lk', function() vim.lsp.buf.hover {} end)
-vim.keymap.set('n', '<leader>ld', function() vim.lsp.buf.definition {} end)
-vim.keymap.set('n', '<leader>lt', function() vim.lsp.buf.type_definition {} end)
-vim.keymap.set('n', '<leader>li', function() vim.lsp.buf.implementation {} end)
-vim.keymap.set('n', '<leader>lr', function() vim.lsp.buf.rename {} end)
-vim.keymap.set('n', '<leader>lh', function() vim.lsp.buf.signature_help {} end)
-vim.keymap.set('n', '<leader>la', function() vim.lsp.buf.code_action {} end)
-vim.keymap.set({ 'n', 'v' }, '<leader>lf', function() vim.lsp.buf.format { async = true } end)
+-- Workspace/Panel toggles
+keymap('n', '<C-e>', ':NvimTreeToggle<cr>')
+keymap('n', '<C-t>', ':AerialToggle!<cr>')
 
-vim.keymap.set('n', '<leader>gd', ':Glance definitions<CR>')
-vim.keymap.set('n', '<F4>', ':Glance references<CR>')
-vim.keymap.set('n', '<leader>gt', ':Glance type_definitions<CR>')
-vim.keymap.set('n', '<leader>gi', ':Glance implementations<CR>')
-vim.keymap.set('n', '[e', vim.diagnostic.goto_prev)
-vim.keymap.set('n', ']e', vim.diagnostic.goto_next)
+-- FZF
+keymap("n", "<C-f>", "<cmd>lua require('fzf-lua').files()<CR>", { silent = true })
+keymap("n", "<C-p>", "<cmd>lua require('fzf-lua').git_files()<CR>", { silent = true })
+keymap("n", "<C-b>", "<cmd>lua require('fzf-lua').buffers()<CR>", { silent = true })
+keymap("n", "<C-g>", "<cmd>lua require('fzf-lua').grep()<CR>", { silent = true })
 
-vim.keymap.set('n', '<leader>wa', vim.lsp.buf.add_workspace_folder)
-vim.keymap.set('n', '<leader>wr', vim.lsp.buf.remove_workspace_folder)
-vim.keymap.set('n', '<leader>wl', function() print(vim.inspect(vim.lsp.buf.list_workspace_folders())) end)
+-- Copilot
+keymap('n', '<leader>pp', ':CopilotChat')
+keymap({ 'n', 'v' }, '<leader>pe', ':CopilotChatExplain<CR>')
+keymap({ 'n', 'v' }, '<leader>pr', ':CopilotChatReview<CR>')
+keymap({ 'n', 'v' }, '<leader>pf', ':CopilotChatFix<CR>')
+keymap({ 'n', 'v' }, '<leader>po', ':CopilotChatOptimize<CR>')
 
--- t: terminal
--- use <f5> to toggle terminal, this can be set in lua/configs/terminal.lua
--- the default position is also set in lua/configs/terminal.lua
+-- Window management
+keymap('n', '<leader>w1', '<c-w>o')
+keymap('n', '<leader>wx', ':x<cr>')
+keymap('n', '<leader>w2', ':sp<cr>')
+keymap('n', '<leader>w3', ':vs<cr>')
+keymap('n', '<c-j>', '<c-w>j')
+keymap('n', '<c-k>', '<c-w>k')
+keymap('n', '<c-l>', '<c-w>l')
+keymap('n', '<c-h>', '<c-w>h')
+
+-- Wrapped lines navigation
+keymap('n', 'j', 'gj')
+keymap('n', 'k', 'gk')
+keymap('v', 'j', 'gj')
+keymap('v', 'k', 'gk')
+
+-- Window resize
+keymap('n', '<m-9>', '<c-w><')
+keymap('n', '<m-0>', '<c-w>>')
+keymap('n', '<m-->', '<c-w>-')
+keymap('n', '<m-=>', '<c-w>+')
+
+-- Buffer navigation
+keymap('n', 'm', ':bn<cr>')
+keymap('n', 'M', ':bp<cr>')
+keymap('n', 't', '<C-^>')
+keymap('n', 'qq', ':Bwipeout<cr>')
+
+-- Plugins
+keymap('n', '<leader>pi', ':PackerInstall<cr>')
+keymap('n', '<leader>pc', ':PackerClean<cr>')
+
+-- Find
+keymap('n', '<leader>fw', '/\\<lt>\\><left><left>')
+keymap('n', '<leader>fc', '/\\v^[<\\|=>]{7}( .*\\|$)<CR>')
+keymap('n', '<leader>/', ':set invhlsearch<cr>')
+
+-- Diagnostics
+keymap('n', '<leader>ef', vim.diagnostic.open_float)
+keymap('n', '<leader>ee', ':TroubleToggle workspace_diagnostics<cr>')
+keymap('n', '<leader>el', ':TroubleToggle document_diagnostics<cr>')
+
+-- LSP
+keymap('n', '<leader>lk', function() vim.lsp.buf.hover {} end)
+keymap('n', '<leader>ld', function() vim.lsp.buf.definition {} end)
+keymap('n', '<leader>lt', function() vim.lsp.buf.type_definition {} end)
+keymap('n', '<leader>li', function() vim.lsp.buf.implementation {} end)
+keymap('n', '<leader>lr', function() vim.lsp.buf.rename {} end)
+keymap('n', '<leader>lh', function() vim.lsp.buf.signature_help {} end)
+keymap('n', '<leader>la', function() vim.lsp.buf.code_action {} end)
+keymap({ 'n', 'v' }, '<leader>lf', function() vim.lsp.buf.format { async = true } end)
+
+-- Glance
+keymap('n', '<leader>gd', ':Glance definitions<CR>')
+keymap('n', '<F4>', ':Glance references<CR>')
+keymap('n', '<leader>gt', ':Glance type_definitions<CR>')
+keymap('n', '<leader>gi', ':Glance implementations<CR>')
+
+-- Diagnostics navigation
+keymap('n', '[e', vim.diagnostic.goto_prev)
+keymap('n', ']e', vim.diagnostic.goto_next)
+
+-- Workspace folders
+keymap('n', '<leader>wa', vim.lsp.buf.add_workspace_folder)
+keymap('n', '<leader>wr', vim.lsp.buf.remove_workspace_folder)
+keymap('n', '<leader>wl', function() print(vim.inspect(vim.lsp.buf.list_workspace_folders())) end)
+
+-- Terminal
 local terminal = require('toggleterm.terminal')
---vim.keymap.set('t', '<C-g>', '<C-\\><C-n>')
-vim.keymap.set('n', '<leader>tt', ':ToggleTerm direction=tab<cr>')
-vim.keymap.set('n', '<leader>tn', function() terminal.Terminal:new():toggle() end)
-vim.keymap.set('n', '<leader>tf', ':ToggleTerm direction=float<cr>')
-vim.keymap.set('n', '<leader>th', ':ToggleTerm direction=horizontal<cr>')
-vim.keymap.set('n', '<leader>tv', ':ToggleTerm direction=vertical<cr>')
+keymap('n', '<leader>tt', ':ToggleTerm direction=tab<cr>')
+keymap('n', '<leader>tn', function() terminal.Terminal:new():toggle() end)
+keymap('n', '<leader>tf', ':ToggleTerm direction=float<cr>')
+keymap('n', '<leader>th', ':ToggleTerm direction=horizontal<cr>')
+keymap('n', '<leader>tv', ':ToggleTerm direction=vertical<cr>')
 
--- h: git
-vim.keymap.set('n', '<leader>hu', ':Gitsigns undo_stage_hunk<cr>')
-vim.keymap.set('n', ']h', ':Gitsigns next_hunk<cr>')
-vim.keymap.set('n', '[h', ':Gitsigns prev_hunk<cr>')
-vim.keymap.set('n', '<leader>hc', ':Gitsigns preview_hunk<cr>')
-vim.keymap.set('n', '<leader>hr', ':Gitsigns reset_hunk<cr>')
-vim.keymap.set('n', '<leader>hR', ':Gitsigns reset_buffer')
-vim.keymap.set('n', '<leader>hb', ':Gitsigns blame_line<cr>')
-vim.keymap.set('n', '<leader>hd', ':Gitsigns diffthis<cr>')
-vim.keymap.set('n', '<leader>hs', ':<C-U>Gitsigns select_hunk<CR>')
--- git conflict
-vim.keymap.set('n', '<leader>co', '<Plug>(git-conflict-ours)')
-vim.keymap.set('n', '<leader>ct', '<Plug>(git-conflict-theirs)')
-vim.keymap.set('n', '<leader>cb', '<Plug>(git-conflict-both)')
-vim.keymap.set('n', '<leader>c0', '<Plug>(git-conflict-none)')
-vim.keymap.set('n', ']x', '<Plug>(git-conflict-prev-conflict)')
-vim.keymap.set('n', '[x', '<Plug>(git-conflict-next-conflict)')
--- replace across multi files
-vim.keymap.set('n', '<leader>ss', '<cmd>lua require("spectre").open()<CR>', {
-    desc = "Open Spectre"
-})
-vim.keymap.set('n', '<leader>sw', '<cmd>lua require("spectre").open_visual({select_word=true})<CR>', {
-    desc = "Search current word"
-})
-vim.keymap.set('v', '<leader>sw', '<esc><cmd>lua require("spectre").open_visual()<CR>', {
-    desc = "Search current word"
-})
-vim.keymap.set('n', '<leader>sp', '<cmd>lua require("spectre").open_file_search({select_word=true})<CR>', {
-    desc = "Search on current file"
-})
+-- Git
+keymap('n', '<leader>hu', ':Gitsigns undo_stage_hunk<cr>')
+keymap('n', ']h', ':Gitsigns next_hunk<cr>')
+keymap('n', '[h', ':Gitsigns prev_hunk<cr>')
+keymap('n', '<leader>hc', ':Gitsigns preview_hunk<cr>')
+keymap('n', '<leader>hr', ':Gitsigns reset_hunk<cr>')
+keymap('n', '<leader>hR', ':Gitsigns reset_buffer')
+keymap('n', '<leader>hb', ':Gitsigns blame_line<cr>')
+keymap('n', '<leader>hd', ':Gitsigns diffthis<cr>')
+keymap('n', '<leader>hs', ':<C-U>Gitsigns select_hunk<CR>')
+
+-- Git conflict
+keymap('n', '<leader>co', '<Plug>(git-conflict-ours)')
+keymap('n', '<leader>ct', '<Plug>(git-conflict-theirs)')
+keymap('n', '<leader>cb', '<Plug>(git-conflict-both)')
+keymap('n', '<leader>c0', '<Plug>(git-conflict-none)')
+keymap('n', ']x', '<Plug>(git-conflict-prev-conflict)')
+keymap('n', '[x', '<Plug>(git-conflict-next-conflict)')
+
+-- Spectre (replace across multi files)
+keymap('n', '<leader>ss', '<cmd>lua require("spectre").open()<CR>', { desc = "Open Spectre" })
+keymap('n', '<leader>sw', '<cmd>lua require("spectre").open_visual({select_word=true})<CR>', { desc = "Search current word" })
+keymap('v', '<leader>sw', '<esc><cmd>lua require("spectre").open_visual()<CR>', { desc = "Search current word" })
+keymap('n', '<leader>sp', '<cmd>lua require("spectre").open_file_search({select_word=true})<CR>', { desc = "Search on current file" })

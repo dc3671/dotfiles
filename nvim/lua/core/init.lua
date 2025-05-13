@@ -1,78 +1,76 @@
--- basicsinit
-vim.deprecate = function() end
-vim.cmd('syntax on')
-vim.cmd('filetype plugin indent on')
--- avoid annoying shift key
-vim.cmd([[ command! -bang -nargs=* -complete=file E e<bang> <args> ]])
-vim.cmd([[ command! -bang -nargs=* -complete=file W w<bang> <args> ]])
-vim.cmd([[ command! -bang -nargs=* -complete=file Wq wq<bang> <args> ]])
-vim.cmd([[ command! -bang -nargs=* -complete=file WQ wq<bang> <args> ]])
-vim.cmd([[ command! -bang Wa wa<bang> ]])
-vim.cmd([[ command! -bang WA wa<bang> ]])
-vim.cmd([[ command! -bang Q q<bang> ]])
-vim.cmd([[ command! -bang QA qa<bang> ]])
-vim.cmd([[ command! -bang Qa qa<bang> ]])
+-- Basic Neovim initialization
 
+vim.deprecate = function() end
+
+-- Syntax and filetype
+vim.cmd([[
+  syntax on
+  filetype plugin indent on
+  command! -bang -nargs=* -complete=file E e<bang> <args>
+  command! -bang -nargs=* -complete=file W w<bang> <args>
+  command! -bang -nargs=* -complete=file Wq wq<bang> <args>
+  command! -bang -nargs=* -complete=file WQ wq<bang> <args>
+  command! -bang Wa wa<bang>
+  command! -bang WA wa<bang>
+  command! -bang Q q<bang>
+  command! -bang QA qa<bang>
+  command! -bang Qa qa<bang>
+]])
+
+-- General options
 vim.opt.number         = true
 vim.opt.relativenumber = false
 vim.opt.shiftround     = true
 vim.opt.updatetime     = 100
 vim.opt.cursorline     = true
-vim.opt.autowrite      = true
+vim.opt.autowrite      = false
 vim.opt.ignorecase     = true
-vim.opt.virtualedit    = 'onemore' -- Allow for cursor beyond last character
+vim.opt.virtualedit    = 'onemore'
 vim.opt.foldmethod     = 'indent'
 vim.opt.foldlevelstart = 99
--- Puts new split windows to the right and bottom of the current
 vim.opt.splitright     = true
 vim.opt.splitbelow     = true
--- Limit max popup menu height for autocomplete
 vim.opt.pumheight      = 30
 
-if (vim.fn.has('termguicolors') == 1) then
+if vim.fn.has('termguicolors') == 1 then
     vim.opt.termguicolors = true
 end
--- tabs
+
+-- Tabs and indentation
 vim.opt.autoindent    = true
 vim.opt.tabstop       = 4
 vim.opt.shiftwidth    = 4
 vim.opt.softtabstop   = 4
-vim.opt.mouse         = 'a'
 vim.opt.expandtab     = true
-vim.opt.autowrite     = false
+
+vim.opt.mouse         = 'a'
 vim.opt.wrap          = true
 vim.opt.formatoptions = ''
--- undo
+
+-- Undo
 vim.opt.undofile      = true
-vim.opt.undolevels    = 1000  -- Maximum number of changes that can be undone
-vim.opt.undoreload    = 10000 -- Maximum number lines to save for undo on a buffer reload
+vim.opt.undolevels    = 1000
+vim.opt.undoreload    = 10000
+
+-- Listchars
 vim.opt.list          = true
 vim.opt.listchars     = { tab = ' ›', trail = '•', extends = '#', nbsp = '.' }
 
-require("core.plugins")
---require("core.gui")
--- disable some useless standard plugins to save startup time
--- these features have been better covered by plugins
-vim.g.loaded_matchparen        = 1
-vim.g.loaded_matchbracket      = 1
-vim.g.loaded_matchit           = 1
-vim.g.loaded_logiPat           = 1
-vim.g.loaded_rrhelper          = 1
-vim.g.loaded_tarPlugin         = 1
-vim.g.loaded_gzip              = 1
-vim.g.loaded_zipPlugin         = 1
-vim.g.loaded_2html_plugin      = 1
-vim.g.loaded_shada_plugin      = 1
-vim.g.loaded_spellfile_plugin  = 1
-vim.g.loaded_netrw             = 1
-vim.g.loaded_netrwPlugin       = 1
-vim.g.loaded_tutor_mode_plugin = 1
-vim.g.loaded_remote_plugins    = 1
+-- Disable standard plugins (faster startup)
+local disabled_built_ins = {
+  "matchparen", "matchbracket", "matchit", "logiPat", "rrhelper",
+  "tarPlugin", "gzip", "zipPlugin", "2html_plugin", "shada_plugin",
+  "spellfile_plugin", "netrw", "netrwPlugin", "tutor_mode_plugin", "remote_plugins"
+}
+for _, plugin in ipairs(disabled_built_ins) do
+  vim.g["loaded_" .. plugin] = 1
+end
 
 vim.diagnostic.config { virtual_text = false }
 
+-- Plugin and config requires
+require("core.plugins")
 require("core.keymaps")
-
 require("core.theme")
 
 require('image').setup {
@@ -81,8 +79,6 @@ require('image').setup {
     render_using_dither = true,
 }
 
--- Load plugin configs
--- plugins without extra configs are configured directly here
 require("impatient")
 require('Comment').setup {
     ignore = '^$',
@@ -118,9 +114,9 @@ require("auto-session").setup {
     log_level = "error",
     auto_session_suppress_dirs = { "~/", "~/Projects", "~/Downloads", "/" },
 }
-
 require("ibl").setup {}
 
+-- Load plugin configs
 require("configs.lsp").config()
 require("configs.autocomplete").config()
 require("configs.statusline").config()
@@ -130,5 +126,4 @@ require("configs.bufferline").config()
 require("configs.grammar").config()
 require("configs.terminal").config()
 require("configs.nvimtree").config()
---require("configs.ide").config()
 require("configs.scrollbar").config()
