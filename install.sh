@@ -121,15 +121,15 @@ fi
 
 # nvim
 msg         "[nvim] Config nvim..."
-msg         "[nvim] Install Packer for nvim plugins management..."
-if [[ ! -d ~/.local/share/nvim/site/pack/packer/start/packer.nvim ]]; then
-    git clone --depth=1 https://github.com/wbthomason/packer.nvim \
-        ~/.local/share/nvim/site/pack/packer/start/packer.nvim
+msg         "[nvim] Install Lazy.nvim for nvim plugins management..."
+if [[ ! -d ~/.local/share/nvim/lazy/lazy.nvim ]]; then
+    git clone --depth=1 --filter=blob:none --branch=stable \
+        https://github.com/folke/lazy.nvim.git ~/.local/share/nvim/lazy/lazy.nvim
 fi
 mkdir -p ~/.config
 mv ~/.config/nvim ~/.config/nvim.bkp >/dev/null 2>&1
 ln -sf $PWD/nvim ~/.config/
-nvim -u "$PWD/init.before.vim" --headless -c 'autocmd User PackerComplete quitall' -c 'PackerSync'
+# nvim -u "$PWD/init.before.vim" --headless -c 'autocmd User PackerComplete quitall' -c 'PackerSync'
 success     "[nvim] Done."
 
 # eslint

@@ -30,11 +30,11 @@ function M.config()
         require('mason-lspconfig').setup {
             ensure_installed = {},
         }
-        require('mason-lspconfig').setup_handlers {
-            function(server_name)
-                require("lspconfig")[server_name].setup {}
-            end
-        }
+        -- require('mason-lspconfig').setup_handlers {
+        --     function(server_name)
+        --         require("lspconfig")[server_name].setup {}
+        --     end
+        -- }
     end
     local null_ls_ok, null_ls = pcall(require, "null-ls")
     if null_ls_ok then

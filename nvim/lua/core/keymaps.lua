@@ -1,5 +1,3 @@
-vim.g.mapleader = ','
-
 -- Background toggle functions
 local function set_bg_light()
     local colors_name = vim.g.colors_name

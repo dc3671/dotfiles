@@ -4,8 +4,8 @@ vim.deprecate = function() end
 
 -- Syntax and filetype
 vim.cmd([[
-  syntax on
-  filetype plugin indent on
+  " syntax on
+  " filetype plugin indent on
   command! -bang -nargs=* -complete=file E e<bang> <args>
   command! -bang -nargs=* -complete=file W w<bang> <args>
   command! -bang -nargs=* -complete=file Wq wq<bang> <args>
@@ -18,6 +18,8 @@ vim.cmd([[
 ]])
 
 -- General options
+vim.g.mapleader = ','
+
 vim.opt.number         = true
 vim.opt.relativenumber = false
 vim.opt.shiftround     = true
@@ -97,6 +99,11 @@ require('unimpaired').setup {}
 require("nvim-autopairs").setup {}
 require("aerial").setup {}
 require("CopilotChat").setup {
+    model = 'claude-3.7-sonnet-thought',
+    mappings = { reset = {
+        normal = "<leader>rr",
+        insert = "<leader>rr"
+    } },
     selection = function(source)
         local select = require("CopilotChat.select")
         return select.visual(source) or select.buffer(source)
