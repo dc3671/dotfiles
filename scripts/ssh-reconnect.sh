@@ -2,6 +2,7 @@
 # source: http://tychoish.com/rhizome/9-awesome-ssh-tricks/
 ssh-reagent() {
 	for agent in /tmp/ssh-*/agent.*; do
+        echo "Found existing agent: ${agent}"
 		export SSH_AUTH_SOCK=$agent
 		if ssh-add -l >/dev/null 2>&1; then
 			echo Found working SSH Agent:

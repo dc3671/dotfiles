@@ -1,0 +1,14 @@
+# id -u -n
+CI_BUILD_USER=zhenhuanc
+# id -u
+CI_BUILD_UID=143107
+# id -g -n, it's better to run the command on farm, seems computelab doesn't get the right one, mostly arch guys should have `dip`
+CI_BUILD_GROUP=hardware
+# id -g
+CI_BUILD_GID=30
+# stat /home/scratch.wkong_gpu/ --format="%G"
+CI_SCRATCH_GROUP=hardware
+# stat /home/scratch.wkong_gpu/ --format="%g"
+CI_SCRATCH_GID=30
+
+LLM_MODELS_ROOT=/llm-models
