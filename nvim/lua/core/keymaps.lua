@@ -68,7 +68,7 @@ keymap("n", "<C-b>", "<cmd>lua require('fzf-lua').buffers()<CR>", { silent = tru
 keymap("n", "<C-g>", "<cmd>lua require('fzf-lua').grep()<CR>", { silent = true })
 
 -- Copilot
-keymap('n', '<leader>pp', ':CopilotChat')
+keymap({'n', 'v'}, '<leader>pp', ':CopilotChat')
 keymap({ 'n', 'v' }, '<leader>pe', ':CopilotChatExplain<CR>')
 keymap({ 'n', 'v' }, '<leader>pr', ':CopilotChatReview<CR>')
 keymap({ 'n', 'v' }, '<leader>pf', ':CopilotChatFix<CR>')

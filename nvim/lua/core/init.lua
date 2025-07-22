@@ -99,7 +99,7 @@ require('unimpaired').setup {}
 require("nvim-autopairs").setup {}
 require("aerial").setup {}
 require("CopilotChat").setup {
-    model = 'claude-3.7-sonnet-thought',
+    model = 'claude-sonnet-4',
     mappings = { reset = {
         normal = "<leader>rr",
         insert = "<leader>rr"
@@ -112,9 +112,9 @@ require("CopilotChat").setup {
 require("fzf-lua").setup {
     winopts = { preview = { flip_columns = 150 } },
     fzf_opts = { ['--layout'] = 'default' },
-    files = { rg_opts = [[--color=never --files --hidden --follow -g "!.git" -g "!*.cubin.cpp*"]], },
-    git = { files = { cmd = 'git ls-files --exclude-standard -- ":!:*.cubin.cpp*"' } },
-    grep = { rg_opts = '--column --line-number --no-heading --color=always -g "!*.cubin.cpp*" --smart-case --max-columns=4096 -e' }
+    files = { rg_opts = [[--color=never --files --hidden --follow -g "!.git" -g "!*.cubin.cpp*" -g "!*_cubin.cpp*"]], },
+    git = { files = { cmd = 'git ls-files --exclude-standard -- ":!:*.cubin.cpp*" ":!:*_cubin.cpp"' } },
+    grep = { rg_opts = '--column --line-number --no-heading --color=always -g "!*.cubin.cpp*" -g "!*_cubin.cpp*" --smart-case --max-columns=4096 -e' }
 }
 require('spectre').setup { default = { find = { cmd = "rg" } } }
 require("auto-session").setup {
