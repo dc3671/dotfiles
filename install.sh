@@ -120,6 +120,13 @@ if [ "$TEST_CURRENT_SHELL" != "zsh" ]; then
     fi
 fi
 
+msg         "[bash] Config bash..."
+msg         "[bash] Install oh-my-bash..."
+git clone --depth=1 https://github.com/ohmybash/oh-my-bash.git ~/.oh-my-bash
+git clone --recursive --depth 1 --shallow-submodules https://github.com/akinomyoga/ble.sh.git ~/ble.sh
+make -C ~/ble.sh
+ln -s $PWD/.blerc ~
+
 # nvim
 msg         "[nvim] Config nvim..."
 msg         "[nvim] Install Lazy.nvim for nvim plugins management..."
@@ -129,7 +136,7 @@ if [[ ! -d ~/.local/share/nvim/lazy/lazy.nvim ]]; then
 fi
 mkdir -p ~/.config
 mv ~/.config/nvim ~/.config/nvim.bkp >/dev/null 2>&1
-ln -sf $PWD/nvim ~/.config/
+ln -sf $PWD/nvim ~/.config
 # nvim -u "$PWD/init.before.vim" --headless -c 'autocmd User PackerComplete quitall' -c 'PackerSync'
 success     "[nvim] Done."
 

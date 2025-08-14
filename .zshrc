@@ -5,6 +5,9 @@ if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]
   source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
 fi
 
+if [[ -r $HOME/.local/share/nvim/lazy/fzf ]]; then
+  export FZF_BASE=$HOME/.local/share/nvim/lazy/fzf
+fi
 # Path to your oh-my-zsh installation.
 export ZSH=~/.oh-my-zsh
 
@@ -32,7 +35,7 @@ ZSH_THEME="powerlevel10k/powerlevel10k"
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(git gitfast dirhistory ssh-agent tmux python pip docker command-not-found zsh-autosuggestions zsh-syntax-highlighting)
+plugins=(git gitfast dirhistory ssh-agent tmux python pip docker command-not-found zsh-autosuggestions zsh-syntax-highlighting fzf)
 
 # User configuration
 export HOME=~
@@ -44,18 +47,26 @@ export LANG="en_US.UTF-8"
 #export DISPLAY="$(/sbin/ip route | awk '/default/ { print $3 }'):0"
 
 export PATH="/bin:/sbin:/usr/local/bin:/usr/local/sbin:$HOME/.local/bin:/usr/bin:/usr/sbin"
+export PATH="/usr/local/mpi/bin:/usr/local/nvidia/bin:/usr/local/cuda/bin:/usr/local/ucx/bin:/opt/amazon/efa/bin:$PATH"
+export PATH="$HOME/neovim/bin:$PATH"
+
+export LD_LIBRARY_PATH="/usr/local/cuda/compat/lib:/usr/local/nvidia/lib:/usr/local/nvidia/lib64:/usr/local/cuda/lib64:/usr/local/tensorrt/lib"
+export PYTHONUSERBASE="intentionally-disabled"
 
 export TERM="xterm-256color"
 export GIT_SSL_NO_VERIFY=1
 export EDITOR="nvim"
 umask 002
+# On some clusters, max process is limited
+ulimit -u $(cat /sys/fs/cgroup/user.slice/user-$(id -u $(whoami)).slice/pids.max)
+ulimit -n $(cat /sys/fs/cgroup/user.slice/user-$(id -u $(whoami)).slice/pids.max)
 
 zstyle :omz:plugins:ssh-agent agent-forwarding on >/dev/null 2>&1
 #zstyle :omz:plugins:ssh-agent identities id_rsa
 
 source $ZSH/oh-my-zsh.sh
 
-[ -f $HOME/.fzf.zsh ] && source $HOME/.fzf.zsh
+# [ -f $HOME/.fzf.zsh ] && source $HOME/.fzf.zsh
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 

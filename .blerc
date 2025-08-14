@@ -1,0 +1,5 @@
+_ble_contrib_fzf_base=~/.local/share/nvim/lazy/fzf
+[ -e /etc/bash_completion ] && source /etc/bash_completion
+ble-import -d integration/fzf-completion
+ble-import -d integration/fzf-key-bindings
+bleopt exec_exit_mark=

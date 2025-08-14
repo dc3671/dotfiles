@@ -3,17 +3,24 @@
 
 set -ex
 
+CI_BUILD_USER=zhenhuanc
+CI_BUILD_UID=143107
+CI_BUILD_GROUP=hardware
+CI_BUILD_GID=30
+CI_SCRATCH_GROUP=hardware
+CI_SCRATCH_GID=30
+
 if [ -z "$@" ]; then
   COMMAND=(zsh)
 else
   COMMAND=("$@")
 fi
 
-apt-get update && apt-get install -y sudo zsh tmux locales
+# apt-get update && apt-get install -y sudo zsh tmux locales
 
 # nvidia-smi -lgc 1980,1980
 
-locale-gen en_US.UTF-8
+# locale-gen en_US.UTF-8
 
 getent group "${CI_BUILD_GID}" || addgroup --gid "${CI_BUILD_GID}" "${CI_BUILD_GROUP}"
 
