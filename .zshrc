@@ -46,8 +46,7 @@ export LANG="en_US.UTF-8"
 # fix WSL2 clipboard
 #export DISPLAY="$(/sbin/ip route | awk '/default/ { print $3 }'):0"
 
-export PATH="/bin:/sbin:/usr/local/bin:/usr/local/sbin:$HOME/.local/bin:/usr/bin:/usr/sbin"
-export PATH="/usr/local/mpi/bin:/usr/local/nvidia/bin:/usr/local/cuda/bin:/usr/local/ucx/bin:/opt/amazon/efa/bin:$PATH"
+export PATH="/bin:/sbin:/usr/local/bin:/usr/local/sbin:$HOME/.local/bin:/usr/bin:/usr/sbin:$PATH"
 export PATH="$HOME/neovim/bin:$PATH"
 
 export LD_LIBRARY_PATH="/usr/local/cuda/compat/lib:/usr/local/nvidia/lib:/usr/local/nvidia/lib64:/usr/local/cuda/lib64:/usr/local/tensorrt/lib"
@@ -58,8 +57,11 @@ export GIT_SSL_NO_VERIFY=1
 export EDITOR="nvim"
 umask 002
 # On some clusters, max process is limited
-ulimit -u $(cat /sys/fs/cgroup/user.slice/user-$(id -u $(whoami)).slice/pids.max)
-ulimit -n $(cat /sys/fs/cgroup/user.slice/user-$(id -u $(whoami)).slice/pids.max)
+pids_max_limit="/sys/fs/cgroup/user.slice/user-$(id -u $(whoami)).slice/pids.max"
+if [[ -e $pids_max_limit ]] && [[ $(cat $pids_max_limit) != "max" ]]; then
+    ulimit -u $(cat /sys/fs/cgroup/user.slice/user-$(id -u $(whoami)).slice/pids.max)
+    ulimit -n $(cat /sys/fs/cgroup/user.slice/user-$(id -u $(whoami)).slice/pids.max)
+fi
 
 zstyle :omz:plugins:ssh-agent agent-forwarding on >/dev/null 2>&1
 #zstyle :omz:plugins:ssh-agent identities id_rsa

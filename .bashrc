@@ -12,6 +12,7 @@ export OSH='/home/zhenhuanc/.oh-my-bash'
 OSH_THEME="powerbash10k"
 # disable git status for big repos
 THEME_SHOW_SCM=false
+THEME_SHOW_PYTHON=true
 
 completions=(git composer ssh pip)
 
@@ -19,8 +20,7 @@ aliases=(general)
 
 plugins=(git bashmarks tmux-autoattach)
 # User configuration
-export PATH="/bin:/sbin:/usr/local/bin:/usr/local/sbin:$HOME/.local/bin:/usr/bin:/usr/sbin"
-export PATH="/usr/local/mpi/bin:/usr/local/nvidia/bin:/usr/local/cuda/bin:/usr/local/ucx/bin:/opt/amazon/efa/bin:$PATH"
+export PATH="/bin:/sbin:/usr/local/bin:/usr/local/sbin:$HOME/.local/bin:/usr/bin:/usr/sbin:$PATH"
 export PATH="$HOME/neovim/bin:$PATH"
 
 export TERM="xterm-256color"
@@ -28,8 +28,11 @@ export GIT_SSL_NO_VERIFY=1
 export EDITOR="nvim"
 umask 002
 # On some clusters, max process is limited
-ulimit -u $(cat /sys/fs/cgroup/user.slice/user-$(id -u $(whoami)).slice/pids.max)
-ulimit -n $(cat /sys/fs/cgroup/user.slice/user-$(id -u $(whoami)).slice/pids.max)
+pids_max_limit="/sys/fs/cgroup/user.slice/user-$(id -u $(whoami)).slice/pids.max"
+if [[ -e $pids_max_limit ]] && [[ $(cat $pids_max_limit) != "max" ]]; then
+    ulimit -u $(cat /sys/fs/cgroup/user.slice/user-$(id -u $(whoami)).slice/pids.max)
+    ulimit -n $(cat /sys/fs/cgroup/user.slice/user-$(id -u $(whoami)).slice/pids.max)
+fi
 
 [ -f "$OSH"/oh-my-bash.sh ] && source "$OSH"/oh-my-bash.sh
 # [ -f ~/.fzf.bash ] && source ~/.fzf.bash
