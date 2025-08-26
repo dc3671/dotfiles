@@ -20,8 +20,11 @@ aliases=(general)
 
 plugins=(git bashmarks tmux-autoattach)
 # User configuration
-export PATH="/bin:/sbin:/usr/local/bin:/usr/local/sbin:$HOME/.local/bin:/usr/bin:/usr/sbin:$PATH"
+export PATH="/bin:/sbin:/usr/local/bin:/usr/local/sbin:$HOME/.local/bin:/usr/bin:/usr/sbin"
+export PATH="/usr/local/mpi/bin:/usr/local/nvidia/bin:/usr/local/cuda/bin:/usr/local/ucx/bin:/opt/amazon/efa/bin:$PATH"
 export PATH="$HOME/neovim/bin:$PATH"
+
+export LD_LIBRARY_PATH="/usr/local/cuda/compat/lib:/usr/local/nvidia/lib:/usr/local/nvidia/lib64:/usr/local/cuda/lib64:/usr/local/tensorrt/lib"
 
 export TERM="xterm-256color"
 export GIT_SSL_NO_VERIFY=1

@@ -16,11 +16,11 @@ else
   COMMAND=("$@")
 fi
 
-# apt-get update && apt-get install -y sudo zsh tmux locales
+apt-get update && apt-get install -y sudo zsh tmux locales
 
 # nvidia-smi -lgc 1980,1980
 
-# locale-gen en_US.UTF-8
+locale-gen en_US.UTF-8
 
 getent group "${CI_BUILD_GID}" || addgroup --gid "${CI_BUILD_GID}" "${CI_BUILD_GROUP}"
 
