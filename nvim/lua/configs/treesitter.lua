@@ -1,5 +1,34 @@
 local M = {}
 function M.config()
+    -- Function to get the system architecture
+    function get_arch()
+        -- Execute the 'uname -m' command to get machine hardware name
+        local handle = io.popen("uname -m")
+        if not handle then
+            return nil, "Failed to run 'uname -m'"
+        end
+
+        -- Read the output of the command
+        local arch = handle:read("*a")
+        handle:close()
+
+        -- Remove trailing newline characters from the output
+        arch = arch:gsub("^%s*(.-)%s*$", "%1")
+
+        return arch
+    end
+
+    -- Get the architecture
+    local architecture, err = get_arch()
+    local is_x86 = architecture == "x86_64"
+    local parser_dir
+    if is_x86 then
+        parser_dir = "~/.local/share/nvim/lazy/nvim-treesitter/parser_x86"
+    else
+        parser_dir = "~/.local/share/nvim/lazy/nvim-treesitter/parser_arm"
+    end
+    vim.opt.runtimepath:prepend(parser_dir)
+
     -- nvim-treesitter config
     -- require('nvim-treesitter.install').update({ with_sync = true })
     require('nvim-treesitter.configs').setup {
@@ -7,6 +36,7 @@ function M.config()
         ensure_installed = { "c", "cpp", "lua", "python", "bash" }, -- for installing specific parsers
         sync_install = true,                                        -- install synchronously
         ignore_install = {},                                        -- parsers to not install
+        parser_install_dir = parser_dir,
         highlight = {
             enable = true,
             additional_vim_regex_highlighting = false, -- disable standard vim highlighting

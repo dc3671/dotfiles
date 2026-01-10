@@ -99,7 +99,7 @@ require('unimpaired').setup {}
 require("nvim-autopairs").setup {}
 require("aerial").setup {}
 require("CopilotChat").setup {
-    model = 'claude-sonnet-4',
+    model = 'claude-sonnet-4.5',
     mappings = { reset = {
         normal = "<leader>rr",
         insert = "<leader>rr"

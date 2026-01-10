@@ -5,7 +5,7 @@ SOURCE_DIR="/usr/local/lib/python3.12/dist-packages"
 TARGET_DIR="$CONDA_PREFIX/lib/python3.12/site-packages"
 PACKAGES=("torch" "functorch" "triton" "tensorrt" "nvidia" "pytorch-triton")
 
-COPY_PACKAGES=("triton*" "nvidia" "nvidia-modelopt-core*" "nvidia-cuda-nvrtc*" "*dist-info")
+COPY_PACKAGES=("triton*" "torchao" "nvidia" "nvidia-modelopt-core*" "nvidia-cuda-nvrtc*" "*dist-info")
 should_copy_package() {
     local basename="$1"
 
