@@ -18,7 +18,7 @@ completions=(git composer ssh pip)
 
 aliases=(general)
 
-plugins=(git bashmarks tmux-autoattach)
+plugins=(git bashmarks)
 # User configuration
 export PATH="/bin:/sbin:/usr/local/bin:/usr/local/sbin:$HOME/.local/bin:/usr/bin:/usr/sbin"
 export PATH="/usr/local/mpi/bin:/usr/local/nvidia/bin:/usr/local/cuda/bin:/usr/local/ucx/bin:/opt/amazon/efa/bin:$PATH"
@@ -35,11 +35,14 @@ pids_max_limit="/sys/fs/cgroup/user.slice/user-$(id -u $(whoami)).slice/pids.max
 if [[ -e $pids_max_limit ]] && [[ $(cat $pids_max_limit) != "max" ]]; then
     ulimit -u $(cat /sys/fs/cgroup/user.slice/user-$(id -u $(whoami)).slice/pids.max)
     ulimit -n $(cat /sys/fs/cgroup/user.slice/user-$(id -u $(whoami)).slice/pids.max)
+else
+    ulimit -u 131072
+    ulimit -n 131072
 fi
 
 [ -f "$OSH"/oh-my-bash.sh ] && source "$OSH"/oh-my-bash.sh
-# [ -f ~/.fzf.bash ] && source ~/.fzf.bash
-export _ble_contrib_fzf_base=~/.local/share/nvim/lazy/fzf
+[ -f ~/.fzf.bash ] && source ~/.fzf.bash
+export _ble_contrib_fzf_base=~/fzf
 [ -f ~/ble.sh/out/ble.sh ] && source -- ~/ble.sh/out/ble.sh
 
 alias sudo="sudo -E"

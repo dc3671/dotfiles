@@ -40,8 +40,8 @@ plugins=(git gitfast dirhistory ssh-agent tmux python pip docker command-not-fou
 # User configuration
 export HOME=~
 
-export LC_ALL="en_US.UTF-8"
-export LANG="en_US.UTF-8"
+# export LC_ALL="en_US.UTF-8"
+# export LANG="en_US.UTF-8"
 
 # fix WSL2 clipboard
 #export DISPLAY="$(/sbin/ip route | awk '/default/ { print $3 }'):0"
