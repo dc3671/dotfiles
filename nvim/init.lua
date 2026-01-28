@@ -2,14 +2,10 @@
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 vim.opt.rtp:prepend(lazypath)
 
--- Check for clipboard support and required executables
--- if vim.fn.has('clipboard') == 1 and
---     (vim.fn.executable('pbcopy') == 1 or
---         vim.fn.executable('xclip') == 1 or
---         vim.fn.executable('xsel') == 1) then
+-- Clipboard setup
 vim.opt.clipboard:append({ "unnamed", "unnamedplus" })
--- end
 
+-- Delete empty buffers function
 function DeleteEmptyBuffers()
     local empty = {}
     for i = 1, vim.fn.bufnr('$') do
@@ -25,4 +21,8 @@ end
 
 DeleteEmptyBuffers()
 
-require("core.init")
+-- Load configuration
+require("config.options")
+require("config.lazy")
+require("config.keymaps")
+require("config.autocmds")
