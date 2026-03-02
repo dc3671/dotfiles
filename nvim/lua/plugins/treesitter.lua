@@ -61,12 +61,12 @@ return {
                 rainbow = {
                     enable = true,
                     extended_mode = true,
-                    max_file_lines = 10000,
+                    max_file_lines = 2000,
                 },
                 pairs = {
                     enable = true,
                     disable = {},
-                    highlight_pair_events = { "CursorMoved" },
+                    highlight_pair_events = { "CursorHold" },
                     highlight_self = false,
                     goto_right_end = false,
                     fallback_cmd_normal = "call matchit#Match_wrapper('',1,'n')",

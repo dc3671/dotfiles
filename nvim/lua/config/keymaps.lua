@@ -32,7 +32,7 @@ keymap({ 'n', 'v' }, 'L', '$')
 local insert_moves = {
     ['<C-o>'] = '<Esc>o',
     ['<C-a>'] = '<Home>',
-    ['<C-e>'] = '<End>',
+    -- ['<C-e>'] = '<End>',
     ['<C-b>'] = '<Left>',
     ['<C-f>'] = '<Right>',
     ['<C-d>'] = '<Delete>',
