@@ -35,7 +35,7 @@ ZSH_THEME="powerlevel10k/powerlevel10k"
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(git gitfast dirhistory ssh-agent tmux python pip docker command-not-found zsh-autosuggestions zsh-syntax-highlighting fzf)
+plugins=(git gitfast dirhistory ssh-agent tmux python pip zsh-autosuggestions zsh-syntax-highlighting fzf)
 
 # User configuration
 export HOME=~
@@ -68,10 +68,38 @@ zstyle :omz:plugins:ssh-agent agent-forwarding on >/dev/null 2>&1
 #zstyle :omz:plugins:ssh-agent identities id_rsa
 
 source $ZSH/oh-my-zsh.sh
-
-# [ -f $HOME/.fzf.zsh ] && source $HOME/.fzf.zsh
-# To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+
+# SSH agent: prefer forwarded agent, fall back to persistent local agent
+_update_ssh_auth_sock() {
+    local fixed="$HOME/.ssh/auth_sock"
+    local agent_env="$HOME/.ssh/agent.env"
+    # If we have a live forwarded agent, update the symlink
+    if [ -n "$SSH_AUTH_SOCK" ] && [ "$SSH_AUTH_SOCK" != "$fixed" ]; then
+        ln -sf "$SSH_AUTH_SOCK" "$fixed"
+        return
+    fi
+    # If the symlink is dead (laptop disconnected), start a local agent
+    if [ ! -S "$fixed" ] || ! ssh-add -l &>/dev/null; then
+        # Reuse existing local agent if alive
+        if [ -f "$agent_env" ]; then
+            source "$agent_env" &>/dev/null
+            if [ -S "$SSH_AUTH_SOCK" ] && ssh-add -l &>/dev/null; then
+                ln -sf "$SSH_AUTH_SOCK" "$fixed"
+                return
+            fi
+        fi
+        # Start fresh local agent
+        eval "$(ssh-agent -s)" &>/dev/null
+        echo "export SSH_AUTH_SOCK=$SSH_AUTH_SOCK; export SSH_AGENT_PID=$SSH_AGENT_PID" > "$agent_env"
+        # Auto-add key if it exists (passphrase-less, or use keychain for passphrase)
+        [ -f "$HOME/.ssh/id_ed25519" ] && ssh-add "$HOME/.ssh/id_ed25519" &>/dev/null
+        [ -f "$HOME/.ssh/id_rsa" ] && ssh-add "$HOME/.ssh/id_rsa" &>/dev/null
+        ln -sf "$SSH_AUTH_SOCK" "$fixed"
+    fi
+}
+_update_ssh_auth_sock
+unset -f _update_ssh_auth_sock
 
 unsetopt PROMPT_SP
 setopt ignoreeof

@@ -41,9 +41,39 @@ else
 fi
 
 [ -f "$OSH"/oh-my-bash.sh ] && source "$OSH"/oh-my-bash.sh
-[ -f ~/.fzf.bash ] && source ~/.fzf.bash
-export _ble_contrib_fzf_base=~/fzf
+export _ble_contrib_fzf_base=~/.local/share/nvim/lazy/fzf
 [ -f ~/ble.sh/out/ble.sh ] && source -- ~/ble.sh/out/ble.sh
+
+# SSH agent: prefer forwarded agent, fall back to persistent local agent
+_update_ssh_auth_sock() {
+    local fixed="$HOME/.ssh/auth_sock"
+    local agent_env="$HOME/.ssh/agent.env"
+    # If we have a live forwarded agent, update the symlink
+    if [ -n "$SSH_AUTH_SOCK" ] && [ "$SSH_AUTH_SOCK" != "$fixed" ]; then
+        ln -sf "$SSH_AUTH_SOCK" "$fixed"
+        return
+    fi
+    # If the symlink is dead (laptop disconnected), start a local agent
+    if [ ! -S "$fixed" ] || ! ssh-add -l &>/dev/null; then
+        # Reuse existing local agent if alive
+        if [ -f "$agent_env" ]; then
+            source "$agent_env" &>/dev/null
+            if [ -S "$SSH_AUTH_SOCK" ] && ssh-add -l &>/dev/null; then
+                ln -sf "$SSH_AUTH_SOCK" "$fixed"
+                return
+            fi
+        fi
+        # Start fresh local agent
+        eval "$(ssh-agent -s)" &>/dev/null
+        echo "export SSH_AUTH_SOCK=$SSH_AUTH_SOCK; export SSH_AGENT_PID=$SSH_AGENT_PID" > "$agent_env"
+        # Auto-add key if it exists (passphrase-less, or use keychain for passphrase)
+        [ -f "$HOME/.ssh/id_ed25519" ] && ssh-add "$HOME/.ssh/id_ed25519" &>/dev/null
+        [ -f "$HOME/.ssh/id_rsa" ] && ssh-add "$HOME/.ssh/id_rsa" &>/dev/null
+        ln -sf "$SSH_AUTH_SOCK" "$fixed"
+    fi
+}
+_update_ssh_auth_sock
+unset -f _update_ssh_auth_sock
 
 alias sudo="sudo -E"
 alias vi="vim"
