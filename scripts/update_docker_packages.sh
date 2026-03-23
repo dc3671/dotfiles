@@ -3,9 +3,9 @@
 # Configuration
 SOURCE_DIR="/usr/local/lib/python3.12/dist-packages"
 TARGET_DIR="$CONDA_PREFIX/lib/python3.12/site-packages"
-PACKAGES=("torch" "functorch" "triton" "tensorrt" "nvidia" "pytorch-triton")
+PACKAGES=("torch" "functorch" "triton" "tensorrt" "nvidia")
 
-COPY_PACKAGES=("triton*" "torchao" "nvidia" "nvidia-modelopt-core*" "nvidia-cuda-nvrtc*" "*dist-info")
+COPY_PACKAGES=("triton*" "torchao*" "functorch*" "nvidia*" "mpi4py*" "nvidia-modelopt-core*" "nvidia-cuda-nvrtc*" "nvidia_cutlass_dsl*" "*dist-info")
 should_copy_package() {
     local basename="$1"
 
