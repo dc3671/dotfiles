@@ -54,9 +54,13 @@ return {
             require("fzf-lua").setup {
                 winopts = { preview = { flip_columns = 150 } },
                 fzf_opts = { ['--layout'] = 'default' },
-                files = { rg_opts = [[--color=never --files --hidden --follow -g "!.git" -g "!*.cubin.cpp*" -g "!*_cubin.cpp*"]], },
+                files = {
+                    cmd     = "rg --files",
+                    rg_opts = [[--color=never --files --hidden --follow -g "!.git" -g "!*.cubin.cpp*" -g "!*_cubin.cpp*"]], },
                 git = { files = { cmd = 'git ls-files --exclude-standard -- ":!:*.cubin.cpp*" ":!:*_cubin.cpp"' } },
-                grep = { rg_opts = '--column --line-number --no-heading --color=always -g "!*.cubin.cpp*" -g "!*_cubin.cpp*" --smart-case --max-columns=4096 -e' }
+                grep = {
+                    cmd     = "rg --vimgrep",
+                    rg_opts = '--column --line-number --no-heading --color=always -g "!*.cubin.cpp*" -g "!*_cubin.cpp*" --smart-case --max-columns=4096 -e' }
             }
         end,
     },
