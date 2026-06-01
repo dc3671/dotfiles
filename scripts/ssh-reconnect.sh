@@ -2,10 +2,27 @@
 
 # SSH agent: prefer forwarded agent, fall back to persistent local agent
 # ssh-add -l: 0 = keys present, 1 = agent alive but no keys, 2 = agent unreachable
+#
+# $HOME is NFS-shared across login and compute nodes. To avoid the compute
+# node clobbering the login node's auth_sock symlink, use a per-host suffix
+# on compute/container. Containers inherit hostname from the host (pyxis
+# default), so a container shares the socket with its compute node.
+_is_on_compute_or_container() {
+    [ -n "$SLURM_JOB_ID" ] && return 0
+    [ -n "$ENROOT_PID" ] || [ -n "$PYXIS_CONTAINER_NAME" ] || [ -n "$container" ] && return 0
+    [ -f /.dockerenv ] || [ -f /run/.containerenv ] && return 0
+    return 1
+}
+
 _update_ssh_auth_sock() {
-    local fixed="$HOME/.ssh/auth_sock"
-    local agent_env="$HOME/.ssh/agent.env"
-    local rc
+    local fixed agent_env rc
+    if _is_on_compute_or_container; then
+        fixed="$HOME/.ssh/auth_sock.$(hostname -s)"
+        agent_env="$HOME/.ssh/agent.$(hostname -s).env"
+    else
+        fixed="$HOME/.ssh/auth_sock"
+        agent_env="$HOME/.ssh/agent.env"
+    fi
 
     _ssh_add_keys() {
         [ -f "$HOME/.ssh/id_ed25519" ] && ssh-add "$HOME/.ssh/id_ed25519" &>/dev/null
@@ -50,8 +67,13 @@ _update_ssh_auth_sock() {
         fi
     fi
 
-    # Start fresh local agent
-    eval "$(ssh-agent -s)" &>/dev/null
+    # Start fresh local agent with socket in ~/.tmp so it's visible inside
+    # containers (pyxis bind-mounts $HOME but not /tmp). Per-host suffix
+    # avoids collisions on shared NFS.
+    mkdir -p "$HOME/.tmp"
+    local own_sock="$HOME/.tmp/ssh-agent.$(hostname -s).sock"
+    rm -f "$own_sock"
+    eval "$(ssh-agent -s -a "$own_sock")" &>/dev/null
     echo "export SSH_AUTH_SOCK=$SSH_AUTH_SOCK; export SSH_AGENT_PID=$SSH_AGENT_PID" >| "$agent_env"
     _ssh_add_keys
     ln -sf "$SSH_AUTH_SOCK" "$fixed"
