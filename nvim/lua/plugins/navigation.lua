@@ -35,6 +35,7 @@ return {
     -- Aerial code outline
     {
         "stevearc/aerial.nvim",
+        branch = "nvim-0.11",
         config = function()
             require("aerial").setup {}
         end,
