@@ -15,7 +15,7 @@ return {
         dependencies = { "mason-org/mason.nvim" },
         config = function()
             require('mason-lspconfig').setup {
-                ensure_installed = { 'pylsp', 'vimls', 'lua_ls', 'clangd' },
+                ensure_installed = { 'pylsp', 'vimls', 'lua_ls' },
             }
         end,
     },

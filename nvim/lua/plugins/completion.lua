@@ -85,6 +85,13 @@ return {
     -- Copilot integration
     {
         "github/copilot.vim",
+        enabled = false,
+        init = function()
+            -- Launch bundled language-server.js directly via node, bypassing
+            -- the `npx -> npm exec` wrapper that holds ~11 extra threads per
+            -- nvim instance under a constrained cgroup pids.max.
+            vim.g.copilot_npx_command = 0
+        end,
         config = function()
             -- Setup github copilot
             vim.keymap.set('i', '<C-e>', 'copilot#Accept("\\<End>")', {

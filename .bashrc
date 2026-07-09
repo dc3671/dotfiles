@@ -1,18 +1,11 @@
-# Enable the subsequent settings only in interactive sessions
-# case $- in
-#   *i*) ;;
-#     *) return;;
-# esac
-
 # Path to your oh-my-bash installation.
 export OSH='/home/zhenhuanc/.oh-my-bash'
 
 # Set name of the theme to load. Optionally, if you set this to "random"
 # it'll load a random theme each time that oh-my-bash is loaded.
-OSH_THEME="powerbash10k"
-# disable git status for big repos
-THEME_SHOW_SCM=false
-THEME_SHOW_PYTHON=true
+# OSH_THEME="powerbash10k"
+# OSH_THEME="bobby-python"
+OSH_THEME="pzq"
 
 completions=(git composer pip)
 
@@ -25,6 +18,12 @@ export PATH="/usr/local/mpi/bin:/usr/local/nvidia/bin:/usr/local/cuda/bin:/usr/l
 export PATH="$HOME/neovim/bin:$PATH"
 
 export LD_LIBRARY_PATH="/usr/local/cuda/compat/lib:/usr/local/nvidia/lib:/usr/local/nvidia/lib64:/usr/local/cuda/lib64:/usr/local/tensorrt/lib"
+
+export SQUEUE_FORMAT="%.18i %.9P %.40j %.10u %.2t %.10M %.6D %R"
+
+# Do not automatically activate the base environment
+# during shell initialization.
+export CONDA_AUTO_ACTIVATE_BASE=false
 
 export TERM="xterm-256color"
 export GIT_SSL_NO_VERIFY=1
@@ -44,7 +43,7 @@ fi
 export _ble_contrib_fzf_base=~/.local/share/nvim/lazy/fzf
 [ -f ~/ble.sh/out/ble.sh ] && source -- ~/ble.sh/out/ble.sh
 
-source "$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")/scripts/ssh-reconnect.sh"
+# source "$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")/scripts/ssh-reconnect.sh"
 
 alias sudo="sudo -E"
 alias vi="vim"
@@ -53,3 +52,4 @@ alias rm="rm -r"
 alias mkdir="mkdir -p"
 alias sa="sudo apt-get"
 alias sd="sudo dnf"
+alias ll="ls -lh"

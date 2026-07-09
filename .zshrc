@@ -1,13 +1,3 @@
-# Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
-# Initialization code that may require console input (password prompts, [y/n]
-# confirmations, etc.) must go above this block; everything else may go below.
-if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
-  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
-fi
-
-if [[ -r $HOME/.local/share/nvim/lazy/fzf ]]; then
-  export FZF_BASE=$HOME/.local/share/nvim/lazy/fzf
-fi
 # Path to your oh-my-zsh installation.
 export ZSH=~/.oh-my-zsh
 
@@ -31,6 +21,10 @@ export ZSH=~/.oh-my-zsh
 #ZSH_THEME="ys"
 ZSH_THEME="powerlevel10k/powerlevel10k"
 
+if [[ -r $HOME/.local/share/nvim/lazy/fzf ]]; then
+  export FZF_BASE=$HOME/.local/share/nvim/lazy/fzf
+fi
+
 # Which plugins would you like to load? (plugins can be found in ~/.oh-my-zsh/plugins/*)
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
@@ -40,8 +34,9 @@ plugins=(git gitfast dirhistory tmux python pip zsh-autosuggestions zsh-syntax-h
 # User configuration
 export HOME=~
 
-# export LC_ALL="en_US.UTF-8"
-# export LANG="en_US.UTF-8"
+# Will prevent tmux not showing UTF-8 characters correctly
+export LC_ALL="en_US.UTF-8"
+export LANG="en_US.UTF-8"
 
 # fix WSL2 clipboard
 #export DISPLAY="$(/sbin/ip route | awk '/default/ { print $3 }'):0"
@@ -52,6 +47,14 @@ export PATH="$HOME/neovim/bin:$PATH"
 
 export LD_LIBRARY_PATH="/opt/nvidia/nvda_nixl/lib/x86_64-linux-gnu:/opt/nvidia/nvda_nixl/lib64:/usr/local/ucx/lib:/usr/local/tensorrt/lib:/usr/local/cuda/lib64:/usr/local/cuda/compat/lib:/usr/local/nvidia/lib:/usr/local/nvidia/lib64"
 export PYTHONUSERBASE="intentionally-disabled"
+
+# export TMPDIR="$HOME/scratch/.tmp"
+
+export SQUEUE_FORMAT="%.18i %.9P %.40j %.10u %.2t %.10M %.6D %R"
+
+# Do not automatically activate the base environment
+# during shell initialization.
+export CONDA_AUTO_ACTIVATE_BASE=false
 
 export TERM="xterm-256color"
 export GIT_SSL_NO_VERIFY=1
@@ -85,3 +88,4 @@ alias rm="rm -r"
 alias mkdir="mkdir -p"
 alias sa="sudo apt-get"
 alias sd="sudo dnf"
+alias salloc="SHELL=/bin/bash salloc"
