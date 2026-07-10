@@ -30,6 +30,8 @@ vim.opt.ignorecase     = true
 vim.opt.virtualedit    = 'onemore'
 vim.opt.foldmethod     = 'indent'
 vim.opt.foldlevelstart = 99
+-- Don't let restored sessions (auto-session) re-fold; respect foldlevelstart above
+vim.opt.sessionoptions:remove('folds')
 vim.opt.splitright     = true
 vim.opt.splitbelow     = true
 vim.opt.pumheight      = 30

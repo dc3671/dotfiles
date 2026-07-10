@@ -21,6 +21,7 @@ return {
                 update_focused_file = { enable = true },
                 view = {
                     width = 30,
+                    preserve_window_proportions = true,
                 },
                 renderer = {
                     group_empty = true,
