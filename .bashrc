@@ -43,7 +43,7 @@ fi
 export _ble_contrib_fzf_base=~/.local/share/nvim/lazy/fzf
 [ -f ~/ble.sh/out/ble.sh ] && source -- ~/ble.sh/out/ble.sh
 
-# source "$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")/scripts/ssh-reconnect.sh"
+source "$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")/scripts/ssh-reconnect.sh"
 
 alias sudo="sudo -E"
 alias vi="vim"
