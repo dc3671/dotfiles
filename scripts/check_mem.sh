@@ -67,10 +67,24 @@ print_summary() {
             'BEGIN{printf "%s: %.2f GiB / max: %.2f GiB (%.1f%%)\n", l, v/2^30, m/2^30, 100*v/m}'
     fi
 
+    # Reclaimable summary: page cache + reclaimable slab. Kernel can drop these
+    # under pressure, so they count toward the cgroup limit but rarely OOM you.
+    if [ -r "$CG/memory.stat" ]; then
+        awk -v cur="$cur" '
+            { s[$1]=$2 }
+            END {
+                recl = s["file"] + s["slab_reclaimable"]
+                unrecl = cur - recl
+                printf "  reclaimable: %.2f GiB (page cache + slab) | unreclaimable: %.2f GiB\n", \
+                       recl/2^30, unrecl/2^30
+            }' "$CG/memory.stat"
+    fi
+
     if [ "$SHOW_STAT" -eq 1 ] && [ -r "$CG/memory.stat" ]; then
         echo "--- memory.stat (top fields) ---"
-        awk '$1 ~ /^(anon|file|kernel|sock|shmem|slab|swap)$/ {
-                 printf "  %-10s %.2f GiB\n", $1, $2/2^30
+        awk '$1 ~ /^(anon|file|kernel|sock|shmem|slab|slab_reclaimable|swap)$/ {
+                 tag = ($1 == "file" || $1 == "slab_reclaimable") ? "  [reclaimable]" : ""
+                 printf "  %-16s %.2f GiB%s\n", $1, $2/2^30, tag
              }' "$CG/memory.stat"
     fi
 
@@ -80,22 +94,34 @@ print_summary() {
         pids=$(find "$CG" -name cgroup.procs -readable -exec cat {} + 2>/dev/null \
                | sort -u | tr '\n' ',' | sed 's/,$//')
         if [ -n "$pids" ]; then
-            echo "--- top $TOP_N processes by RSS ---"
-            # PSS via smaps_rollup would be more accurate but needs root for some pids;
-            # RSS works for everything the user owns.
-            ps -o pid,rss,comm,args -p "$pids" --no-headers 2>/dev/null \
-                | sort -k2 -nr \
-                | head -n "$TOP_N" \
-                | awk '{
-                    rss_gib = $2/2^20
-                    pid = $1
-                    comm = $3
-                    $1=""; $2=""; $3=""
-                    args = $0
-                    sub(/^ +/, "", args)
-                    if (length(args) > 80) args = substr(args, 1, 77) "..."
-                    printf "  %7d  %6.2f GiB  %-15s  %s\n", pid, rss_gib, comm, args
-                  }'
+            echo "--- top $TOP_N processes by RSS (anon=private, file=mmap'd/reclaimable) ---"
+            printf "  %7s  %9s  %9s  %9s  %-15s  %s\n" \
+                   "PID" "RSS" "anon" "file" "COMM" "ARGS"
+            # Read RssAnon/RssFile from /proc/<pid>/status: file-backed RSS (mmap'd
+            # index, PCH, shared libs) is reclaimable and invisible in plain `ps rss`
+            # summing. anon is the private footprint that actually pins memory.
+            local oldifs="$IFS"; IFS=,
+            for pid in $pids; do
+                [ -r "/proc/$pid/status" ] || continue
+                awk -v pid="$pid" '
+                    /^VmRSS:/   {rss=$2}
+                    /^RssAnon:/ {anon=$2}
+                    /^RssFile:/ {file=$2}
+                    /^Name:/    {name=$2}
+                    END {
+                        if (rss=="") exit
+                        printf "%d\t%d\t%d\t%d\t%s\n", rss, anon, file, pid, name
+                    }' "/proc/$pid/status"
+            done | sort -k1 -nr | head -n "$TOP_N" | while IFS=$'\t' read -r rss anon file pid name; do
+                args=$(tr '\0' ' ' < "/proc/$pid/cmdline" 2>/dev/null | sed 's/ *$//')
+                [ ${#args} -gt 70 ] && args="${args:0:67}..."
+                awk -v rss="$rss" -v anon="$anon" -v file="$file" -v pid="$pid" \
+                    -v name="$name" -v args="$args" 'BEGIN{
+                        printf "  %7d  %6.2f GiB  %6.2f GiB  %6.2f GiB  %-15s  %s\n", \
+                               pid, rss/2^20, anon/2^20, file/2^20, name, args
+                    }'
+            done
+            IFS="$oldifs"
         fi
     fi
 }
