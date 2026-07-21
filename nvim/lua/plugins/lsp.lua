@@ -27,6 +27,25 @@ return {
             "mason-org/mason-lspconfig.nvim",
             "hrsh7th/cmp-nvim-lsp",
         },
+        config = function()
+            -- clangd: memory-conscious launch flags (nvim 0.11 native config API).
+            -- Biggest wins: PCH on disk (not RAM), malloc-trim returns freed pages
+            -- to OS, fewer indexer threads = lower peak RSS.
+            vim.lsp.config('clangd', {
+                cmd = {
+                    'clangd',
+                    '--background-index',                -- persist index to .cache/clangd (disk), not RAM
+                    '--background-index-priority=background',
+                    '--pch-storage=disk',                -- preamble/PCH on disk; biggest anon-RSS save
+                    '--malloc-trim',                     -- hand freed memory back to the OS
+                    '-j=2',                              -- cap indexer threads; fewer = lower peak mem
+                    '--limit-references=1000',
+                    '--limit-results=200',
+                    '--clang-tidy=false',                -- clang-tidy doubles parse cost + memory
+                    '--header-insertion=never',
+                },
+            })
+        end,
     },
 
     -- Null-ls for formatters and linters (commented)
