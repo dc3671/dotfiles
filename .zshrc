@@ -89,3 +89,57 @@ alias mkdir="mkdir -p"
 alias sa="sudo apt-get"
 alias sd="sudo dnf"
 alias salloc="SHELL=/bin/bash salloc"
+
+# Two miniforge installs, split by arch: arm64 = compute node/container,
+# x86 = login node. Wrong arch conda = ENOEXEC, then shell runs conda's python
+# source as shell script ("import: command not found"). Keep in sync with
+# .bashrc. No install / scratch not mounted -> skip, stay quiet.
+if [ "$(uname -m)" = "aarch64" ]; then
+    __mf_root="$HOME/scratch/miniforge3"
+else
+    __mf_root="$HOME/scratch/miniforge3_x86"
+fi
+
+if [ -x "$__mf_root/bin/conda" ]; then
+
+# >>> conda initialize >>>
+# !! Contents within this block are managed by 'conda init' !!
+__conda_setup="$("$__mf_root/bin/conda" 'shell.zsh' 'hook' 2> /dev/null)"
+if [ $? -eq 0 ]; then
+    eval "$__conda_setup"
+else
+    if [ -f "$__mf_root/etc/profile.d/conda.sh" ]; then
+        . "$__mf_root/etc/profile.d/conda.sh"
+    else
+        export PATH="$__mf_root/bin:$PATH"
+    fi
+fi
+unset __conda_setup
+# <<< conda initialize <<<
+
+
+# >>> mamba initialize >>>
+# !! Contents within this block are managed by 'mamba shell init' !!
+export MAMBA_EXE="$__mf_root/bin/mamba";
+export MAMBA_ROOT_PREFIX="$__mf_root";
+__mamba_setup="$("$MAMBA_EXE" shell hook --shell zsh --root-prefix "$MAMBA_ROOT_PREFIX" 2> /dev/null)"
+if [ $? -eq 0 ]; then
+    eval "$__mamba_setup"
+else
+    alias mamba="$MAMBA_EXE"  # Fallback on help from mamba activate
+fi
+unset __mamba_setup
+# <<< mamba initialize <<<
+
+# .zshrc = interactive shells only, so no login/interactive guard needed here.
+# CONDA_ENV honored for parity with .bashrc.
+if [ "${CONDA_ENV:-}" = "null" ]; then
+    :
+elif [ -n "${CONDA_ENV:-}" ]; then
+    conda activate "$CONDA_ENV"
+else
+    conda activate llm
+fi
+
+fi
+unset __mf_root
