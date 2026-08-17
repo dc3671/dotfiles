@@ -5,13 +5,16 @@ vim.opt.rtp:prepend(lazypath)
 -- Clipboard setup
 vim.opt.clipboard:append({ "unnamed", "unnamedplus" })
 
--- Delete empty buffers function
+-- Delete unnamed scratch buffers (never touches new files not yet written)
 function DeleteEmptyBuffers()
     local empty = {}
-    for i = 1, vim.fn.bufnr('$') do
-        if vim.fn.bufexists(i) == 1 and
-            (vim.fn.bufname(i) == '' or vim.fn.filereadable(vim.fn.bufname(i)) == 0) then
-            table.insert(empty, i)
+    for _, b in ipairs(vim.api.nvim_list_bufs()) do
+        if vim.api.nvim_buf_is_valid(b)
+            and vim.api.nvim_buf_get_name(b) == ''
+            and not vim.bo[b].modified
+            and vim.bo[b].buftype == ''
+        then
+            table.insert(empty, b)
         end
     end
     if #empty > 0 then
@@ -19,7 +22,7 @@ function DeleteEmptyBuffers()
     end
 end
 
-DeleteEmptyBuffers()
+vim.api.nvim_create_user_command('BDEmpty', DeleteEmptyBuffers, {})
 
 -- Load configuration
 require("config.options")
