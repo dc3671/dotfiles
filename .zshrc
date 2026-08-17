@@ -43,7 +43,7 @@ export LANG="en_US.UTF-8"
 
 export PATH="/bin:/sbin:/usr/local/bin:/usr/local/sbin:$HOME/.local/bin:/usr/bin:/usr/sbin"
 export PATH="/usr/local/cmake/bin:/usr/local/nvidia/bin:/usr/local/cuda/bin:/usr/local/mpi/bin:/usr/local/ucx/bin:/opt/amazon/efa/bin:/opt/tensorrt/bin:$PATH"
-export PATH="$HOME/neovim/bin:$PATH"
+export PATH="$HOME/neovim/bin:$HOME/node/bin:$HOME/zsh/bin:$PATH"
 
 export LD_LIBRARY_PATH="/opt/nvidia/nvda_nixl/lib/x86_64-linux-gnu:/opt/nvidia/nvda_nixl/lib64:/usr/local/ucx/lib:/usr/local/tensorrt/lib:/usr/local/cuda/lib64:/usr/local/cuda/compat/lib:/usr/local/nvidia/lib:/usr/local/nvidia/lib64"
 export PYTHONUSERBASE="intentionally-disabled"
