@@ -3,15 +3,16 @@
 # Configuration
 SOURCE_DIR="/usr/local/lib/python3.12/dist-packages"
 TARGET_DIR="$CONDA_PREFIX/lib/python3.12/site-packages"
-PACKAGES=("torch" "functorch" "triton" "tensorrt" "nvidia" "pytorch_triton" "cuda")
+PACKAGES=("torch" "functorch" "triton" "tensorrt" "nvidia" "pytorch_triton" "cuda" "flash_attn")
 
-# Copy (don't symlink) packages that requirements.txt pins to a different version
-# than the container ships, so pip can uninstall/downgrade them in place. A
-# symlink into the container's read-only dist-packages breaks pip's uninstall
-# with `OSError: ... No such file or directory: '<pkg>/__init__.py'`.
-# e.g. torchao (container 0.17.0 vs pinned <0.16.0),
-#      torch_c_dlpack_ext (container 0.1.5 vs pinned ==0.1.3).
-COPY_PACKAGES=("triton*" "torchao*" "torch_c_dlpack_ext*" "functorch*" "nvidia*" "mpi4py*" "nvidia-modelopt-core*" "nvidia-cuda-nvrtc*" "nvidia_cutlass_dsl*" "cuda*" "*dist-info")
+# Copy (don't symlink) packages pinned to a version the container doesn't ship, so
+# pip can uninstall in place -- symlinks into read-only dist-packages fail with
+# `OSError: ... '<pkg>/__init__.py'`. e.g. torchao 0.17.0 vs pinned <0.16.0.
+#
+# flash_attn is two packages sharing one dir: pinned flash-attn-4 (4.0.0b19) ships
+# only cute/* and lacks flash_attn_with_kvcache, which lives in container-only
+# flash_attn 2.7.4. Copying keeps it through pip's cute b11 -> b19 upgrade.
+COPY_PACKAGES=("triton*" "torchao*" "torch_c_dlpack_ext*" "functorch*" "nvidia*" "mpi4py*" "nvidia-modelopt-core*" "nvidia-cuda-nvrtc*" "nvidia_cutlass_dsl*" "cuda*" "flash_attn*" "*dist-info")
 should_copy_package() {
     local basename="$1"
 
@@ -24,14 +25,10 @@ should_copy_package() {
     return -1
 }
 
-# Skip these entirely (don't copy or link) — let `pip install -r requirements`
-# provide them. Needed when a package's importable module is NOT captured by the
-# PACKAGES prefixes but its *-dist-info IS (matched by `nvidia*`/`*dist-info`).
-# The stray dist-info makes pip think the requirement is satisfied and skip
-# installing it, leaving the module missing at import time.
-# e.g. nvidia_ml_py ships top-level `pynvml.py` (not under the `nvidia` prefix),
-#      so only its dist-info gets copied -> `ModuleNotFoundError: No module named
-#      'pynvml'`. It's a tiny pure-python pinned dep; pip installs it cleanly.
+# Skip entirely -- let `pip install -r requirements` provide them. Needed when the
+# importable module escapes the PACKAGES prefixes but its dist-info doesn't: the
+# stray dist-info satisfies pip, so it never installs the module.
+# e.g. nvidia_ml_py ships top-level pynvml.py -> `ModuleNotFoundError: 'pynvml'`.
 SKIP_PACKAGES=("nvidia_ml_py*" "nvidia-ml-py*")
 should_skip_package() {
     local basename="$1"
