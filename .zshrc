@@ -59,7 +59,7 @@ export CONDA_AUTO_ACTIVATE_BASE=false
 export TERM="xterm-256color"
 export GIT_SSL_NO_VERIFY=1
 export EDITOR="nvim"
-umask 002
+umask 022
 # On some clusters, max process is limited
 pids_max_limit="/sys/fs/cgroup/user.slice/user-$(id -u $(whoami)).slice/pids.max"
 if [[ -e $pids_max_limit ]] && [[ $(cat $pids_max_limit) != "max" ]]; then
