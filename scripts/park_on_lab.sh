@@ -111,8 +111,16 @@ start|ensure)
     ;;
 supervise)  # internal: the detached loop itself
     paths
+    # Node-local lock, held for this process's lifetime: two starts racing (tmux
+    # hook + a manual one) both passed the pidfile check before either wrote it,
+    # and the loser then spun 741 times on "remote port forwarding failed for
+    # listen port 2222" while overwriting the winner's pidfile. /tmp, not $HOME —
+    # lustre flock is not guaranteed, and one supervisor per host is the scope.
+    exec 9>"/tmp/park_on_lab_${HUB}_${PORT}.lock"
+    flock -n 9 || { echo "$(date -Is) another supervisor holds $HUB:$PORT here — exiting"; exit 0; }
     echo "$$ $SELF" >"$PIDFILE"
-    trap 'kill 0 2>/dev/null; rm -f "$PIDFILE"; exit 0' TERM INT
+    # Only drop the pidfile if it is still ours: a loser must not delete it.
+    trap 'kill 0 2>/dev/null; [ "$(rec_pid "$PIDFILE")" = "$$" ] && rm -f "$PIDFILE"; exit 0' TERM INT
     while :; do
         echo "$(date -Is) connecting -R ${PORT}:localhost:22 $HUB (supervisor $$ on $SELF)"
         ssh -N -o ExitOnForwardFailure=yes -o ServerAliveInterval=30 \
