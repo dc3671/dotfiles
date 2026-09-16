@@ -1,18 +1,30 @@
 #!/usr/bin/env bash
-# Park this host's sshd on <hub>:127.0.0.1:<port> and keep it parked, as a
-# detached background process (no tmux, no systemd --user: linger is denied on
-# these login nodes, so a user unit would die with the last login session).
+# Park this host's sshd on <hub>:127.0.0.1:<port> so the hub can dial back in.
+# The hub cannot reach the cluster (firewalled both ways), so the cluster side
+# owns the connection. One port per cluster: lyris 2122, hecate 2222, prenyx
+# 2322, bia 2422, poly 2522, ptyche 2622.
 #
-#   park_on_lab.sh start  -p 2222        # idempotent, safe from a tmux hook
+#   park_on_lab.sh start  -p 2222           # idempotent, safe from a tmux hook
 #   park_on_lab.sh start  -p 2222 --steal   # take the hub port from another node
 #   park_on_lab.sh status [--check]
 #   park_on_lab.sh stop   -p 2222
 #   park_on_lab.sh restart -p 2222
 #
+# Detached background process, not tmux and not systemd --user: `loginctl
+# enable-linger` is "Access denied" here so a user unit dies with the last login
+# session, and `crontab` is blocked for this user. A setsid orphan survives
+# logout because /etc/systemd/logind.conf leaves KillUserProcesses at its `no`
+# default. Nothing restarts it after a node reboot — that is the tmux hook's job
+# (lab-tunnel-boot.sh).
+#
 # $HOME is shared between a cluster's login nodes, so the pidfile records the
 # host too: "<pid> <host>". A record owned by a different login node is left
 # alone while the hub port is still LISTENING — otherwise two nodes fight over
-# the same forward and flap.
+# the same forward and flap. `status` only knows ports that have a pidfile, so a
+# hand-started loop squatting a port shows up nowhere: `pgrep -af park_on_lab`.
+#
+# Editing this file while a supervisor is running leaves lustre .nfs* stubs
+# behind (silly-rename): stop, edit, start.
 set -u
 export PATH=${PATH:-}:/usr/bin:/bin
 
