@@ -89,6 +89,7 @@ alias mkdir="mkdir -p"
 alias sa="sudo apt-get"
 alias sd="sudo dnf"
 alias salloc="SHELL=/bin/bash salloc"
+alias claude='claude --model "opus" --effort high'
 
 # Two miniforge installs, split by arch: arm64 = compute node/container,
 # x86 = login node. Wrong arch conda = ENOEXEC, then shell runs conda's python
