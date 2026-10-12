@@ -65,6 +65,10 @@ case "$row" in
     *)              log "skip: unparsed status for '$name': $row"; exit 0 ;;
 esac
 
+# The worker hands its env to every claude it spawns (claude-backend.js:307);
+# a model picked explicitly in the hub UI still overrides this default.
+export ANTHROPIC_MODEL=claude-opus-5-5
+
 log "restart $name ($reason) on $(hostname -s)"
 # --yes: migration prompts for confirmation otherwise, and there is no tty here.
 out=$("$CHW" restart --yes "$name" 2>&1); rc=$?
