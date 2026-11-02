@@ -23,6 +23,14 @@
 # the same forward and flap. `status` only knows ports that have a pidfile, so a
 # hand-started loop squatting a port shows up nowhere: `pgrep -af park_on_lab`.
 #
+# Node health = GSSAPI login to the node works, the hop mfa_switch_user.sh makes
+# after MFA. A node failing it never parks, releases a port it holds, and gets
+# its port stolen by the next `start` elsewhere (seen: login-hecate04 reimaged
+# with hecate03's host keys, IPA still holding its old ones, GSSAPI denied).
+#
+# The hub-side sshd pid is recorded on the hub (~/.tmp/tunnels/park_<port>.sshd)
+# so --steal kills exactly that connection; lab has no fuser/ss/lsof.
+#
 # Editing this file while a supervisor is running leaves lustre .nfs* stubs
 # behind (silly-rename): stop, edit, start.
 set -u
@@ -46,7 +54,9 @@ done
 paths() {
     [ -n "$PORT" ] || { echo "-p <port> required for '$CMD'" >&2; exit 2; }
     PIDFILE=$RUNDIR/park_${HUB}_${PORT}.pid
-    LOG=$RUNDIR/park_${HUB}_${PORT}.log
+    # Per host: two nodes appending to one lustre file interleave and clobber.
+    LOG=$RUNDIR/park_${HUB}_${PORT}.${SELF}.log
+    HUBREC=.tmp/tunnels/park_${PORT}.sshd     # relative to the hub's $HOME
     mkdir -p "$RUNDIR"
 }
 
@@ -61,8 +71,16 @@ alive() {  # local pid alive AND still our supervisor, not a recycled pid
 }
 
 hub_listening() {  # is the forward actually up on the hub right now?
-    timeout 10 ssh -o BatchMode=yes -o ConnectTimeout=6 "$HUB" \
+    timeout 10 ssh -n -o BatchMode=yes -o ConnectTimeout=6 "$HUB" \
         "timeout 5 bash -c 'cat </dev/null >/dev/tcp/127.0.0.1/$1'" 2>/dev/null
+}
+
+gss_ok() {  # can $1 be logged into over GSSAPI? No valid TGT here = cannot judge = yes
+    klist -s 2>/dev/null || return 0
+    timeout 20 ssh -n -F /dev/null -o BatchMode=yes -o ConnectTimeout=6 \
+        -o GSSAPIAuthentication=yes -o PreferredAuthentications=gssapi-with-mic \
+        -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o LogLevel=ERROR \
+        "$1" true 2>/dev/null
 }
 
 case "$CMD" in
@@ -72,28 +90,42 @@ start|ensure)
     if [ "$host" = "$SELF" ] && alive "$pid"; then
         echo "already parked: pid $pid on $SELF, $HUB:127.0.0.1:$PORT"; exit 0
     fi
+    if ! gss_ok "$(hostname)"; then
+        echo "GSSAPI login to $SELF itself fails — a tunnel here is useless, not parking" >&2; exit 1
+    fi
     if [ -n "$pid" ] && [ "$host" != "$SELF" ] && [ "$STEAL" = 0 ]; then
         if hub_listening "$PORT"; then
-            echo "port $PORT already served by $host (pid $pid); --steal to move it here"
-            exit 0
+            # Steal only on 3 straight failures: a KDC/DNS blip must not kick a
+            # healthy tunnel and its MFA master.
+            for i in 1 2 3; do
+                if gss_ok "$host"; then
+                    echo "port $PORT already served by $host (pid $pid); --steal to move it here"
+                    exit 0
+                fi
+                [ "$i" -lt 3 ] && sleep 5
+            done
+            echo "holder $host fails GSSAPI login 3x — stealing port $PORT"; STEAL=1
+        else
+            echo "record from $host is stale (hub port dead), taking over"
         fi
-        echo "record from $host is stale (hub port dead), taking over"
     fi
     # Preflight: hub must answer without a prompt, else the loop spins forever.
     # Retried — a single refusal is usually the hub's MaxStartups throttle after
     # a burst, and a boot hook that gives up on that leaves no tunnel at all.
     ok=0
     for _ in 1 2 3; do
-        timeout 10 ssh -o BatchMode=yes -o ConnectTimeout=6 "$HUB" true 2>/dev/null && { ok=1; break; }
+        timeout 10 ssh -n -o BatchMode=yes -o ConnectTimeout=6 "$HUB" true 2>/dev/null && { ok=1; break; }
         sleep 5
     done
     if [ "$ok" = 0 ]; then
         echo "hub '$HUB' unreachable with BatchMode after 3 tries — fix keys/ssh config first" >&2; exit 1
     fi
     if [ "$STEAL" = 1 ]; then
-        # Kill the hub-side holder; the losing node's supervisor backs off to its
-        # own retry loop instead of racing us.
-        ssh -o BatchMode=yes "$HUB" "fuser -k ${PORT}/tcp" >/dev/null 2>&1
+        # Kill the hub-side sshd holding the forward; its tunneled connections, the
+        # MFA master included, go with it. The old node's supervisor retries in 10s.
+        ssh -n -o BatchMode=yes "$HUB" "read p h <$HUBREC && grep -qa '^sshd' /proc/\$p/cmdline \
+            && kill \$p && echo \"killed hub sshd \$p (parked from \$h)\"" 2>/dev/null \
+            || echo "no live hub-side record for port $PORT — holder must be stopped by hand" >&2
         sleep 1
     fi
     [ -f "$LOG" ] && [ "$(stat -c%s "$LOG")" -gt 1048576 ] && : >"$LOG"
@@ -122,11 +154,31 @@ supervise)  # internal: the detached loop itself
     # Only drop the pidfile if it is still ours: a loser must not delete it.
     trap 'kill 0 2>/dev/null; [ "$(rec_pid "$PIDFILE")" = "$$" ] && rm -f "$PIDFILE"; exit 0' TERM INT
     while :; do
+        if ! gss_ok "$(hostname)"; then
+            echo "$(date -Is) GSSAPI login to self fails — not parking, recheck in 300s"
+            sleep 300; continue
+        fi
         echo "$(date -Is) connecting -R ${PORT}:localhost:22 $HUB (supervisor $$ on $SELF)"
-        ssh -N -o ExitOnForwardFailure=yes -o ServerAliveInterval=30 \
+        # A command instead of -N, to record the hub-side sshd ($PPID there) for
+        # --steal. The race loser exits on ExitOnForwardFailure before it runs.
+        ssh -T -a -x -o ExitOnForwardFailure=yes -o ServerAliveInterval=30 \
             -o ServerAliveCountMax=3 -o BatchMode=yes \
-            -R "${PORT}:localhost:22" "$HUB"
-        echo "$(date -Is) ssh exited rc=$? — retry in 10s"
+            -R "${PORT}:localhost:22" "$HUB" \
+            "mkdir -p ${HUBREC%/*} && echo \$PPID $SELF >$HUBREC && exec sleep infinity" </dev/null &
+        sp=$!
+        n=0
+        while kill -0 "$sp" 2>/dev/null; do   # health recheck every 300s while parked
+            sleep 10; n=$((n + 1))
+            # Still up after 10s = forward won. Reclaim the pidfile: a node that
+            # held the port meanwhile removes it on its own stop.
+            [ "$n" = 1 ] && echo "$$ $SELF" >"$PIDFILE"
+            if [ $((n % 30)) = 0 ] && ! gss_ok "$(hostname)"; then
+                echo "$(date -Is) GSSAPI login to self broke while parked — releasing the port"
+                kill "$sp" 2>/dev/null
+            fi
+        done
+        wait "$sp"; rc=$?
+        echo "$(date -Is) ssh exited rc=$rc — retry in 10s"
         sleep 10
     done
     ;;
