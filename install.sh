@@ -1,142 +1,78 @@
 #!/bin/bash
+# Link dotfiles into $HOME and fetch shell/tmux frameworks. Idempotent: existing
+# clones are kept, a real file in the way is moved to <file>.bkp.<epoch>.
+#
+#   ./install.sh                 # frameworks + links
+#   ./install.sh --link-only     # links only, no network (home-env-migration)
+#   ./install.sh --tmux-extras   # also fetch net-speed/sysstat (tmux/extras.conf)
+#
+# No chsh: LDAP accounts cannot change it; .bash_profile execs ~/zsh/bin/zsh.
+# nvim/node/zsh/fzf binaries are manual per-arch installs (see shell/common.sh);
+# nvim bootstraps lazy.nvim itself and pins plugins via nvim/lazy-lock.json.
 
-msg() {
-    printf '%b\n' "$1" >&2
-}
+set -u
+DOT=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
+LINK_ONLY=0
+TMUX_EXTRAS=0
+for a in "$@"; do
+    case $a in
+        --link-only) LINK_ONLY=1 ;;
+        --tmux-extras) TMUX_EXTRAS=1 ;;
+        *) echo "unknown option: $a" >&2; exit 2 ;;
+    esac
+done
 
-success() {
-    msg "\33[32m[✔]\33[0m ${1}${2}"
-}
+msg() { printf '%b\n' "$1" >&2; }
 
-error() {
-    msg "\33[31m[✘]\33[0m ${1}${2}"
-}
-
-program_exists() {
-    local ret='0'
-    command -v $1 >/dev/null 2>&1 || { local ret='1'; }
-
-    # fail on non-zero return value
-    if [ "$ret" -ne 0 ]; then
-        return 1
+# link SRC DST: DST -> $DOT/SRC
+link() {
+    local src=$DOT/$1 dst=$2
+    [ "$(readlink "$dst")" = "$src" ] && return
+    if [ -e "$dst" ] && [ ! -L "$dst" ]; then
+        mv "$dst" "$dst.bkp.$(date +%s)" && msg "[link] backed up $dst"
     fi
-
-    return 0
+    ln -sfn "$src" "$dst" && msg "[link] $dst -> $src"
 }
 
-program_must_exist() {
-    program_exists $1
-    # throw error on non-zero return value
-    if [ "$?" -ne 0 ]; then
-        error "You must have '$1' installed to continue."
-    fi
+# clone URL DIR [git clone args...]: skip when DIR exists
+clone() {
+    local url=$1 dir=$2
+    shift 2
+    [ -d "$dir" ] && return
+    git clone --depth=1 "$@" "$url" "$dir"
 }
 
-msg         ">>> Start checking basic requirement..."
-program_must_exist "nvim"
-program_must_exist "git"
-program_must_exist "zsh"
-program_must_exist "tmux"
-success     "Done."
+if [ $LINK_ONLY = 0 ]; then
+    for p in git zsh tmux make; do
+        command -v $p >/dev/null 2>&1 || msg "\33[31m[✘]\33[0m '$p' not found in PATH"
+    done
 
-# PS3='Please choose which version to be installed: '
-# options=("basic python version(without YouCompleteMe)" "python & C++ version(with YCM)" "python & frontend version(with YCM)" "full version")
-# select opt in "${options[@]}"
-# do
-#     case "$REPLY" in
-#         1)
-#             echo "let g:cfg_bundle_preset = 'nano'" >> .vimrc.before
-#             break
-#             ;;
-#         2)
-#             echo "let g:cfg_bundle_preset = 'cpp'" >> .vimrc.before
-#             break
-#             ;;
-#         3)
-#             echo "let g:cfg_bundle_preset = 'frontend'" >> .vimrc.before
-#             break
-#             ;;
-#         4)
-#             echo "let g:cfg_bundle_preset = 'full'" >> .vimrc.before
-#             break
-#             ;;
-#         *) echo "invalid option";;
-#     esac
-# done
+    msg ">>> zsh: oh-my-zsh + plugins + p10k"
+    clone https://github.com/ohmyzsh/ohmyzsh.git ~/.oh-my-zsh
+    clone https://github.com/zsh-users/zsh-autosuggestions ~/.oh-my-zsh/custom/plugins/zsh-autosuggestions
+    clone https://github.com/zsh-users/zsh-syntax-highlighting ~/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting
+    clone https://github.com/romkatv/powerlevel10k.git ~/.oh-my-zsh/custom/themes/powerlevel10k
 
-# zsh
-msg         "[zsh] Config zsh..."
-msg         "[zsh] Install oh-my-zsh..."
-git clone --depth=1 https://github.com/robbyrussell/oh-my-zsh.git ~/.oh-my-zsh
-git clone https://github.com/zsh-users/zsh-autosuggestions ~/.oh-my-zsh/custom/plugins/zsh-autosuggestions
-git clone https://github.com/zsh-users/zsh-syntax-highlighting ~/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting
-git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ~/.oh-my-zsh/custom/themes/powerlevel10k
-mv ~/.zshrc ~/.zshrc.bkp >/dev/null 2>&1
-ln -sf $PWD/.zshrc ~/.zshrc
+    msg ">>> bash: oh-my-bash + ble.sh"
+    clone https://github.com/ohmybash/oh-my-bash.git ~/.oh-my-bash
+    clone https://github.com/akinomyoga/ble.sh.git ~/ble.sh --recursive --shallow-submodules
+    [ -f ~/ble.sh/out/ble.sh ] || make -C ~/ble.sh
 
-TEST_CURRENT_SHELL=$(expr "$SHELL" : '.*/\(.*\)')
-if [ "$TEST_CURRENT_SHELL" != "zsh" ]; then
-    msg "[zsh] Prepare to change shell to zsh."
-    # If this platform provides a "chsh" command (not Cygwin), do it, man!
-    if hash chsh >/dev/null 2>&1; then
-        flag_chsh=1
-        msg "[zsh] Do you want to change your default shell to zsh? (password is needed) [y/n]"
-        read opt
-        case $opt in
-            y*|Y*|"") msg "[zsh] Changing the shell..." ;;
-            n*|N*) msg "[zsh] Shell change skipped."; flag_chsh=0 ;;
-            *) msg "[zsh] Invalid choice. Shell change skipped."; flag_chsh=0 ;;
-        esac
-
-        if [ "$flag_chsh" != 0 ]; then
-            if ! chsh $USER -s $(grep /zsh$ /etc/shells | tail -1); then
-                error "[zsh] chsh command unsuccessful. Change your default shell manually."
-            else
-                export SHELL="$zsh"
-                success "[zsh] Done. You may need to re-login or reopen terminal to see the effect"
-            fi
-        else
-            msg "[zsh] You can use 'chsh -s /bin/zsh' to set it as default manually."
-        fi
-    # Else, suggest the user do so manually.
-    else
-        error"[zsh] Cannot find chsh command!"
+    msg ">>> tmux: tpm + plugins"
+    clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
+    clone https://github.com/tmux-plugins/tmux-sensible ~/.tmux/plugins/tmux-sensible
+    clone https://github.com/tmux-plugins/tmux-resurrect ~/.tmux/plugins/tmux-resurrect
+    if [ $TMUX_EXTRAS = 1 ]; then
+        clone https://github.com/beeryardtech/tmux-net-speed.git ~/.tmux/plugins/tmux-net-speed
+        clone https://github.com/samoshkin/tmux-plugin-sysstat.git ~/.tmux/plugins/tmux-plugin-sysstat
     fi
 fi
 
-msg         "[bash] Config bash..."
-msg         "[bash] Install oh-my-bash..."
-git clone --depth=1 https://github.com/ohmybash/oh-my-bash.git ~/.oh-my-bash
-git clone --recursive --depth 1 --shallow-submodules https://github.com/akinomyoga/ble.sh.git ~/ble.sh
-make -C ~/ble.sh
-ln -sf $PWD/.blerc ~/.blerc
-mv ~/.bashrc ~/.bashrc.bkp >/dev/null 2>&1
-ln -sf $PWD/.bashrc ~/.bashrc
-echo '"\C-w": unix-filename-rubout' > ~/.inputrc
-
-# nvim
-msg         "[nvim] Config nvim..."
-msg         "[nvim] Install Lazy.nvim for nvim plugins management..."
-if [[ ! -d ~/.local/share/nvim/lazy/lazy.nvim ]]; then
-    git clone --depth=1 --filter=blob:none --branch=stable \
-        https://github.com/folke/lazy.nvim.git ~/.local/share/nvim/lazy/lazy.nvim
-fi
+msg ">>> links"
+for f in .zshrc .p10k.zsh .bashrc .bash_profile .blerc .inputrc .tmux.conf; do
+    link "$f" "$HOME/$f"
+done
 mkdir -p ~/.config
-ln -sf $PWD/nvim ~/.config
-success     "[nvim] Done."
+link nvim ~/.config/nvim
 
-# tmux
-msg         "[tmux] Config tmux..."
-mkdir -p ~/.tmux/plugins
-git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
-git clone https://github.com/tmux-plugins/tmux-sensible ~/.tmux/plugins/tmux-sensible
-git clone https://github.com/tmux-plugins/tmux-resurrect ~/.tmux/plugins/tmux-resurrect
-git clone https://github.com/beeryardtech/tmux-net-speed.git ~/.tmux/plugins/tmux-net-speed
-git clone https://github.com/samoshkin/tmux-plugin-sysstat.git ~/.tmux/plugins/tmux-plugin-sysstat
-mv ~/.tmux.conf ~/.tmux.conf.bkp >/dev/null 2>&1
-ln -sf $PWD/.tmux.conf ~/.tmux.conf
-success     "[tmux] Done."
-
-msg         "\nThanks for using my dotfiles."
-msg         "© `date +%Y` https://github.com/dc3671/dotfiles"
-exec zsh -l
+msg "\33[32m[✔]\33[0m done; open a new shell to load it"
