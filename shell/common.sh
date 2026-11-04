@@ -138,23 +138,35 @@ if { _my_shell || [ -n "${CONDA_ENV:-}" ]; } && [ -x "$__mf_root/bin/conda" ]; t
     if __mamba_setup="$("$MAMBA_EXE" shell hook --shell "${ZSH_VERSION:+zsh}${BASH_VERSION:+bash}" \
             --root-prefix "$MAMBA_ROOT_PREFIX" 2>/dev/null)"; then
         eval "$__mamba_setup"
-        _act=mamba
     else
         alias mamba="$MAMBA_EXE"
-        _act=conda
     fi
     unset __mamba_setup
+
+    # mamba resolves symlinks, but CONDA_PREFIX must stay under ~/scratch: the
+    # lustre path behind it differs per cluster. Rewrite its script back.
+    _activate() {
+        if [ "${CONDA_PREFIX:-}" = "$__mf_root/envs/$1" ]; then
+            _prepend PATH "$CONDA_PREFIX/bin"   # nested shell: already active
+            return
+        fi
+        local real script
+        real=$(cd "$__mf_root" && pwd -P) &&
+            script=$("$MAMBA_EXE" shell activate -s "${ZSH_VERSION:+zsh}${BASH_VERSION:+bash}" -n "$1") ||
+            { conda activate "$1"; return; }
+        eval "${script//$real/$__mf_root}"
+    }
 
     if [ "${CONDA_ENV:-}" = "null" ]; then
         # opt-out: keep container system trtllm (/usr/local), no conda. Needed for
         # login shells in release images -- `bash -l worker.sh`, `srun --pty bash -l`.
         :
     elif [ -n "${CONDA_ENV:-}" ]; then
-        $_act activate "$CONDA_ENV"
+        _activate "$CONDA_ENV"
     elif _my_shell; then
         # default env, my shells only. batch/pyxis must name CONDA_ENV.
-        $_act activate llm
+        _activate llm
     fi
-    unset _act
+    unset -f _activate
 fi
 unset __mf_root _arch
