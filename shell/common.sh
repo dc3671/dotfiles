@@ -20,6 +20,42 @@ _prepend() {
     eval "export $var=\"\$pre\${pre:+\${cur:+:}}\$cur\""
 }
 
+# _drop VAR GLOB...: remove entries of VAR matching any GLOB.
+_drop() {
+    local var=$1 rest e out= g keep
+    shift
+    eval "rest=\${$var:-}"
+    while [ -n "$rest" ]; do
+        e=${rest%%:*}
+        case $rest in *:*) rest=${rest#*:} ;; *) rest= ;; esac
+        keep=1
+        for g in "$@"; do eval "case \$e in $g) keep=0 ;; esac"; done
+        [ $keep = 1 ] && out="${out:+$out:}$e"
+    done
+    if [ -n "$out" ]; then eval "export $var=\"\$out\""; else unset "$var"; fi
+}
+
+# sbatch/srun export the x86 login node's env into aarch64 jobs (--export=ALL):
+# drop the other arch's tools, libs and conda env so they cannot shadow ours.
+if [ "$_arch" = aarch64 ]; then
+    _foreign_mf=miniforge3_x86
+    _drop PATH '*/miniforge3_x86/*' "$HOME/neovim/bin" "$HOME/node/bin" "$HOME/zsh/bin" \
+        "$HOME/.local/share/nvim/lazy/fzf/bin"
+    _drop LD_LIBRARY_PATH '*/x86_64-linux-gnu'
+else
+    _foreign_mf=miniforge3
+    _drop PATH '*/miniforge3/*' "$HOME/*-aarch64/bin" "$HOME/fzf/bin"
+    _drop LD_LIBRARY_PATH '*/aarch64-linux-gnu'
+fi
+case "${CONDA_PREFIX:-}" in
+    */$_foreign_mf|*/$_foreign_mf/*)
+        unset CONDA_PREFIX CONDA_SHLVL CONDA_DEFAULT_ENV CONDA_PROMPT_MODIFIER \
+            CONDA_EXE CONDA_PYTHON_EXE _CE_CONDA _CE_M MAMBA_EXE MAMBA_ROOT_PREFIX
+        for _i in 1 2 3 4 5 6 7 8 9; do unset CONDA_PREFIX_$_i; done
+        unset _i ;;
+esac
+unset _foreign_mf
+
 # Per-arch tool installs in $HOME. x86 fzf comes from nvim's lazy dir (FZF_BASE).
 if [ "$_arch" = aarch64 ]; then
     _prepend PATH "$HOME/neovim-aarch64/bin" "$HOME/node-aarch64/bin" "$HOME/fzf/bin"

@@ -39,10 +39,9 @@ _is_on_compute_or_container() {
     # compute node's socket -- measured: auth_sock -> ssh-agent.<compute-node>.sock,
     # every login-node shell then got "Error connecting to agent: Connection refused".
     case "$(tr '\0' ' ' </proc/$PPID/cmdline 2>/dev/null)" in *slurmstepd*) return 0 ;; esac
-    # Compute nodes run slurmd. ps/pgrep scan all of /proc: ~0.2s each on a login
-    # node with ~5k processes, so try the pidfile (SlurmdPidFile) first and skip
-    # pgrep on hosts named *login*.
-    { [ -e /run/slurmd.pid ] || [ -e /var/run/slurmd.pid ]; } && return 0
+    # Compute nodes run slurmd. pgrep scans all of /proc (~0.2s on a login node
+    # with ~5k processes), so skip it on hosts named *login*. /run/slurmd.pid is
+    # not visible from inside a lyris job, so it cannot replace pgrep.
     case "${HOSTNAME:-$HOST}" in *login*) return 1 ;; esac
     pgrep -x slurmd &>/dev/null && return 0
     return 1
