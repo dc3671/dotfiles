@@ -166,7 +166,7 @@ if { _my_shell || [ -n "${CONDA_ENV:-}" ]; } && [ -x "$__mf_root/bin/conda" ]; t
         :
     elif [ -n "${CONDA_ENV:-}" ]; then
         _activate "$CONDA_ENV"
-    elif _my_shell; then
+    elif _my_shell && [ -d "$__mf_root/envs/llm" ]; then
         # default env, my shells only. batch/pyxis must name CONDA_ENV.
         _activate llm
     fi
