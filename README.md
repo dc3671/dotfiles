@@ -1,6 +1,6 @@
 # Dotfiles
 
-Shell, tmux, and nvim config for NVIDIA Slurm clusters (x86 login nodes, aarch64 GB200/GB300 compute nodes, pyxis containers). `$HOME` is portable across clusters; `~/scratch` is cluster-local.
+Shell, tmux, and nvim config for NVIDIA Slurm clusters (Lyris: x86 login + aarch64 compute; MARS: aarch64 login + compute; pyxis containers). `$HOME` is portable across clusters; `~/scratch` is cluster-local.
 
 ## Install
 
@@ -13,18 +13,18 @@ git clone git@github.com:dc3671/dotfiles.git ~/dotfiles
 
 Tool binaries are not installed by the script. Unpack them per arch into `$HOME`:
 
-| Tool | x86_64 (login) | aarch64 (compute) |
+| Tool | x86_64 | aarch64 |
 |---|---|---|
 | nvim | `~/neovim/bin` | `~/neovim-aarch64/bin` |
 | node | `~/node/bin` | `~/node-aarch64/bin` |
-| zsh | `~/zsh/bin` | — (bash) |
+| zsh | `~/zsh/bin` | `~/zsh-aarch64/bin` (MARS login; optional) |
 | fzf | nvim lazy dir | `~/fzf/bin` |
 
 ## Layout
 
 | Path | Role |
 |---|---|
-| `.bash_profile` | x86 interactive login: exec `~/zsh/bin/zsh` (`NOZSH=1` keeps bash); aarch64: source `.bashrc` |
+| `.bash_profile` | interactive login outside a job/container: exec this arch's zsh if installed (`NOZSH=1` keeps bash); else source `.bashrc` |
 | `.zshrc` / `.bashrc` | framework only (oh-my-zsh + p10k / oh-my-bash + ble.sh), then `shell/common.sh` |
 | `shell/common.sh` | env, arch-aware PATH, aliases, ulimit, conda (`conda.sh` + `mamba activate`) |
 | `.tmux.conf` | prefix `C-x`; boots `scripts/claude-hub-boot.sh` and `scripts/lab-tunnel-boot.sh` |

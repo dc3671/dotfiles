@@ -4,7 +4,7 @@
 # Inherited PATH / LD_LIBRARY_PATH are kept, not reset: a pyxis container sources
 # this file and its image-provided entries (torch/lib, hpcx) must survive.
 
-_arch=${HOSTTYPE:-${CPUTYPE:-$(uname -m)}}   # x86_64 = login node, aarch64 = GB200/GB300 compute
+_arch=${HOSTTYPE:-${CPUTYPE:-$(uname -m)}}   # lyris: x86 login, aarch64 compute; MARS: aarch64 both
 
 # _prepend VAR DIR...: existing DIRs move to the front of VAR, in argument order.
 _prepend() {
@@ -58,14 +58,15 @@ unset _foreign_mf
 
 # Per-arch tool installs in $HOME. x86 fzf comes from nvim's lazy dir (FZF_BASE).
 if [ "$_arch" = aarch64 ]; then
-    _prepend PATH "$HOME/neovim-aarch64/bin" "$HOME/node-aarch64/bin" "$HOME/fzf/bin"
+    _prepend PATH "$HOME/neovim-aarch64/bin" "$HOME/node-aarch64/bin" "$HOME/zsh-aarch64/bin" \
+        "$HOME/fzf/bin"
 else
     _prepend PATH "$HOME/neovim/bin" "$HOME/node/bin" "$HOME/zsh/bin"
 fi
 _prepend PATH \
     /usr/local/cmake/bin /usr/local/nvidia/bin /usr/local/cuda/bin /usr/local/mpi/bin \
     /usr/local/ucx/bin /opt/amazon/efa/bin /opt/tensorrt/bin
-# ~/.local is cluster-local scratch holding x86 binaries: lowest priority.
+# ~/.local is cluster-local scratch, built for that cluster's login arch: lowest priority.
 case ":$PATH:" in *":$HOME/.local/bin:"*) ;; *) export PATH="$PATH:$HOME/.local/bin" ;; esac
 
 _prepend LD_LIBRARY_PATH \
@@ -105,6 +106,8 @@ ulimit -n "$(ulimit -Hn)" 2>/dev/null
 unset _pids_max
 
 alias vi=nvim
+alias cp="cp -r"
+alias rm="rm -r"
 alias mkdir="mkdir -p"
 alias ll="ls -lh"
 alias salloc="SHELL=/bin/bash salloc"

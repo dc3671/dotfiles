@@ -1,14 +1,17 @@
-# x86 login node: hand interactive terminals to the user-built zsh (LDAP accounts
-# cannot chsh). NOZSH=1 keeps bash. aarch64 compute/container: stay in bash.
-if [[ $- == *i* ]] && [ "$(uname -m)" = "x86_64" ] && [ -z "${NOZSH}" ] &&
-    [[ $TERM == xterm* || $TERM == screen* || $TERM == tmux* ]] && [ -x "$HOME/zsh/bin/zsh" ]
+# Interactive login outside a Slurm job/container: hand over to the user-built
+# zsh for this arch (LDAP accounts cannot chsh). Lyris login is x86 and MARS
+# login is aarch64, so arch alone cannot tell login from compute. NOZSH=1 keeps bash.
+case $(uname -m) in aarch64) __zsh=$HOME/zsh-aarch64/bin/zsh ;; *) __zsh=$HOME/zsh/bin/zsh ;; esac
+if [[ $- == *i* ]] && [ -z "${NOZSH}" ] && [ -z "${SLURM_JOB_ID}" ] &&
+    [ -z "${ENROOT_PID}${PYXIS_CONTAINER_NAME}${container}" ] &&
+    [[ $TERM == xterm* || $TERM == screen* || $TERM == tmux* ]] && [ -x "$__zsh" ]
 then
-    export SHELL=$HOME/zsh/bin/zsh
+    export SHELL=$__zsh
     if [[ -o login ]]; then
-        exec "$HOME/zsh/bin/zsh" -l
+        exec "$__zsh" -l
     else
-        exec "$HOME/zsh/bin/zsh"
+        exec "$__zsh"
     fi
-elif [ "$(uname -m)" = "aarch64" ] && [ -e "${HOME}/.bashrc" ]; then
-    source "${HOME}/.bashrc"
 fi
+unset __zsh
+[ -e "${HOME}/.bashrc" ] && source "${HOME}/.bashrc"

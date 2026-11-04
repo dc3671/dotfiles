@@ -11,7 +11,6 @@ export _ble_contrib_fzf_base=~/.local/share/nvim/lazy/fzf
 
 __dotfiles="$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")"
 source "$__dotfiles/shell/common.sh"
-unalias cp 2>/dev/null   # omb general aliases: cp -iv
 
 # agent socket juggling spawns ssh-add/ssh-agent + rewrites ~/.ssh/auth_sock.
 # my shells only; no agent churn per rsync connection.
