@@ -30,16 +30,21 @@
 
 _is_on_compute_or_container() {
     [ -n "$SLURM_JOB_ID" ] && return 0
+    { [ -n "$ENROOT_PID" ] || [ -n "$PYXIS_CONTAINER_NAME" ] || [ -n "$container" ]; } && return 0
+    { [ -f /.dockerenv ] || [ -f /run/.containerenv ]; } && return 0
     # Slurm harvests the user environment BEFORE SLURM_JOB_ID exists, by running
     #   su - <user> -c '...; /usr/sbin/slurmstepd getenv; ...'
     # ON THE COMPUTE NODE. That is a login shell, so without these two checks the
     # login-node branch runs there and relinks the NFS-shared ~/.ssh/auth_sock at a
     # compute node's socket -- measured: auth_sock -> ssh-agent.<compute-node>.sock,
     # every login-node shell then got "Error connecting to agent: Connection refused".
-    case "$(ps -o args= -p $PPID 2>/dev/null)" in *slurmstepd*) return 0 ;; esac
-    pgrep -x slurmd &>/dev/null && return 0   # compute nodes run slurmd; login nodes do not
-    { [ -n "$ENROOT_PID" ] || [ -n "$PYXIS_CONTAINER_NAME" ] || [ -n "$container" ]; } && return 0
-    { [ -f /.dockerenv ] || [ -f /run/.containerenv ]; } && return 0
+    case "$(tr '\0' ' ' </proc/$PPID/cmdline 2>/dev/null)" in *slurmstepd*) return 0 ;; esac
+    # Compute nodes run slurmd. ps/pgrep scan all of /proc: ~0.2s each on a login
+    # node with ~5k processes, so try the pidfile (SlurmdPidFile) first and skip
+    # pgrep on hosts named *login*.
+    { [ -e /run/slurmd.pid ] || [ -e /var/run/slurmd.pid ]; } && return 0
+    case "${HOSTNAME:-$HOST}" in *login*) return 1 ;; esac
+    pgrep -x slurmd &>/dev/null && return 0
     return 1
 }
 
