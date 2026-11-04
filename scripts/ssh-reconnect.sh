@@ -40,9 +40,9 @@ _is_on_compute_or_container() {
     # every login-node shell then got "Error connecting to agent: Connection refused".
     case "$(tr '\0' ' ' </proc/$PPID/cmdline 2>/dev/null)" in *slurmstepd*) return 0 ;; esac
     # Compute nodes run slurmd. pgrep scans all of /proc (~0.2s on a login node
-    # with ~5k processes), so skip it on hosts named *login*. /run/slurmd.pid is
-    # not visible from inside a lyris job, so it cannot replace pgrep.
-    case "${HOSTNAME:-$HOST}" in *login*) return 1 ;; esac
+    # with ~5k processes), so skip it on login hosts (lyris login-*, MARS *-vscode-*).
+    # /run/slurmd.pid is not visible from inside a lyris job, so it cannot replace pgrep.
+    case "${HOSTNAME:-$HOST}" in *login*|*vscode*) return 1 ;; esac
     pgrep -x slurmd &>/dev/null && return 0
     return 1
 }
