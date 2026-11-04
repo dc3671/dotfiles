@@ -64,22 +64,6 @@ success     "Done."
 #     esac
 # done
 
-# vim
-#msg         "[vim] Config vim..."
-#msg         "[vim] Install Plug for vim plugins management..."
-#git clone --depth=1 https://github.com/junegunn/vim-plug.git $PWD/vim-plug
-#mkdir -p ~/.vim/autoload
-#cp $PWD/vim-plug/plug.vim ~/.vim/autoload/plug.vim
-#rm -rf $PWD/vim-plug
-##curl -fLo ~/.vim/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim >/dev/null 2>&1
-#mv ~/.vimrc ~/.vimrc.bkp > /dev/null 2>&1
-#mv ~/.vimrc.before ~/.vimrc.before.bkp > /dev/null 2>&1
-#mv ~/.vimrc.bundles ~/.vimrc.bundles.bkp > /dev/null 2>&1
-#ln -s $PWD/.vimrc ~/.vimrc
-#ln -s $PWD/.vimrc.before ~/.vimrc.before
-#ln -s $PWD/.vimrc.bundles ~/.vimrc.bundles
-#vim -u "$PWD/.vimrc.bundles" "+set nomore" "+PlugInstall!" "+PlugClean" "+qall"
-
 # zsh
 msg         "[zsh] Config zsh..."
 msg         "[zsh] Install oh-my-zsh..."
@@ -139,28 +123,7 @@ if [[ ! -d ~/.local/share/nvim/lazy/lazy.nvim ]]; then
 fi
 mkdir -p ~/.config
 ln -sf $PWD/nvim ~/.config
-# nvim -u "$PWD/init.before.vim" --headless -c 'autocmd User PackerComplete quitall' -c 'PackerSync'
 success     "[nvim] Done."
-
-# eslint
-#mv ~/.eslintrc.js ~/.eslintrc.js.bkp >/dev/null 2>&1
-#ln -s $PWD/.eslintrc.js ~/.eslintrc.js
-
-# ternjs
-#mv ~/.tern-config ~/.tern-config.bkp >/dev/null 2>&1
-#ln -s $PWD/.tern-config ~/.tern-config
-
-# pylint
-#mv ~/.pylintrc ~/.pylintrc.bkp >/dev/null 2>&1
-#ln -s $PWD/.pylintrc ~/.pylintrc
-
-# yapf
-#mv ~/.style.yapf ~/.style.yapf.bkp >/dev/null 2>&1
-#ln -s $PWD/.style.yapf ~/.style.yapf
-
-# gdbinit
-mv ~/.gdbinit ~/.gdbinit.bkp >/dev/null 2>&1
-ln -sf $PWD/.gdbinit ~/.gdbinit
 
 # tmux
 msg         "[tmux] Config tmux..."

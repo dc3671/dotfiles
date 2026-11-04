@@ -1,2 +1,0 @@
-" use bundle_preset from 'full', 'cpp', 'frontend', 'nano' to get needed plugins
-" eg: let g:cfg_bundle_preset = 'full'
