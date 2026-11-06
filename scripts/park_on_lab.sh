@@ -10,6 +10,7 @@
 #   park_on_lab.sh status  [--check]
 #   park_on_lab.sh stop    -p 2222                    # this node only; sets the off-mark
 #   park_on_lab.sh restart -p 2222 [--peers "h1 h2"]
+#   park_on_lab.sh krb-tidy                           # prune KCM, fix primary, renew
 #
 # Detached background process, not tmux and not systemd --user: `loginctl
 # enable-linger` is "Access denied" here so a user unit dies with the last login
@@ -24,9 +25,14 @@
 # on 11-05, 02 up since 10-14), so some standby is normally alive.
 #
 # --peers: each supervisor runs `ensure` on every peer over GSSAPI every 10 min,
-# so a rebooted login node rejoins without a login. Delegates the TGT, which KCM
-# keeps across reboots and auto-renews, but only up to renew-until: 7 days after
-# the MFA login that issued it. `stop` sets an off-mark that `ensure` honours.
+# so a rebooted login node rejoins without a login. The TGT is delegated only to
+# a peer without a valid one, and lasts until renew-until: 7 days after the MFA
+# login that issued it. `stop` sets an off-mark that `ensure` honours.
+#
+# KCM caps a uid at 64 caches and each delegated login adds one and makes it the
+# primary. At the cap every write fails (`Internal credentials cache error`), so
+# renewals stop and the primary can be left empty (hecate 2026-11-06: delegating
+# every 10 min filled 3 nodes in ~5h). krb_tidy runs every 10 min to prevent it.
 #
 # $HOME is shared between login nodes: park_<hub>_<port>.pid names the holder
 # ("<pid> <host>"), park_<hub>_<port>.<host>.node each node's supervisor. One
@@ -125,19 +131,40 @@ gss_ok() {  # can $1 be logged into over GSSAPI? No valid TGT here = cannot judg
     return 1
 }
 
+krb_tidy() {  # keep only a valid primary KCM cache, renewed; sessions don't pin KRB5CCNAME
+    local c p
+    if ! klist -s 2>/dev/null; then  # kswitch also fails at the cap: prune expired first
+        for c in $(klist -l 2>/dev/null | awk '/KCM:/ && /\(Expired\)/ {print $2}'); do
+            kdestroy -c "$c" 2>/dev/null; done
+        c=$(klist -l 2>/dev/null | awk '/KCM:/ && !/\(Expired\)/ {print $2; exit}')
+        [ -n "$c" ] && kswitch -c "$c" 2>/dev/null
+    fi
+    klist -s 2>/dev/null || return 0  # nothing valid: leave it for a login to fix
+    p=$(klist 2>/dev/null | sed -n 's/^Ticket cache: //p')
+    for c in $(klist -l 2>/dev/null | awk '/KCM:/ {print $2}'); do
+        [ "$c" = "$p" ] || kdestroy -c "$c" 2>/dev/null; done
+    # Only after the prune: at the cap, kinit -R empties the cache and then fails to save.
+    kinit -R 2>/dev/null || echo "$(date -Is) krb_tidy: kinit -R failed"
+}
+
 seed_peers() {  # `ensure` on each peer; quiet when it already runs or is off
-    local h out
+    local h out rc d
     for h in $PEERS; do
         [ "$h" = "$SELF" ] && continue
         # Delegation lands the TGT in the peer's KCM, which outlives the session
-        # (GSSAPICleanupCredentials no): a seeded peer can seed in turn.
-        out=$(timeout 60 ssh -n -F /dev/null -o BatchMode=yes -o ConnectTimeout=6 \
-            -o GSSAPIAuthentication=yes -o PreferredAuthentications=gssapi-with-mic \
-            -o GSSAPIDelegateCredentials=yes \
-            -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o LogLevel=ERROR \
-            "$h" "$SCRIPT ensure -p $PORT -H $HUB --peers '$PEERS'" 2>&1)
+        # (GSSAPICleanupCredentials no): a seeded peer can seed in turn. rc 42 =
+        # the peer has no valid TGT, retry with delegation.
+        for d in no yes; do
+            out=$(timeout 60 ssh -n -F /dev/null -o BatchMode=yes -o ConnectTimeout=6 \
+                -o GSSAPIAuthentication=yes -o PreferredAuthentications=gssapi-with-mic \
+                -o GSSAPIDelegateCredentials=$d \
+                -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o LogLevel=ERROR \
+                "$h" "[ $d = yes ] || klist -s || exit 42; $SCRIPT krb-tidy; $SCRIPT ensure -p $PORT -H $HUB --peers '$PEERS'" 2>&1)
+            rc=$?
+            [ "$rc" = 42 ] || break
+        done
         case "$out" in *"already running"*|*"off on"*) ;;
-            *) echo "$(date -Is) seed $h: ${out//$'\n'/ | }" ;; esac
+            *) echo "$(date -Is) seed $h (delegate=$d rc=$rc): ${out//$'\n'/ | }" ;; esac
     done
 }
 
@@ -195,9 +222,8 @@ supervise)  # internal: the detached loop itself
     # Only drop files that are still ours: a successor may have rewritten them.
     trap 'kill 0 2>/dev/null; [ "$(rec_pid "$PIDFILE")" = "$$" ] && rm -f "$PIDFILE"
           [ "$(cat "$NODEFILE" 2>/dev/null)" = "$$" ] && rm -f "$NODEFILE"; exit 0' TERM INT
-    if [ -n "$PEERS" ]; then
-        ( sleep 30; while kill -0 $$ 2>/dev/null; do seed_peers; sleep 600; done ) &
-    fi
+    ( sleep 30; while kill -0 $$ 2>/dev/null; do
+        krb_tidy; [ -n "$PEERS" ] && seed_peers; sleep 600; done ) &
     misses=0; gfails=0; n=0; role=""
     while :; do
         take=0
@@ -275,6 +301,8 @@ stop)
     [ "$(rec_host "$PIDFILE")" = "$SELF" ] && rm -f "$PIDFILE"
     echo "off-mark set: peers and the tmux hook leave $SELF alone until 'start'"
     ;;
+krb-tidy)
+    krb_tidy; exit 0 ;;
 restart)
     "$SCRIPT" stop -p "$PORT" -H "$HUB"; exec "$SCRIPT" start -p "$PORT" -H "$HUB" --peers "$PEERS" ;;
 status)
@@ -309,5 +337,5 @@ status)
     exit 0
     ;;
 *)
-    echo "usage: $0 {start|ensure|stop|restart|status} -p <port> [-H <hub>] [--peers \"h1 h2\"] [--check] [--steal]" >&2; exit 2 ;;
+    echo "usage: $0 {start|ensure|stop|restart|status|krb-tidy} -p <port> [-H <hub>] [--peers \"h1 h2\"] [--check] [--steal]" >&2; exit 2 ;;
 esac
