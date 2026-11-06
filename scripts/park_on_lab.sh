@@ -4,48 +4,62 @@
 # owns the connection. One port per cluster: lyris 2122, hecate 2222, prenyx
 # 2322, bia 2422, poly 2522, ptyche 2622.
 #
-#   park_on_lab.sh start  -p 2222           # idempotent, safe from a tmux hook
-#   park_on_lab.sh start  -p 2222 --steal   # take the hub port from another node
-#   park_on_lab.sh status [--check]
-#   park_on_lab.sh stop   -p 2222
-#   park_on_lab.sh restart -p 2222
+#   park_on_lab.sh start   -p 2222 [--peers "h1 h2"]  # by hand; clears stop's off-mark
+#   park_on_lab.sh ensure  -p 2222 [--peers "h1 h2"]  # tmux hook, peer seed; honours it
+#   park_on_lab.sh start   -p 2222 --steal            # take the hub port from another node
+#   park_on_lab.sh status  [--check]
+#   park_on_lab.sh stop    -p 2222                    # this node only; sets the off-mark
+#   park_on_lab.sh restart -p 2222 [--peers "h1 h2"]
 #
 # Detached background process, not tmux and not systemd --user: `loginctl
 # enable-linger` is "Access denied" here so a user unit dies with the last login
 # session, and `crontab` is blocked for this user. A setsid orphan survives
 # logout because /etc/systemd/logind.conf leaves KillUserProcesses at its `no`
-# default. Nothing restarts it after a node reboot — that is the tmux hook's job
-# (lab-tunnel-boot.sh).
+# default. A reboot kills it; a peer (--peers) or the tmux hook brings it back.
 #
-# $HOME is shared between a cluster's login nodes, so the pidfile records the
-# host too: "<pid> <host>". A record owned by a different login node is left
-# alone while the hub port is still LISTENING — otherwise two nodes fight over
-# the same forward and flap. `status` only knows ports that have a pidfile, so a
-# hand-started loop squatting a port shows up nowhere: `pgrep -af park_on_lab`.
+# Every login node runs one supervisor: one holds the port, the rest stand by.
+# A standby takes over when the forward stops answering with an sshd banner: at
+# once if the hub listener is gone, after 3 misses 60s apart if it lingers (holder
+# died hard). Login nodes reboot one at a time (hecate 2026-11: 04 on 11-04, 03
+# on 11-05, 02 up since 10-14), so some standby is normally alive.
+#
+# --peers: each supervisor runs `ensure` on every peer over GSSAPI every 10 min,
+# so a rebooted login node rejoins without a login. Delegates the TGT, which KCM
+# keeps across reboots and auto-renews, but only up to renew-until: 7 days after
+# the MFA login that issued it. `stop` sets an off-mark that `ensure` honours.
+#
+# $HOME is shared between login nodes: park_<hub>_<port>.pid names the holder
+# ("<pid> <host>"), park_<hub>_<port>.<host>.node each node's supervisor. One
+# supervisor per node: supervise holds a per-host flock here (lustre mounted with
+# `flock`), start tests it. Never /tmp: pam_namespace gives each
+# ssh session its own, so a /tmp lock let peer seeds stack 133 supervisors on 3
+# nodes in 4 min (2026-11-05). A hard-rebooted node's lock lingers until lustre
+# evicts it; the next reseed retries.
 #
 # Node health = GSSAPI login to the node works, the hop mfa_switch_user.sh makes
-# after MFA. Checked only before parking (3 tries); a node failing it never parks
-# and gets its port stolen by the next `start` elsewhere (seen: login-hecate04
-# reimaged with hecate03's host keys, IPA still holding its old ones). Not checked
-# while parked: single probes fail transiently (8 releases in 13h on hecate03),
-# and each release kills the MFA master riding the tunnel.
+# after MFA. A node failing it on itself never parks (seen: login-hecate04
+# reimaged with hecate03's host keys, IPA still holding its old ones); a standby
+# that sees the holder fail it 2 rounds running steals the port. Single probes
+# fail transiently (8 releases in 13h on hecate03): never act on one.
 #
 # The hub-side sshd pid is recorded on the hub (~/.tmp/tunnels/park_<port>.sshd)
-# so --steal kills exactly that connection; lab has no fuser/ss/lsof.
+# so a steal kills exactly that connection; lab has no fuser/ss/lsof.
 #
-# Editing this file while a supervisor is running leaves lustre .nfs* stubs
-# behind (silly-rename): stop, edit, start.
+# Never edit this file in place while supervisors run (bash reads it lazily):
+# write a new file and mv it over; the old inode lingers as an .nfs* stub.
 set -u
 export PATH=${PATH:-}:/usr/bin:/bin
 
-RUNDIR=$HOME/.tmp/claude/tunnels
-HUB=lab; PORT=""; CHECK=0; STEAL=0
+SCRIPT=$(readlink -f "$0")
+RUNDIR=$HOME/.tmp/tunnels
+HUB=lab; PORT=""; CHECK=0; STEAL=0; PEERS=""
 SELF=$(hostname -s)
 CMD=${1:-status}; [ $# -gt 0 ] && shift
 while [ $# -gt 0 ]; do
     case "$1" in
         -p|--port) PORT=$2; shift 2 ;;
         -H|--hub)  HUB=$2; shift 2 ;;
+        --peers)   PEERS=$2; shift 2 ;;
         --check)   CHECK=1; shift ;;
         --steal)   STEAL=1; shift ;;
         -h|--help) sed -n '2,13p' "$0"; exit 0 ;;
@@ -55,7 +69,10 @@ done
 
 paths() {
     [ -n "$PORT" ] || { echo "-p <port> required for '$CMD'" >&2; exit 2; }
-    PIDFILE=$RUNDIR/park_${HUB}_${PORT}.pid
+    PIDFILE=$RUNDIR/park_${HUB}_${PORT}.pid            # holder: "<pid> <host>"
+    NODEFILE=$RUNDIR/park_${HUB}_${PORT}.${SELF}.node  # this node's supervisor pid
+    OFFMARK=$RUNDIR/park_${HUB}_${PORT}.${SELF}.off
+    LOCK=$RUNDIR/park_${HUB}_${PORT}.${SELF}.lock
     # Per host: two nodes appending to one lustre file interleave and clobber.
     LOG=$RUNDIR/park_${HUB}_${PORT}.${SELF}.log
     HUBREC=.tmp/tunnels/park_${PORT}.sshd     # relative to the hub's $HOME
@@ -72,9 +89,25 @@ alive() {  # local pid alive AND still our supervisor, not a recycled pid
         grep -qa "park_on_lab" "/proc/$pid/cmdline" 2>/dev/null
 }
 
+running_here() { ! flock -n "$LOCK" true 2>/dev/null; }  # 5ms; pgrep -f scans ~4k login-node procs, ~1s
+
 hub_listening() {  # is the forward actually up on the hub right now?
     timeout 10 ssh -n -o BatchMode=yes -o ConnectTimeout=6 "$HUB" \
         "timeout 5 bash -c 'cat </dev/null >/dev/tcp/127.0.0.1/$1'" 2>/dev/null
+}
+
+hub_state() {  # 0 sshd banner through the forward, 1 listener but no banner, 2 hub unreachable, 3 no listener
+    local out
+    out=$(timeout 20 ssh -n -o BatchMode=yes -o ConnectTimeout=6 "$HUB" \
+        "printf ok:; timeout 8 bash -c 'exec 3<>/dev/tcp/127.0.0.1/$PORT || { printf closed; exit; }; head -c 4 <&3'" 2>/dev/null)
+    case "$out" in ok:SSH-) return 0 ;; ok:closed) return 3 ;; ok:*) return 1 ;; *) return 2 ;; esac
+}
+
+hub_holder() { ssh -n -o BatchMode=yes -o ConnectTimeout=6 "$HUB" "cat $HUBREC" 2>/dev/null; }  # "<pid> <host>"
+
+kill_hub_sshd() {  # only if the record still names $1: a racing standby's fresh sshd must survive
+    ssh -n -o BatchMode=yes "$HUB" "read p h <$HUBREC && [ \"\$p\" = '$1' ] && grep -qa '^sshd' /proc/\$p/cmdline \
+        && kill \$p && echo \"killed hub sshd \$p (parked from \$h)\"" 2>/dev/null
 }
 
 gss_ok() {  # can $1 be logged into over GSSAPI? No valid TGT here = cannot judge = yes
@@ -92,26 +125,40 @@ gss_ok() {  # can $1 be logged into over GSSAPI? No valid TGT here = cannot judg
     return 1
 }
 
+seed_peers() {  # `ensure` on each peer; quiet when it already runs or is off
+    local h out
+    for h in $PEERS; do
+        [ "$h" = "$SELF" ] && continue
+        # Delegation lands the TGT in the peer's KCM, which outlives the session
+        # (GSSAPICleanupCredentials no): a seeded peer can seed in turn.
+        out=$(timeout 60 ssh -n -F /dev/null -o BatchMode=yes -o ConnectTimeout=6 \
+            -o GSSAPIAuthentication=yes -o PreferredAuthentications=gssapi-with-mic \
+            -o GSSAPIDelegateCredentials=yes \
+            -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o LogLevel=ERROR \
+            "$h" "$SCRIPT ensure -p $PORT -H $HUB --peers '$PEERS'" 2>&1)
+        case "$out" in *"already running"*|*"off on"*) ;;
+            *) echo "$(date -Is) seed $h: ${out//$'\n'/ | }" ;; esac
+    done
+}
+
 case "$CMD" in
 start|ensure)
     paths
-    pid=$(rec_pid "$PIDFILE"); host=$(rec_host "$PIDFILE")
-    if [ "$host" = "$SELF" ] && alive "$pid"; then
-        echo "already parked: pid $pid on $SELF, $HUB:127.0.0.1:$PORT"; exit 0
+    if [ "$CMD" = ensure ] && [ -e "$OFFMARK" ]; then
+        echo "off on $SELF (stopped by hand) — 'start' to re-enable"; exit 0
+    fi
+    rm -f "$OFFMARK"
+    if running_here; then
+        pid=$(cat "$NODEFILE" 2>/dev/null)
+        if [ "$STEAL" = 0 ]; then
+            echo "already running here: supervisor ${pid:-?} on $SELF"; exit 0
+        fi
+        # A standby here would lose the race to the old holder's 10s retry; relaunch with --steal.
+        alive "$pid" && kill -TERM "-$pid" 2>/dev/null
+        for _ in 1 2 3 4 5; do running_here || break; sleep 1; done
     fi
     if ! gss_ok "$(hostname)"; then
         echo "GSSAPI login to $SELF itself fails — a tunnel here is useless, not parking" >&2; exit 1
-    fi
-    if [ -n "$pid" ] && [ "$host" != "$SELF" ] && [ "$STEAL" = 0 ]; then
-        if hub_listening "$PORT"; then
-            if gss_ok "$host"; then
-                echo "port $PORT already served by $host (pid $pid); --steal to move it here"
-                exit 0
-            fi
-            echo "holder $host fails GSSAPI login 3x — stealing port $PORT"; STEAL=1
-        else
-            echo "record from $host is stale (hub port dead), taking over"
-        fi
     fi
     # Preflight: hub must answer without a prompt, else the loop spins forever.
     # Retried — a single refusal is usually the hub's MaxStartups throttle after
@@ -124,55 +171,85 @@ start|ensure)
     if [ "$ok" = 0 ]; then
         echo "hub '$HUB' unreachable with BatchMode after 3 tries — fix keys/ssh config first" >&2; exit 1
     fi
-    if [ "$STEAL" = 1 ]; then
-        # Kill the hub-side sshd holding the forward; its tunneled connections, the
-        # MFA master included, go with it. The old node's supervisor retries in 10s.
-        ssh -n -o BatchMode=yes "$HUB" "read p h <$HUBREC && grep -qa '^sshd' /proc/\$p/cmdline \
-            && kill \$p && echo \"killed hub sshd \$p (parked from \$h)\"" 2>/dev/null \
-            || echo "no live hub-side record for port $PORT — holder must be stopped by hand" >&2
-        sleep 1
-    fi
     [ -f "$LOG" ] && [ "$(stat -c%s "$LOG")" -gt 1048576 ] && : >"$LOG"
-    setsid nohup "$0" supervise -p "$PORT" -H "$HUB" >>"$LOG" 2>&1 < /dev/null &
+    rm -f "$NODEFILE"
+    sargs=(supervise -p "$PORT" -H "$HUB" --peers "$PEERS")
+    [ "$STEAL" = 1 ] && sargs+=(--steal)
+    setsid nohup "$SCRIPT" "${sargs[@]}" >>"$LOG" 2>&1 < /dev/null &
     disown 2>/dev/null
     for _ in 1 2 3 4 5 6 7 8 9 10; do
-        pid=$(rec_pid "$PIDFILE"); [ "$(rec_host "$PIDFILE")" = "$SELF" ] && alive "$pid" && break
+        pid=$(cat "$NODEFILE" 2>/dev/null); alive "$pid" && break
         sleep 1
     done
     if alive "$pid"; then
-        echo "parked: pid $pid on $SELF -> $HUB:127.0.0.1:$PORT, log $LOG"
+        echo "supervisor pid $pid on $SELF for $HUB:127.0.0.1:$PORT (holder or standby: status), log $LOG"
     else
         echo "failed to start; see $LOG" >&2; tail -3 "$LOG" >&2; exit 1
     fi
     ;;
 supervise)  # internal: the detached loop itself
     paths
-    # Node-local lock, held for this process's lifetime: two starts racing (tmux
-    # hook + a manual one) both passed the pidfile check before either wrote it,
-    # and the loser then spun 741 times on "remote port forwarding failed for
-    # listen port 2222" while overwriting the winner's pidfile. /tmp, not $HOME —
-    # lustre flock is not guaranteed, and one supervisor per host is the scope.
-    exec 9>"/tmp/park_on_lab_${HUB}_${PORT}.lock"
+    exec 9>"$LOCK"
     flock -n 9 || { echo "$(date -Is) another supervisor holds $HUB:$PORT here — exiting"; exit 0; }
-    echo "$$ $SELF" >"$PIDFILE"
-    # Only drop the pidfile if it is still ours: a loser must not delete it.
-    trap 'kill 0 2>/dev/null; [ "$(rec_pid "$PIDFILE")" = "$$" ] && rm -f "$PIDFILE"; exit 0' TERM INT
+    echo "$$" >"$NODEFILE"
+    # Only drop files that are still ours: a successor may have rewritten them.
+    trap 'kill 0 2>/dev/null; [ "$(rec_pid "$PIDFILE")" = "$$" ] && rm -f "$PIDFILE"
+          [ "$(cat "$NODEFILE" 2>/dev/null)" = "$$" ] && rm -f "$NODEFILE"; exit 0' TERM INT
+    if [ -n "$PEERS" ]; then
+        ( sleep 30; while kill -0 $$ 2>/dev/null; do seed_peers; sleep 600; done ) &
+    fi
+    misses=0; gfails=0; n=0; role=""
     while :; do
+        take=0
+        if [ "$STEAL" = 1 ]; then
+            STEAL=0; take=1
+            set -- $(hub_holder)
+            [ -n "${1:-}" ] && [ "${2:-}" != "$SELF" ] && kill_hub_sshd "$1" | sed "s/^/$(date -Is) steal: /"
+        else
+            hub_state; st=$?
+            case $st in
+            0)  misses=0; n=$((n + 1))
+                if [ "$role" != standby ]; then
+                    role=standby; echo "$(date -Is) standby: $HUB:$PORT answered by $(hub_holder | cut -d' ' -f2)"
+                fi
+                if [ $((n % 10)) = 0 ]; then  # holder health, ~10 min
+                    set -- $(hub_holder)
+                    if [ -n "${2:-}" ] && [ "$2" != "$SELF" ] && ! gss_ok "$2"; then
+                        gfails=$((gfails + 1)); echo "$(date -Is) holder $2 fails GSSAPI login ($gfails/2)"
+                        if [ "$gfails" -ge 2 ]; then
+                            gfails=0; take=1; kill_hub_sshd "$1" | sed "s/^/$(date -Is) steal: /"
+                        fi
+                    else
+                        gfails=0
+                    fi
+                fi ;;
+            1)  misses=$((misses + 1))
+                echo "$(date -Is) $HUB:$PORT listening but no sshd banner ($misses/3)"
+                if [ "$misses" -ge 3 ]; then
+                    misses=0; take=1
+                    set -- $(hub_holder)
+                    [ -n "${1:-}" ] && kill_hub_sshd "$1" | sed "s/^/$(date -Is) stale: /"
+                fi ;;
+            2)  echo "$(date -Is) hub $HUB unreachable — recheck in 60s" ;;
+            3)  misses=0; take=1 ;;
+            esac
+        fi
+        [ "$take" = 1 ] || { sleep 60; continue; }
         if ! gss_ok "$(hostname)"; then
             echo "$(date -Is) GSSAPI login to self fails — not parking, recheck in 300s"
             sleep 300; continue
         fi
+        role=holder
         echo "$(date -Is) connecting -R ${PORT}:localhost:22 $HUB (supervisor $$ on $SELF)"
         # A command instead of -N, to record the hub-side sshd ($PPID there) for
-        # --steal. The race loser exits on ExitOnForwardFailure before it runs.
+        # steals. The race loser exits on ExitOnForwardFailure before it runs.
         # Polls $PPID: `exec sleep infinity` outlived its killed sshd (no tty, no HUP).
         ssh -T -a -x -o ExitOnForwardFailure=yes -o ServerAliveInterval=30 \
             -o ServerAliveCountMax=3 -o BatchMode=yes \
             -R "${PORT}:localhost:22" "$HUB" \
             "mkdir -p ${HUBREC%/*} && echo \$PPID $SELF >$HUBREC && while kill -0 \$PPID 2>/dev/null; do sleep 60; done" </dev/null &
         sp=$!
-        # Still up after 10s = forward won. Reclaim the pidfile: a node that held
-        # the port meanwhile removes it on its own stop.
+        # Still up after 10s = forward won.
         sleep 10
         kill -0 "$sp" 2>/dev/null && echo "$$ $SELF" >"$PIDFILE"
         wait "$sp"; rc=$?
@@ -182,22 +259,24 @@ supervise)  # internal: the detached loop itself
     ;;
 stop)
     paths
-    pid=$(rec_pid "$PIDFILE"); host=$(rec_host "$PIDFILE")
-    if [ "$host" != "$SELF" ] && [ -n "$pid" ]; then
-        echo "parked from $host, not here — run stop there, or start --steal here"; exit 1
-    fi
+    : >"$OFFMARK"
+    pid=$(cat "$NODEFILE" 2>/dev/null)
+    # Supervisors from before the standby design wrote only the holder record.
+    [ -z "$pid" ] && [ "$(rec_host "$PIDFILE")" = "$SELF" ] && pid=$(rec_pid "$PIDFILE")
     if alive "$pid"; then
         kill -TERM "-$pid" 2>/dev/null || kill -TERM "$pid" 2>/dev/null
         for _ in 1 2 3 4 5; do alive "$pid" || break; sleep 1; done
         alive "$pid" && kill -KILL "-$pid" 2>/dev/null
-        echo "stopped pid $pid"
+        echo "stopped pid $pid on $SELF"
     else
-        echo "not running"
+        echo "not running on $SELF"
     fi
-    rm -f "$PIDFILE"
+    rm -f "$NODEFILE"
+    [ "$(rec_host "$PIDFILE")" = "$SELF" ] && rm -f "$PIDFILE"
+    echo "off-mark set: peers and the tmux hook leave $SELF alone until 'start'"
     ;;
 restart)
-    "$0" stop -p "$PORT" -H "$HUB"; exec "$0" start -p "$PORT" -H "$HUB" ;;
+    "$SCRIPT" stop -p "$PORT" -H "$HUB"; exec "$SCRIPT" start -p "$PORT" -H "$HUB" --peers "$PEERS" ;;
 status)
     mkdir -p "$RUNDIR"
     shopt -s nullglob
@@ -205,24 +284,30 @@ status)
     for f in "$RUNDIR"/park_*.pid; do
         found=1
         base=$(basename "$f" .pid); p=${base##*_}; h=${base#park_}; h=${h%_*}
-        pid=$(rec_pid "$f"); host=$(rec_host "$f")
-        if [ "$host" = "$SELF" ] && alive "$pid"; then
-            printf '%-10s port %-6s pid %-8s on %-18s up %s\n' "$h" "$p" "$pid" "$host" \
-                "$(ps -o etime= -p "$pid" | tr -d ' ')"
-        elif [ "$host" != "$SELF" ]; then
-            printf '%-10s port %-6s pid %-8s on %-18s (other login node)\n' "$h" "$p" "$pid" "$host"
-        else
-            printf '%-10s port %-6s DEAD (stale pidfile %s)\n' "$h" "$p" "$f"
-        fi
+        printf '%-10s port %-6s holder pid %-8s on %s\n' "$h" "$p" "$(rec_pid "$f")" "$(rec_host "$f")"
+        for n in $(for x in "$RUNDIR"/park_${h}_${p}.*.node "$RUNDIR"/park_${h}_${p}.*.off; do
+                       x=${x%.*}; echo "${x##*.}"; done | sort -u); do
+            pid=$(cat "$RUNDIR/park_${h}_${p}.$n.node" 2>/dev/null)
+            if [ -e "$RUNDIR/park_${h}_${p}.$n.off" ]; then st=OFF
+            elif [ "$n" != "$SELF" ]; then st="(other login node)"
+            elif alive "$pid"; then st="up $(ps -o etime= -p "$pid" | tr -d ' ')"
+            else st=DEAD; fi
+            printf '    %-18s supervisor %-8s %s\n' "$n" "${pid:--}" "$st"
+        done
         if [ "$CHECK" = 1 ]; then
             PORT=$p HUB=$h
-            hub_listening "$p" && echo "    hub $h:127.0.0.1:$p LISTENING" \
-                              || echo "    hub $h:127.0.0.1:$p NOT listening"
+            hub_state
+            case $? in
+                0) echo "    hub $h:127.0.0.1:$p sshd answers" ;;
+                1) echo "    hub $h:127.0.0.1:$p LISTENING but no sshd banner" ;;
+                2) echo "    hub $h unreachable" ;;
+                3) echo "    hub $h:127.0.0.1:$p NOT listening" ;;
+            esac
         fi
     done
     [ "$found" = 0 ] && echo "no tunnels registered under $RUNDIR"
     exit 0
     ;;
 *)
-    echo "usage: $0 {start|stop|restart|status} -p <port> [-H <hub>] [--check] [--steal]" >&2; exit 2 ;;
+    echo "usage: $0 {start|ensure|stop|restart|status} -p <port> [-H <hub>] [--peers \"h1 h2\"] [--check] [--steal]" >&2; exit 2 ;;
 esac
