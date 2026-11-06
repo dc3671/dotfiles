@@ -34,7 +34,7 @@ log() { printf '%s %s\n' "$(date -Is 2>/dev/null)" "$*" >>"$LOG" 2>/dev/null; }
 # Compute node / container: the hub worker belongs to the login node. Same
 # signals ssh-reconnect.sh uses, minus the slurmstepd case (no tmux there).
 [ -n "$SLURM_JOB_ID" ] && exit 0
-pgrep -x slurmd &>/dev/null && exit 0
+case "$(hostname -s)" in *login*|*vscode*) ;; *) pgrep -x slurmd &>/dev/null && exit 0 ;; esac  # pgrep: ~1s on a login node
 { [ -n "$ENROOT_PID" ] || [ -n "$PYXIS_CONTAINER_NAME" ] || [ -n "$container" ]; } && exit 0
 { [ -f /.dockerenv ] || [ -f /run/.containerenv ]; } && exit 0
 
