@@ -89,6 +89,15 @@ _update_ssh_auth_sock() {
         [ $r -eq 0 ] || [ $r -eq 1 ]
     }
 
+    # Repoint $fixed at $1. Tmux opening several panes runs this concurrently, and
+    # uutils `ln -sf` is unlink+symlink, so racers fail with "Already exists";
+    # build the link aside and rename(2) it over $fixed atomically.
+    _relink_fixed() {
+        [ "$(readlink "$fixed" 2>/dev/null)" = "$1" ] && return 0
+        local tmp="$fixed.$$.$RANDOM"
+        ln -s "$1" "$tmp" && mv -Tf "$tmp" "$fixed" || rm -f "$tmp"
+    }
+
     _ssh_add_keys() {
         [ -f "$HOME/.ssh/id_ed25519" ] && ssh-add "$HOME/.ssh/id_ed25519" &>/dev/null
         [ -f "$HOME/.ssh/id_rsa" ] && ssh-add "$HOME/.ssh/id_rsa" &>/dev/null
@@ -183,7 +192,7 @@ _update_ssh_auth_sock() {
     # 1. Forwarded agent on the shared $HOME socket -- preferred whenever the
     #    laptop is connected.
     if _sock_alive "$fwd"; then
-        ln -sf "$fwd" "$fixed"
+        _relink_fixed "$fwd"
         export SSH_AUTH_SOCK="$fixed"
         return
     fi
@@ -191,14 +200,14 @@ _update_ssh_auth_sock() {
     # 2. A forwarded agent already in our environment (e.g. a fresh login shell
     #    before tmux pins the fixed path), and not our own managed symlink.
     if [ -n "$SSH_AUTH_SOCK" ] && [ "$SSH_AUTH_SOCK" != "$fixed" ] && _sock_alive "$SSH_AUTH_SOCK"; then
-        ln -sf "$SSH_AUTH_SOCK" "$fixed"
+        _relink_fixed "$SSH_AUTH_SOCK"
         export SSH_AUTH_SOCK="$fixed"
         return
     fi
 
     # 3. Laptop disconnected: point the fixed symlink at the durable local agent.
     _ensure_local_agent
-    ln -sf "$own_sock" "$fixed"
+    _relink_fixed "$own_sock"
     export SSH_AUTH_SOCK="$fixed"
 }
 _update_ssh_auth_sock
