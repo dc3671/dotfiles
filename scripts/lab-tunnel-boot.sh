@@ -30,7 +30,7 @@ PARK="$HOME/dotfiles/scripts/park_on_lab.sh"
 # PEERS: the cluster's login nodes, kept supervised by each other (standby + reseed).
 PEERS=""
 case "$(hostname -s)" in
-    *lyris*)  PORT=2122 ;;
+    *lyris*)  PORT=2122; PEERS="login-lyris01 login-lyris02" ;;
     *hecate*) PORT=2222; PEERS="login-hecate02 login-hecate03 login-hecate04" ;;
     *prenyx*) PORT=2322 ;;
     *bia*)    PORT=2422 ;;
