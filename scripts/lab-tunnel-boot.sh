@@ -27,11 +27,9 @@ PARK="$HOME/dotfiles/scripts/park_on_lab.sh"
 [ -x "$PARK" ] || exit 0          # not installed on this machine: silent no-op
 
 # One port per cluster, matching the *-tun blocks in lab:~/.ssh/config.
-# PEERS: the cluster's login nodes, kept supervised by each other (standby + reseed).
-PEERS=""
 case "$(hostname -s)" in
-    *lyris*)  PORT=2122; PEERS="login-lyris01 login-lyris02" ;;
-    *hecate*) PORT=2222; PEERS="login-hecate02 login-hecate03 login-hecate04" ;;
+    *lyris*)  PORT=2122 ;;
+    *hecate*) PORT=2222 ;;
     *prenyx*) PORT=2322 ;;
     *bia*)    PORT=2422 ;;
     *poly*)   PORT=2522 ;;
@@ -39,5 +37,14 @@ case "$(hostname -s)" in
     *) log "skip: no port assigned for $(hostname -s)"; exit 0 ;;
 esac
 
+# PEERS: this cluster's login nodes, kept supervised by each other (standby +
+# reseed). Found in DNS as <prefix>01..16 of this host's name (login-hecate03 ->
+# login-hecate01..16); 16 lookups take ~45ms. No digits in the name = no peers.
+SELF=$(hostname -s); PREFIX=${SELF%%[0-9]*}; PEERS=$SELF
+if [ "$PREFIX" != "$SELF" ]; then
+    PEERS=$(for i in $(seq -w 1 16); do getent hosts "$PREFIX$i" >/dev/null && echo "$PREFIX$i"; done | tr '\n' ' ')
+    PEERS=${PEERS% }
+fi
+
 out=$("$PARK" ensure -p "$PORT" --peers "$PEERS" 2>&1); rc=$?
-log "ensure -p $PORT on $(hostname -s): rc=$rc ${out//$'\n'/ | }"
+log "ensure -p $PORT --peers \"$PEERS\" on $SELF: rc=$rc ${out//$'\n'/ | }"
