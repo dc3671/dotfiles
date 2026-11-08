@@ -48,6 +48,10 @@
 # that sees the holder fail it 2 rounds running steals the port. Single probes
 # fail transiently (8 releases in 13h on hecate03): never act on one.
 #
+# Before a health steal, the hub's MFA master (if any) runs `true` through the
+# holder; success vetoes the steal, which would kill that master and cost an MFA.
+# 2026-11-07: a ~1 min sshd auth stall on hecate03 hit both rounds, 04 stole.
+#
 # The hub-side sshd pid is recorded on the hub (~/.tmp/tunnels/park_<port>.sshd)
 # so a steal kills exactly that connection; lab has no fuser/ss/lsof.
 #
@@ -114,6 +118,15 @@ hub_holder() { ssh -n -o BatchMode=yes -o ConnectTimeout=6 "$HUB" "cat $HUBREC" 
 kill_hub_sshd() {  # only if the record still names $1: a racing standby's fresh sshd must survive
     ssh -n -o BatchMode=yes "$HUB" "read p h <$HUBREC && [ \"\$p\" = '$1' ] && grep -qa '^sshd' /proc/\$p/cmdline \
         && kill \$p && echo \"killed hub sshd \$p (parked from \$h)\"" 2>/dev/null
+}
+
+hub_master_ok() {  # 0 hub's MFA master for $PORT runs a command, 1 it fails, 2 no master
+    local out  # 90s: outlasts the ~1 min auth stalls seen on hecate03
+    out=$(timeout 100 ssh -n -o BatchMode=yes -o ConnectTimeout=6 "$HUB" \
+        "for s in ~/.ssh/cm-*@127.0.0.1:$PORT; do [ -S \"\$s\" ] && ssh -S \"\$s\" -O check x 2>/dev/null || continue
+         timeout 90 ssh -S \"\$s\" -o ControlMaster=no -o BatchMode=yes x true </dev/null >/dev/null 2>&1 && echo ok || echo fail; exit
+         done; echo none" 2>/dev/null)
+    case "$out" in ok) return 0 ;; fail) return 1 ;; *) return 2 ;; esac
 }
 
 gss_ok() {  # can $1 be logged into over GSSAPI? No valid TGT here = cannot judge = yes
@@ -243,7 +256,14 @@ supervise)  # internal: the detached loop itself
                     if [ -n "${2:-}" ] && [ "$2" != "$SELF" ] && ! gss_ok "$2"; then
                         gfails=$((gfails + 1)); echo "$(date -Is) holder $2 fails GSSAPI login ($gfails/2)"
                         if [ "$gfails" -ge 2 ]; then
-                            gfails=0; take=1; kill_hub_sshd "$1" | sed "s/^/$(date -Is) steal: /"
+                            gfails=0
+                            hub_master_ok; mst=$?
+                            if [ "$mst" = 0 ]; then
+                                echo "$(date -Is) holder $2: hub MFA master still works through it — not stealing"
+                            else
+                                echo "$(date -Is) holder $2: hub MFA master $([ "$mst" = 1 ] && echo fails || echo absent) — stealing"
+                                take=1; kill_hub_sshd "$1" | sed "s/^/$(date -Is) steal: /"
+                            fi
                         fi
                     else
                         gfails=0
