@@ -30,8 +30,8 @@ Tool binaries are not installed by the script. Unpack them per arch into `$HOME`
 | `.tmux.conf` | prefix `C-x`; boots `scripts/claude-hub-boot.sh` and `scripts/lab-tunnel-boot.sh` |
 | `tmux/extras.conf` | net-speed + sysstat; auto-on only without a cgroup pids cap, `TMUX_EXTRAS=1/0` forces |
 | `nvim/` | lazy.nvim config, plugins pinned in `nvim/lazy-lock.json` |
-| `scripts/` | cluster helpers: `query_slurm_ppp.sh`, `get_current_sqsh.sh`, `check_mem.sh`, `ssh-reconnect.sh`, `park_on_lab.sh`, `update_docker_packages.sh` |
+| `scripts/` | cluster helpers: `query_slurm_ppp.sh`, `get_current_sqsh.sh`, `check_mem.sh`, `ssh-reconnect.sh`, `park_on_lab.sh` |
 
-## Conda
+## No conda
 
-`CONDA_ENV=<env>` picks the env activated in a new shell (incl. pyxis containers); `CONDA_ENV=null` skips conda; unset activates `llm` in interactive/login shells only. Miniforge roots: `~/scratch/miniforge3` (aarch64), `~/scratch/miniforge3_x86` (x86).
+Shells never install or activate conda; `shell/common.sh` scrubs any inherited `miniforge3*` PATH entry and `CONDA_*` var. Login-node tools go to `~/.local` (`pip install --user`, prebuilt binaries in `~/.local/bin`); jobs use the container's system python or a baked sqsh.
