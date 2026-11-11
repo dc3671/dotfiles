@@ -2,7 +2,7 @@
 # Park this host's sshd on <hub>:127.0.0.1:<port> so the hub can dial back in.
 # The hub cannot reach the cluster (firewalled both ways), so the cluster side
 # owns the connection. One port per cluster: lyris 2122, hecate 2222, prenyx
-# 2322, bia 2422, poly 2522, ptyche 2622.
+# 2322, bia 2422, poly 2522, ptyche 2622, rhea 2722.
 #
 #   park_on_lab.sh start   -p 2222 [--peers "h1 h2"]  # by hand; clears stop's off-mark
 #   park_on_lab.sh ensure  -p 2222 [--peers "h1 h2"]  # tmux hook, peer seed; honours it

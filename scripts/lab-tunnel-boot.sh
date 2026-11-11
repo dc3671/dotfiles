@@ -34,6 +34,7 @@ case "$(hostname -s)" in
     *bia*)    PORT=2422 ;;
     *poly*)   PORT=2522 ;;
     *ptyche*) PORT=2622 ;;
+    *rhea*)   PORT=2722 ;;
     *) log "skip: no port assigned for $(hostname -s)"; exit 0 ;;
 esac
 
