@@ -8,8 +8,6 @@ fi
 # Add wisely, as too many plugins slow down shell startup.
 plugins=(git gitfast dirhistory tmux python pip zsh-autosuggestions zsh-syntax-highlighting fzf)
 
-export PYTHONUSERBASE="intentionally-disabled"
-
 # Before omz: its plugins probe PATH (fzf, rg, tmux) at load time.
 source ${${(%):-%x}:A:h}/shell/common.sh
 
