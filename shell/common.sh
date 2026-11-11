@@ -86,6 +86,11 @@ unset _loc
 command -v tput >/dev/null 2>&1 && ! tput -T "${TERM:-dumb}" longname >/dev/null 2>&1 &&
     export TERM=xterm-256color
 
+# tmux sockets out of /tmp, whose purges orphan running servers (027, 2026-11-11).
+# Per host: NFS $HOME is shared, and a peer's socket looks stale here, so tmux unlinks it.
+export TMUX_TMPDIR="$HOME/.tmp/tmux.$(hostname -s)"
+[ -d "$TMUX_TMPDIR" ] || mkdir -p "$TMUX_TMPDIR" 2>/dev/null
+
 export SQUEUE_FORMAT="%.18i %.9P %.40j %.10u %.2t %.10M %.6D %R"
 export EDITOR=nvim
 umask 022
