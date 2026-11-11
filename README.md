@@ -8,7 +8,6 @@ Shell, tmux, and nvim config for NVIDIA Slurm clusters (Lyris: x86 login + aarch
 git clone git@github.com:dc3671/dotfiles.git ~/dotfiles
 ~/dotfiles/install.sh                 # frameworks + symlinks, idempotent
 ~/dotfiles/install.sh --link-only     # symlinks only (after a $HOME migration)
-~/dotfiles/install.sh --tmux-extras   # also fetch tmux net-speed/sysstat
 ```
 
 Tool binaries are not installed by the script. Unpack them per arch into `$HOME`:
@@ -28,7 +27,7 @@ Tool binaries are not installed by the script. Unpack them per arch into `$HOME`
 | `.zshrc` / `.bashrc` | framework only (oh-my-zsh + p10k / oh-my-bash + ble.sh), then `shell/common.sh` |
 | `shell/common.sh` | env, arch-aware PATH, aliases, ulimit, conda (`conda.sh` + `mamba activate`) |
 | `.tmux.conf` | prefix `C-x`; boots `scripts/claude-hub-boot.sh` and `scripts/lab-tunnel-boot.sh` |
-| `tmux/extras.conf` | net-speed + sysstat; auto-on only without a cgroup pids cap, `TMUX_EXTRAS=1/0` forces |
+| `tmux/extras.conf` | `tmux/sysstat.sh` CPU/mem/NIC widget on status-right; fork-free, on by default, `TMUX_EXTRAS=0` disables |
 | `nvim/` | lazy.nvim config, plugins pinned in `nvim/lazy-lock.json` |
 | `scripts/` | cluster helpers: `query_slurm_ppp.sh`, `get_current_sqsh.sh`, `check_mem.sh`, `ssh-reconnect.sh`, `park_on_lab.sh` |
 

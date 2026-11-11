@@ -4,7 +4,6 @@
 #
 #   ./install.sh                 # frameworks + links
 #   ./install.sh --link-only     # links only, no network (home-env-migration)
-#   ./install.sh --tmux-extras   # also fetch net-speed/sysstat (tmux/extras.conf)
 #
 # No chsh: LDAP accounts cannot change it; .bash_profile execs ~/zsh/bin/zsh.
 # nvim/node/zsh/fzf binaries are manual per-arch installs (see shell/common.sh);
@@ -13,11 +12,9 @@
 set -u
 DOT=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 LINK_ONLY=0
-TMUX_EXTRAS=0
 for a in "$@"; do
     case $a in
         --link-only) LINK_ONLY=1 ;;
-        --tmux-extras) TMUX_EXTRAS=1 ;;
         *) echo "unknown option: $a" >&2; exit 2 ;;
     esac
 done
@@ -62,10 +59,6 @@ if [ $LINK_ONLY = 0 ]; then
     clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
     clone https://github.com/tmux-plugins/tmux-sensible ~/.tmux/plugins/tmux-sensible
     clone https://github.com/tmux-plugins/tmux-resurrect ~/.tmux/plugins/tmux-resurrect
-    if [ $TMUX_EXTRAS = 1 ]; then
-        clone https://github.com/beeryardtech/tmux-net-speed.git ~/.tmux/plugins/tmux-net-speed
-        clone https://github.com/samoshkin/tmux-plugin-sysstat.git ~/.tmux/plugins/tmux-plugin-sysstat
-    fi
 fi
 
 msg ">>> links"
