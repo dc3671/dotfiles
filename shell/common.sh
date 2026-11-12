@@ -6,18 +6,21 @@
 
 _arch=${HOSTTYPE:-${CPUTYPE:-$(uname -m)}}   # lyris: x86 login, aarch64 compute; MARS: aarch64 both
 
-# _prepend VAR DIR...: existing DIRs move to the front of VAR, in argument order.
-_prepend() {
-    local var=$1 d cur pre=
-    shift
+# _prepend / _append VAR DIR...: existing DIRs move to the front / back of VAR, in argument order.
+_prepend() { _place front "$@"; }
+_append() { _place back "$@"; }
+_place() {
+    local end=$1 var=$2 d cur add=
+    shift 2
     eval "cur=\":\${$var:-}:\""
     for d in "$@"; do
         [ -d "$d" ] || continue
         cur=${cur//:$d:/:}
-        pre="$pre:$d"
+        add="$add:$d"
     done
-    cur=${cur#:}; cur=${cur%:}; pre=${pre#:}
-    eval "export $var=\"\$pre\${pre:+\${cur:+:}}\$cur\""
+    cur=${cur#:}; cur=${cur%:}; add=${add#:}
+    if [ "$end" = front ]; then cur="$add${add:+${cur:+:}}$cur"; else cur="$cur${cur:+${add:+:}}$add"; fi
+    eval "export $var=\"\$cur\""
 }
 
 # _drop VAR GLOB...: remove entries of VAR matching any GLOB.
@@ -62,19 +65,20 @@ fi
 _prepend PATH \
     /usr/local/cmake/bin /usr/local/nvidia/bin /usr/local/cuda/bin /usr/local/mpi/bin \
     /usr/local/ucx/bin /opt/amazon/efa/bin /opt/tensorrt/bin
-# ~/.local is cluster-local scratch, built for that cluster's login arch: lowest priority.
-case ":$PATH:" in *":$HOME/.local/bin:"*) ;; *) export PATH="$PATH:$HOME/.local/bin" ;; esac
+# ~/.local is per-cluster scratch built for the login arch: first on the host so user
+# installs beat site-wide ones in /usr/bin (slack-cli); last in a Slurm job or container,
+# where the arch can differ and the image's tools must win.
+if [ -z "${SLURM_JOB_ID}${ENROOT_PID}${PYXIS_CONTAINER_NAME}${container}" ]; then
+    _prepend PATH "$HOME/.local/bin"
+else
+    _append PATH "$HOME/.local/bin"
+fi
 
 _prepend LD_LIBRARY_PATH \
     /opt/nvidia/nvda_nixl/lib/x86_64-linux-gnu /opt/nvidia/nvda_nixl/lib64 /usr/local/ucx/lib \
     /usr/local/cuda/compat/lib /usr/local/nvidia/lib /usr/local/nvidia/lib64 \
     /usr/local/cuda/lib64 /usr/local/tensorrt/lib
-_d="$HOME/.local/lib/$_arch-linux-gnu"   # libpcsclite for ~/.local/bin CLIs
-case ":$LD_LIBRARY_PATH:" in
-    *":$_d:"*) ;;
-    *) [ -d "$_d" ] && export LD_LIBRARY_PATH="${LD_LIBRARY_PATH:+$LD_LIBRARY_PATH:}$_d" ;;
-esac
-unset _d
+_append LD_LIBRARY_PATH "$HOME/.local/lib/$_arch-linux-gnu"   # libpcsclite for ~/.local/bin CLIs
 
 # Forced so a laptop's LC_CTYPE=UTF-8 (invalid on Linux) cannot leak in; images
 # without en_US get C.UTF-8 instead of setlocale warnings.
